@@ -1,0 +1,21 @@
+.canvas {
+	background-color: #313131;
+	border: 1px solid black;
+}
+.main {
+	position: relative;
+	width: 90vw;
+	&__left {
+		text-align: left;
+		vertical-align: top;
+		width: 10%;
+		display: inline-block;
+	}
+	&__right {
+		width: 90%;
+		display: inline-block;
+		&.canvas {
+			image-rendering: pixelated
+		}
+	}
+}
