@@ -1,5 +1,6 @@
 import React from "react";
 import { Tooltip, Button } from "reactstrap";
+import { clearDriftless } from 'driftless';
 
 import _draw from "./_draw";
 import "./main.scss";
@@ -7,14 +8,23 @@ import "./main.scss";
 export default class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { density: null, hasError: false, error: null, text: "yello again" }
-		
-		//TODO: calculate from window width
+		this.state = { 
+			speed: 1,
+			density: null, 
+			hasError: false, 
+			error: null,
+			canvasAnimating: true,
+			pause: false,
+			stop: false,
+			buttonText: "Cancel" 
+		}
+		this.interval = null;
 		this.canvasWidth = window.innerWidth;
 		this.canvasHeight = window.innerHeight;
 
-		this.ctx = null;
+		this.shouldAnimationStop = false;
 		this.canvasRef = React.createRef();
+
 		this._draw = _draw.bind(this);
 		this.drawHandler = this.drawHandler.bind(this);
 	}
@@ -29,9 +39,20 @@ export default class HomePage extends React.Component {
 	componentDidMount() {
 		this._draw();
 	}
+	componentWillUnmount() {
+		clearDriftless(this.interval);
+	}
 	
-	drawHandler() {
-		this._draw();
+	drawHandler() {		
+		const canvasAnimating = this.state.canvasAnimating;
+		if (canvasAnimating) {
+			this.shouldAnimationStop = true;
+			this.setState({ canvasAnimating: false, pause: true, buttonText: "Draw" });
+		} else {
+			this.shouldAnimationStop = false;
+			this.setState({ canvasAnimating: true, pause: false, buttonText: "Cancel" });
+		}
+
 	}
 
 
@@ -39,7 +60,7 @@ export default class HomePage extends React.Component {
 		return (
 			<main className="main">
 				<aside className="main__left">
-					<Button className="col-10" onClick={this.drawHandler}>Draw</Button>
+					<Button className="col-10" onClick={this.drawHandler}>{this.state.buttonText}</Button>
 				</aside>
 				<aside className="main__right">
 					<canvas 

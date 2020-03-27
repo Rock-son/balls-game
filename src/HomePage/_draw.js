@@ -1,11 +1,10 @@
-
-import Particle from "./classes/Circle";
+import Particle from "./classes/Particle";
+import { setDriftlessInterval } from 'driftless';
 
 export default function _draw() {	
-
-	// utility functions
+	// UTILITIES
 	function randomIntNumber(min, max) {
-		return Math.floor(Math.random() * (max - min + 1) + min);
+		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 	function distance(x1, y1, x2, y2) {
 		const xDist = x2 - x1;
@@ -15,23 +14,24 @@ export default function _draw() {
 	}
 
 
-
+	// CANVAS
 	const canvas = this.canvasRef.current;
 	if (canvas.getContext) {
-		const context = canvas.getContext("2d");
-
-
+		let context = canvas.getContext("2d");
+	
 		const particles = [];
-		const radius = 15;
-		const color = "blue";
+		const radius = 10;
+		let color, contagious;
 		const maxWidth = this.canvasWidth - radius * 2.5;
-		const maxHeight = this.canvasHeight - radius * 2.5
-		for (let i = 0; i < 100; i++) {
+		const maxHeight = this.canvasHeight - radius * 2.5;
+		for (let i = 0; i < 300; i++) {
+			color = i === 0 ? "red" : "darkblue";
+			contagious = i === 0 ? 1 : 0;
 			let x = randomIntNumber(radius * 2, maxWidth);
 			let y = randomIntNumber(radius * 2, maxHeight);
 			if (i !== 0) {
 				for (let j = 0; j < particles.length; j++) {
-					if (distance(x, y, particles[j].xpos, particles[j].ypos) - radius * 2 < 0) {
+					if ((distance(x, y, particles[j].x, particles[j].y) - (radius + particles[j].radius)) < 0) {
 						x = randomIntNumber(radius * 2, maxWidth);
 						y = randomIntNumber(radius * 2, maxHeight);
 						// start over
@@ -39,18 +39,25 @@ export default function _draw() {
 					}
 				}
 			}
-			particles.push(new Particle(context, x, y, radius, color, 1, 5));
-			
+			particles.push(new Particle(context, contagious, x, y, radius, color, i, this.state.speed));			
 		}
 		
 		// ANIMATION
-		const animate = () => {
-			requestAnimationFrame(animate);
-			context.clearRect(0,0, window.innerWidth, window.innerHeight)			
-			particles.forEach(particle => {
-				particle.draw();
-			});
-		}		
-		animate();	
+		this.interval = setDriftlessInterval(
+			() => {			
+			if (!this.state.pause && !this.state.stop) {
+				context.clearRect(0,0, window.innerWidth, window.innerHeight)			
+				particles.forEach(particle => {
+					particle.draw();
+					particle.update(particles, distance);
+				});
+			} else if (this.state.pause) {
+				return;
+			} else {
+				context.clearRect(0,0, window.innerWidth, window.innerHeight)
+				context = null;
+				return;
+			}
+		}, 15);
 	}
 }
