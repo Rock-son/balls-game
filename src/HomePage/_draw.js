@@ -20,11 +20,13 @@ export default function _draw() {
 		let context = canvas.getContext("2d");
 	
 		const particles = [];
-		const radius = 10;
 		let color, contagious;
-		const maxWidth = this.canvasWidth - radius * 2.5;
-		const maxHeight = this.canvasHeight - radius * 2.5;
-		for (let i = 0; i < 300; i++) {
+		const maxRadius = 12;
+		const maxWidth = this.canvasWidth - maxRadius * 2.5;
+		const maxHeight = this.canvasHeight - maxRadius * 2.5;
+		for (let i = 0; i < 350; i++) {
+			const radius = randomIntNumber(8, maxRadius);
+			const mass = radius;
 			color = i === 0 ? "red" : "darkblue";
 			contagious = i === 0 ? 1 : 0;
 			let x = randomIntNumber(radius * 2, maxWidth);
@@ -39,7 +41,7 @@ export default function _draw() {
 					}
 				}
 			}
-			particles.push(new Particle(context, contagious, x, y, radius, color, i, this.state.speed));			
+			particles.push(new Particle(context, contagious, x, y, radius, color, this.state.speed, mass));			
 		}
 		
 		// ANIMATION
