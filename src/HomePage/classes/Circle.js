@@ -1,5 +1,5 @@
 
-export default class Circle {
+export default class Particle {
 	constructor(context, xpos, ypos, radius, color, text, speed) {
 		this.context = context;
 		this.xpos = xpos;
@@ -8,9 +8,11 @@ export default class Circle {
 		this.color = color;
 		this.text = text;
 		this.speed = speed;
-
+		
 		this.dx = 1 * this.speed;
 		this.dy = 1 * this.speed;
+
+		this.hitCounter = 0;
 
 		this.windowWidth = window.innerWidth;
 		this.windowHeight = window.innerHeight
@@ -26,12 +28,30 @@ export default class Circle {
 
 		this.context.linewidth = 1;
 		this.context.arc(this.xpos, this.ypos, this.radius, 0, Math.PI * 2, false);
-		this.context.fillStyle = this.color;
+		this.context.strokeStyle = this.color;
 		this.context.stroke();
 		this.context.closePath();
 	}
 	update() {
-		this.context.clearRect(0, 0, this.windowWidth, this.windowHeight);
+		this.text = this.hitCounter;
+		// X
+		if ((this.xpos + this.radius) > this.windowWidth) {
+			this.dx = -this.dx;
+			this.hitCounter++;
+		}
+		if ((this.xpos - this.radius) < 0) {
+			this.dx = -this.dx;
+			this.hitCounter++;
+		}
+		// Y
+		if ((this.ypos + this.radius) > this.windowHeight) {
+			this.dy = -this.dy;
+			this.hitCounter++;
+		}
+		if ((this.ypos - this.radius) < 0) {
+			this.dy = -this.dy;
+			this.hitCounter++;
+		}
 
 		this.draw(this.context);
 		this.xpos += this.dx;
