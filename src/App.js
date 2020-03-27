@@ -1,9 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
-import HomePage from "./pages/HomePage";
+import HomePage from "./HomePage";
 
 import './App.scss';
-import 'bootstrap/dist/css/bootstrap.css';
 
 
 
