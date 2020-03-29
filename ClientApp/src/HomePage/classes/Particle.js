@@ -77,8 +77,8 @@ export default class Particle {
 		}
 
 		this.draw(this.context);
-		this.x += this.velocity.x;
-		this.y += this.velocity.y;
+		this.x += this.velocity.x > 2 ? 2 : this.velocity.x;
+		this.y += this.velocity.y > 2 ? 2 : this.velocity.y;
 
 	}
 	/**
