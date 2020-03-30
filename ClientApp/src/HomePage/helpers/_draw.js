@@ -22,7 +22,7 @@ export default function _draw() {
 		const radius = 5;
 		const maxWidth = this.canvasWidth - radius * 2.5;
 		const maxHeight = this.canvasHeight - radius * 2.5;
-		for (let i = 0; i < 700; i++) {
+		for (let i = 0; i < 300; i++) {
 			const mass = 1;
 			color = i === 0 ? "darkred" : "#aaa";
 			contagious = i === 0 ? 1 : 0;

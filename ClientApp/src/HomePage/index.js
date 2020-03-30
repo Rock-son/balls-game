@@ -1,5 +1,6 @@
 import React from "react";
-import { Tooltip, Button, Row } from "reactstrap";
+import { Modal, Button, Row, Navbar, Nav, NavbarToggler,
+			Collapse, NavItem, NavLink, NavbarText } from "reactstrap";
 import { clearDriftless } from 'driftless';
 
 import _draw from "./helpers/_draw";
@@ -14,18 +15,23 @@ export default class HomePage extends React.Component {
 		this.canvasRef = React.createRef();
 
 		this.state = { 
+			// operation
 			speed: 2,
-			density: null, 
+			density: null,
+			// react functionality
 			hasError: false, 
 			error: null,
+			// deprecated buttons
 			isPaneOpen: true,
 			canvasAnimating: true,
-			pause: false,
+			pause: true,
 			stop: false,
 			dropdownSizeOpen: false,
 			dropdownQuantityOpen: false,
 			startButtonText: "Pause Simulation",
-			stopButtonText: "Stop Simulation"
+			stopButtonText: "Stop Simulation",
+			// nav item buttons
+			isNavOpened: false,
 		}
 		this.interval = null;
 		this.canvasWidth = window.innerWidth;
@@ -39,13 +45,13 @@ export default class HomePage extends React.Component {
 		this.stopButton = this.stopButton.bind(this);
 		this.toggleTooltip = this.toggleTooltip.bind(this);
 		this.toggleSizeOpen = this.toggleSizeOpen.bind(this);
+		this.toggleNavItems = this.toggleNavItems.bind(this);
 		this.toggleQuantityOpen = this.toggleQuantityOpen.bind(this);
 	}
 	static getDerivedStateFromError(error) {
 		// Update state so the next render will show the fallback UI.
 		return { hasError: true };
-	  }
-
+	}
 	componentDidCatch(error, errorInfo) {
 		// logErrorToMyService(error, errorInfo);
 	}
@@ -54,8 +60,7 @@ export default class HomePage extends React.Component {
 	}
 	componentWillUnmount() {
 		clearDriftless(this.interval);
-	}
-	
+	}	
 	playPause() {		
 		const { canvasAnimating } = this.state;
 		if (canvasAnimating) {
@@ -84,10 +89,57 @@ export default class HomePage extends React.Component {
 		this.setState(prevState => ({ dropdownQuantityOpen: !prevState.dropdownQuantityOpen}));
 	}
 
+	toggleNavItems() {
+		this.setState(prevState => ({ isNavOpened: !prevState.isNavOpened}));
+	}
+
 	render() {
 		return (
-			<main className="main">
-				<aside className={`main__left main__left--${this.state.isPaneOpen ? "open" : "closed"}`}>
+			<section className="main">
+				<Navbar dark className="main__navbar d-inline-flex justify-content-between" >
+					<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm">
+						<NavbarToggler onClick={this.toggleNavItems} />
+						<Collapse isOpen={this.state.isNavOpened} navbar>
+						<Nav className="navbar__nav left" navbar>
+							<NavItem>
+								<NavLink className="navbar__nav__link">Simulate</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink className="navbar__nav__link">Play game</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink className="navbar__nav__link">Share</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink className="navbar__nav__link">Hide</NavLink>
+							</NavItem>
+						</Nav>
+						</Collapse>
+					</Navbar>
+					<Navbar dark className="col-6 main__navbar__right d-inline-flex justify-content-between" >
+						<Nav className="navbar__nav caption" navbar>
+							<NavItem>TheCovidSimulator</NavItem>
+						</Nav>
+						<Nav className="navbar__nav right " navbar>
+							<NavItem className=" d-inline-flex justify-content-between">
+								<NavbarText>Stay safe. For more visit&nbsp;</NavbarText>
+								<NavLink href="https://www.countdownkings.com/">CountdownKings.com</NavLink>
+							</NavItem>
+						</Nav>
+					</Navbar>
+				</Navbar>
+
+
+				<article className={`main__left main__left--${this.state.isPaneOpen ? "open" : "closed"}`}>
 					<Button className="col-1 close-pane" onClick={this.toggleTooltip} >{this.state.isPaneOpen ? "<" : ">"} </Button>
 					<Row>
 						<Button 
@@ -127,8 +179,8 @@ export default class HomePage extends React.Component {
 							items={this.sizeQuantities}
 						/>
 					</Row>
-				</aside>
-				<aside className="main__right">
+				</article>
+				<article className="main__right">
 					<canvas 
 						id="canvas"
 						ref={this.canvasRef} 
@@ -136,8 +188,8 @@ export default class HomePage extends React.Component {
 						width={this.canvasWidth} 
 						height={this.canvasHeight}
 					/>
-				</aside>
-			</main>
+				</article>
+			</section>
 		);
 	}
 }

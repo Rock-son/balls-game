@@ -1,16 +1,77 @@
+@import "./helpers/colors.scss";
+
+
 html {
 	overflow: hidden;
 }
-
-
 #canvas {
 	background-color: black;
 	image-rendering: pixelated
 }
+// NAVBAR
 .main {
 	position: absolute;
+	min-height: 100vh;
 	top: 0;
+	right: 0;
 	left: 0;
+	&__navbar {
+		position: absolute;
+		font-family: "Roboto", Arial, sans-serif;
+		z-index: 5;
+		top: 0;
+		right: 0;
+		left: 0;
+		padding: 0;
+		&__left {
+			position: relative;
+			font-size: .9rem;
+			font-weight: 900;
+			line-height: 0;
+		}
+		&__right {
+			position: relative;
+			font-size: 1rem;
+			line-height: 1rem;
+		}
+	}
+
+	& .navbar__nav {
+		color: $grey;
+		font-weight: 900;
+		text-align: left;
+		&__link {
+			padding: 10px;
+			&:hover {
+				color: $white;
+				cursor: pointer;
+			}
+		}
+		&__separator {
+			padding: 10px;
+		}
+		&.caption {
+			color: $white;
+			font-size: 1.1rem;
+			transform: translate(-50%, 50%);
+		}
+		&.right {
+			font-size: .8rem;
+			text-align: right;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+//DEPRECATED
+.main {
 	&__left {
 		position: fixed;
 		z-index: 10;
@@ -52,10 +113,5 @@ html {
 		& .dropdown {
 			padding: 0;
 		}
-	}
-	&__right {
-		position: absolute;
-		z-index: 1;
-		display: inline-block;
 	}
 }
