@@ -43,7 +43,7 @@ html {
 		&__link {
 			padding: 10px;
 			&:hover {
-				color: $white;
+				color: $white !important;
 				cursor: pointer;
 			}
 		}
@@ -58,60 +58,6 @@ html {
 		&.right {
 			font-size: .8rem;
 			text-align: right;
-		}
-	}
-}
-
-
-
-
-
-
-
-
-
-//DEPRECATED
-.main {
-	&__left {
-		position: fixed;
-		z-index: 10;
-		height: 100vh;
-		width: 250px;
-		background-color: rgba(192,192,192, .5);
-		background-color: rgba(59, 59, 59, .5);
-		text-align: left;
-		vertical-align: top;
-		display: inline-block;
-		transition: left .8s ease;
-		&--open {
-			left: 0;
-		}
-		&--closed {
-			left: -230px;
-		}
-		& .close-pane {
-			position: absolute;
-			top: 0;
-			right: 0;
-			height: 100%;
-			padding: 5px;
-			color: lightgray;
-			background-color: rgba(192,192,192, .5);
-			background-color: rgba(129, 129, 129, .5);
-			&:focus, &:active {
-				box-shadow: none;
-				border: none;
-				color: inherit;
-			}
-		}
-		& .btn:not(.close-pane) {
-			margin-top: 1rem;
-			&:disabled {
-				cursor: not-allowed;
-			}
-		}
-		& .dropdown {
-			padding: 0;
 		}
 	}
 }
