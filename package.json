@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "test",
-    "start": "cross-env NODE_ENV=production nodemon bin/www",
-    "start_prod": "cross-env NODE_ENV=production nodemon bin/www"
+    "start": "node bin/www",
+    "dev": "cross-env NODE_ENV=production nodemon bin/www"
   },
   "repository": {
     "type": "git",
