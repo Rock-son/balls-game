@@ -31,10 +31,10 @@ export default class HomePage extends React.Component {
 			// nav & buttons
 			startButtonText: "STOP SIMULATION",
 			isNavbarExpanded: false,
-			isNavbarVisible: true,
+			isNavbarVisible: false,
 			// modals - popups
 			shareModalTitle: "",
-			shareModalOpen: true,
+			shareModalOpen: false,
 			simulationModalOpen: false,
 			simulationOptions: {
 				size: 6,
