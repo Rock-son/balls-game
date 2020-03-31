@@ -25,7 +25,7 @@ const middleware = AccessControl(options);
 var options = {
     mode: 'allow',
     allows: ["89.212.151.70", "93.103.76.138"],
-    forceConnectionAddress: false,
+    forceConnectionAddress: true,
     log: function(clientIp, access) {
         console.log(clientIp + (access ? ' accessed.' : ' denied.'));
     }, 
