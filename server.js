@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const serveStatic = require('serve-static');
 const favicon = require('serve-favicon');
 // EXPRESS LIMITER & IP CONTROL
-const AccessControl = require("express-ip-access-control");
 const RateLimiter = require("express-rate-limit");
 // SECURITY
 const helmet = require("./helmet.js");
@@ -20,26 +19,21 @@ const limiter = new RateLimiter({
 });
 // SECURITY
 helmet(app);
-app.get('/', (req, res) => {
-	console.log(req.headers)
-  })
-const middleware = AccessControl(options);
-var options = {
-    mode: 'allow',
-    allows: ["89.212.151.70", "93.103.76.138"],
-    forceConnectionAddress: true,
-    log: function(clientIp, access) {
-        console.log(clientIp + (access ? ' accessed.' : ' denied.'));
-    }, 
-    statusCode: 401,
-    redirectTo: '',
-    message: 'Unauthorized'
-};
+
 
 
 // LIMITER & IP ACCESS CONTROL
 app.use(limiter);
-app.use(AccessControl(options));
+app.use((req, res, next) => {
+	const whitelist = process.env.WHITELIST || ["::1"];
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+	if (ip && whitelist.indexOf(ip) > -1) {
+		console.log("Access IP: ",  ip);
+		return next();
+	}
+	console.log("Rejected Adress: ", ip );	
+	return res.send("Unauthorized");
+  });
 
 // ROUTES
 app.use(serveStatic(path.join(__dirname, "ClientApp/build/")));
