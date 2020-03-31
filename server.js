@@ -20,8 +20,10 @@ const limiter = new RateLimiter({
 });
 // SECURITY
 helmet(app);
+app.get('/', (req, res) => {
+	console.log(req.headers)
+  })
 const middleware = AccessControl(options);
-
 var options = {
     mode: 'allow',
     allows: ["89.212.151.70", "93.103.76.138"],
