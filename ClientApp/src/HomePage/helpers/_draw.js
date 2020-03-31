@@ -24,7 +24,7 @@ export default function _draw() {
 		const maxHeight = this.canvasHeight - radius * 2.5;
 		for (let i = 0; i < 300; i++) {
 			const mass = 1;
-			color = i === 0 ? "darkred" : "#aaa";
+			color = i === 0 ? "red" : "#aaa";
 			contagious = i === 0 ? 1 : 0;
 			let x = randomIntNumber(radius * 2, maxWidth);
 			let y = randomIntNumber(radius * 2, maxHeight);
