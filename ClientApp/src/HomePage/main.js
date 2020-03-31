@@ -1,7 +1,7 @@
 import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
-import _draw from "./helpers/_draw";
+import _draw from "./classes/_draw";
 import { SimulationModal, NavBar, ShareModal } from "./components";
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -16,9 +16,6 @@ export default class HomePage extends React.Component {
 			// playing choice
 			simulation: true,
 			game: false,
-			// operation
-			speed: 1,
-			density: null,
 			// error handling
 			hasError: false, 
 			error: null,

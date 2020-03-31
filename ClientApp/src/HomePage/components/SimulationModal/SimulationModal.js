@@ -63,7 +63,7 @@ export const SimulationModal = props => {
 								return	<NavLink 
 													key={idx}
 													tabIndex="0" 
-													data-option={`${JSON.stringify({size: speedOption.value})}`}
+													data-option={`${JSON.stringify({speed: speedOption.value})}`}
 													onClick={setSimulationOptions}
 													active={speedOption.value === speed}>
 														{speedOption.type}
