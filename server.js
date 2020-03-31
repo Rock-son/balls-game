@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 	}
 	console.log("Rejected Adress: ", ip );	
 	return res.send("Unauthorized");
-  });
+});
 
 // ROUTES
 app.use(serveStatic(path.join(__dirname, "ClientApp/build/")));
@@ -56,6 +56,6 @@ bodyParser.json({
 	  res.status(204).end()
 });
 
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "ClientApp/build", "index.html")));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "./ClientApp/build", "index.html")));
 
 module.exports = app;
