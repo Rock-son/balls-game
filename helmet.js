@@ -10,13 +10,13 @@ module.exports = function a(app) {
 		directives: {
 			"default-src": 	[ "'self'" ],
 			"script-src": 	[ "'self'" ],
-			"style-src": 	[ "'self'", "https://cdnjs.cloudflare.com", "https://stackpath.bootstrapcdn.com" ],
-			"font-src": 	[ "'self'" , "https://fonts.googleapis.com" ],
+			"style-src": 	[ "'self'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com" ],
+			"font-src": 	[ "'self'" , "https://fonts.gstatic.com" ],
 			"img-src":	    [ "'self'", "data:" ],			
 			"object-src": ["'none'"],
 			"sandbox":	[ "allow-forms", "allow-scripts", "allow-same-origin" ],
 			"report-uri": '/report-violation',
-			"upgradeInsecureRequests": true,
+			"upgradeInsecureRequests": true
 		},
 		// set up a POST route for notifying / logging data to server
 		// "reportOnly=true" - policy will not be enforced
