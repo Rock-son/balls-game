@@ -27,11 +27,11 @@ export default class HomePage extends React.Component {
 			// canvas state
 			canvasAnimating: true,
 			pause: false,
-			stop: true,
+			stop: false,
 			// nav & buttons
 			startButtonText: "STOP SIMULATION",
 			isNavbarExpanded: false,
-			isNavbarVisible: false,
+			isNavbarVisible: true,
 			// modals - popups
 			shareModalTitle: "",
 			shareModalOpen: false,

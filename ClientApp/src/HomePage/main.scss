@@ -40,7 +40,7 @@ html {
 			border-bottom-left-radius: 200px;
 			border-bottom-right-radius: 200px;
 			transform: translate(-70%, 85%);
-			transition: opacity .5s;
+			transition: opacity .3s;
 			&:active, &:focus, &:hover {
 				background-color: $grey;
 				border: none;
