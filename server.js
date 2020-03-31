@@ -5,7 +5,8 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const serveStatic = require('serve-static');
 const favicon = require('serve-favicon');
-// EXPRESS LIMITER
+// EXPRESS LIMITER & IP CONTROL
+const AccessControl = require("express-ip-access-control");
 const RateLimiter = require("express-rate-limit");
 // SECURITY
 const helmet = require("./helmet.js");
@@ -19,9 +20,24 @@ const limiter = new RateLimiter({
 });
 // SECURITY
 helmet(app);
+const middleware = AccessControl(options);
 
-// LIMITER
+var options = {
+    mode: 'allow',
+    allows: [],
+    forceConnectionAddress: false,
+    log: function(clientIp, access) {
+        console.log(clientIp + (access ? ' accessed.' : ' denied.'));
+    }, 
+    statusCode: 401,
+    redirectTo: '',
+    message: 'Unauthorized'
+};
+
+
+// LIMITER & IP ACCESS CONTROL
 app.use(limiter);
+app.use(AccessControl(options));
 
 // ROUTES
 app.use(serveStatic(path.join(__dirname, "ClientApp/build/")));
