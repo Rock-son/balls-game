@@ -151,7 +151,7 @@ export default class HomePage extends React.Component {
 					shareModalTitle={this.state.shareModalTitle}
 				
 				/>
-				<article className="main__right">
+				<article className="main__canvas">
 					<canvas 
 						id="canvas"
 						ref={this.canvasRef} 

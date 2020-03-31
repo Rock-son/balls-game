@@ -13,7 +13,7 @@ export const NavBar = props => {
 				disabled={isNavbarVisible}
 				>
 					<svg height="15" width="20">
-						<path d="M-2 2 l12 12 M10 15 l12 -13 Z" fill="none" strokeWidth="3" stroke="white"/>
+						<path d="M-2 2 l12 12 M10 15 l12 -13 Z" fill="none" strokeWidth="5" stroke="white"/>
 					</svg>
 			</Button>
 			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm">
