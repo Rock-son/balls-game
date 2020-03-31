@@ -1,10 +1,8 @@
 import React from "react";
-import { Row, Navbar, Nav, NavbarToggler,
-			Collapse, NavItem, NavLink, NavbarText } from "reactstrap";
-import { clearDriftless } from 'driftless';
+import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import _draw from "./helpers/_draw";
-import { SimulationModal } from "./components";
+import { SimulationModal, NavBar, ShareModal } from "./components";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
@@ -14,21 +12,28 @@ export default class HomePage extends React.Component {
 		super(props);
 		this.canvasRef = React.createRef();
 
-		this.state = { 
+		this.state = {
+			// playing choice
+			simulation: true,
+			game: false,
 			// operation
 			speed: 1,
 			density: null,
-			// react functionality
+			// error handling
 			hasError: false, 
 			error: null,
-			// deprecated buttons
+			// current time
+			currentTime: new Date().getTime(),
+			// canvas state
 			canvasAnimating: true,
 			pause: false,
-			stop: false,
-			simulationModalOpen: true,
+			stop: true,
+			// nav & buttons
 			startButtonText: "STOP SIMULATION",
-			// nav item buttons
 			isNavBarOpen: false,
+			// modals - popups
+			shareModalOpen: true,
+			simulationModalOpen: false,
 			simulationOptions: {
 				size: 6,
 				speed: 1,
@@ -45,7 +50,10 @@ export default class HomePage extends React.Component {
 		
 		this._draw = _draw.bind(this);
 		this.playPause = this.playPause.bind(this);
+		this.intervalTime = this.intervalTime.bind(this);
 		this.toggleNavItems = this.toggleNavItems.bind(this);
+		this.toggleShareModal = this.toggleShareModal.bind(this);
+		this.copyToClipboard = this.copyToClipboard.bind(this);
 		this.stopStartSimulation = this.stopStartSimulation.bind(this);
 		this.setSimulationOptions = this.setSimulationOptions.bind(this);
 		this.toggleSimulationModal = this.toggleSimulationModal.bind(this);
@@ -58,11 +66,15 @@ export default class HomePage extends React.Component {
 		// logErrorToMyService(error, errorInfo);
 	}
 	componentDidMount() {
+		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 		this._draw();
 	}
 	componentWillUnmount() {
 		clearDriftless(this.interval);
-	}	
+	}
+	intervalTime() {
+		this.setState({currentTime: new Date().getTime()});
+	}
 	// DEPRECATED
 	playPause() {		
 		const { canvasAnimating } = this.state;
@@ -87,57 +99,33 @@ export default class HomePage extends React.Component {
 		const parsedData = JSON.parse(targetData) || {};
 		this.setState(prevState => ({ simulationOptions: {...prevState.simulationOptions, ...parsedData}}));
 	}
+	toggleShareModal() {
+		this.setState(prevState => ({ shareModalOpen: !prevState.shareModalOpen}));
+	}
 	toggleSimulationModal() {
 		this.setState(prevState => ({ simulationModalOpen: !prevState.simulationModalOpen}));
 	}
 	toggleNavItems() {
 		this.setState(prevState => ({ isNavBarOpen: !prevState.isNavBarOpen}));
 	}
+	copyToClipboard() {
+		navigator.permissions.query({name: "clipboard-write"})
+			.then(result => {
+				if (result.state == "granted" || result.state == "prompt") {
+					navigator.clipboard.writeText("https://www.covidsimulator.com");
+				}
+		 	});
+	}
 
 	render() {
 		return (
 			<section className="main">
-				<Navbar dark className="main__navbar d-inline-flex justify-content-between" >
-					<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm">
-						<NavbarToggler onClick={this.toggleNavItems} />
-						<Collapse isOpen={this.state.isNavBarOpen} navbar>
-						<Nav className="navbar__nav left" navbar>
-							<NavItem>
-								<NavLink onClick={this.toggleSimulationModal} className="navbar__nav__link">Simulate</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink className="navbar__nav__link">Play game</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink className="navbar__nav__link">Share</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink className="navbar__nav__link">Hide</NavLink>
-							</NavItem>
-						</Nav>
-						</Collapse>
-					</Navbar>
-					<Navbar dark className="col-6 main__navbar__right d-inline-flex justify-content-between" >
-						<Nav className="navbar__nav caption" navbar>
-							<NavItem>TheCovidSimulator</NavItem>
-						</Nav>
-						<Nav className="navbar__nav right " navbar>
-							<NavItem className=" d-inline-flex justify-content-between">
-								<NavbarText>Stay safe. For more visit&nbsp;</NavbarText>
-								<NavLink href="https://www.countdownkings.com/">CountdownKings.com</NavLink>
-							</NavItem>
-						</Nav>
-					</Navbar>
-				</Navbar>
+				<NavBar 
+					toggleNavItems={this.toggleNavItems} 
+					isNavBarOpen={this.state.isNavBarOpen}
+					toggleSimulationModal={this.toggleSimulationModal}
+					toggleShareModal={this.toggleShareModal}
+				/>
 				<SimulationModal
 					startSimulation={this.stopStartSimulation}
 					isOpen={this.state.simulationModalOpen} 
@@ -145,6 +133,12 @@ export default class HomePage extends React.Component {
 					buttonText={this.state.startButtonText}
 					options={this.state.simulationOptions}
 					setSimulationOptions={this.setSimulationOptions}
+				/>
+				<ShareModal 
+					isOpen={this.state.shareModalOpen}
+					toggle={this.toggleShareModal}
+					copy={this.copyToClipboard}
+				
 				/>
 				<article className="main__right">
 					<canvas 

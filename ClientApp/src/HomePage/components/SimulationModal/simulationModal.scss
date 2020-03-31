@@ -4,66 +4,63 @@
 
 // setting the width of the modal dialog
 @media (min-width: 576px) {
-	.modal-dialog {
-		max-width: 400px !important;
+	.simulator-modal.modal-dialog {
+		max-width: 400px;
 	}	
 }
-.modal-content {
-	font-family: "Roboto", sans-serif;
-	background-color: #150101 !important;
-}
-.modal-header {
-	border-bottom: none !important;
-    padding: 1rem 1rem 0 0 !important;
-	& .close {
-		color: $light-grey !important;
+.simulator-modal {
+	& .modal-content {
+		font-family: "Roboto", sans-serif;
+		background-color: #150101;
 	}
-}
-.modal-body {
-	padding: 1rem 0 !important;
-	& .row {
-		margin-bottom: 10px;
-	}
-}
-.modal-footer {
-	padding: 1.1rem 0 !important;
-	text-align: center !important;
-	justify-content: center !important;
-	color: $white;
-	background-color: #302020 !important;
-	font-weight: 700;
-	cursor: pointer;
-}
-
-.choice {
-	color: $grey;
-	font-weight: 700;
-	font-family: "Roboto", Arial, Helvetica, sans-serif;
-	text-align: center;
-	margin-bottom: 1rem;
-	&__options {
-		font-family: inherit;
-		padding: 0;
-		color: $light-grey !important;
-		justify-content: center;
-		& .nav-link:nth-child(even) {
-			color: $black !important;
-			cursor: text;
+	& .modal-header {
+		border-bottom: none;
+		padding: 1rem 1rem 0 0;
+		& .close {
+			color: $light-grey;
 		}
-		& .nav-link {
-			padding: 0 2px !important;
-			&:hover, &.active {
-				color: $white;
-				cursor: pointer;
-				text-decoration: underline;;
+	}
+	& .modal-body {
+		padding: 1rem 0;
+		& .row {
+			margin-bottom: 10px;
+		}
+	}
+	& .modal-footer {
+		padding: 1.1rem 0;
+		text-align: center;
+		justify-content: center;
+		color: $white;
+		background-color: #302020;
+		font-weight: 700;
+		cursor: pointer;
+	}
+	& .choice {
+		color: $grey;
+		font-weight: 700;
+		font-family: "Roboto", Arial, Helvetica, sans-serif;
+		text-align: center;
+		margin-bottom: 1rem;
+		&__options {
+			font-family: inherit;
+			padding: 0;
+			color: $light-grey;
+			justify-content: center;
+			& .nav-link:nth-child(even) {
+				color: $black;
+				cursor: text;
+			}
+			& .nav-link {
+				padding: 0 2px;
+				&:hover, &.active {
+					color: $white;
+					cursor: pointer;
+					text-decoration: underline;;
+				}
 			}
 		}
 	}
-	&.inline {
-
-	}
 }
-
 .last-row-inline {
 	justify-content: center;
 }

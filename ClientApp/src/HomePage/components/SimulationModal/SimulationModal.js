@@ -93,7 +93,7 @@ export const SimulationModal = props => {
 					</Container>
 				</Row>				
 				<Row className="col-12">
-					<Container className="col-4 choice inline">
+					<Container className="col-4 choice">
 						<div>Show time</div>
 						<Nav className="choice__options">
 							{booleanOptions.map((timeOption, idx) => {
@@ -111,7 +111,7 @@ export const SimulationModal = props => {
 							})}
 						</Nav>
 					</Container>
-					<Container className="col-4 choice inline">
+					<Container className="col-4 choice">
 						<div>Show stats</div>
 						<Nav className="choice__options">
 							{booleanOptions.map((statOption, idx) => {
@@ -129,7 +129,7 @@ export const SimulationModal = props => {
 							})}
 						</Nav>
 					</Container>
-					<Container className="col-4 choice inline">
+					<Container className="col-4 choice">
 						<div>Autorestart</div>
 						<Nav className="choice__options">
 							{booleanOptions.map((restartOption, idx) => {

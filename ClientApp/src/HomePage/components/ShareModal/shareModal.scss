@@ -1,0 +1,53 @@
+@import "../../helpers/colors.scss";
+
+@media (min-width: 576px) {
+	.share-modal.modal-dialog {
+		max-width: 400px;
+	}
+}
+
+.share-modal {
+	& .modal-content {
+		font-family: "Roboto", sans-serif;
+		background-color: $black;
+		text-align: center;
+		justify-content: center;
+	}
+	& .modal-header {
+		padding-bottom: 0;
+		border-bottom: none;
+		& .close {
+			color: #acacad;
+		}
+	}
+	& .modal-body {
+		padding-top: 0;
+		color: $white;
+		& .share {
+			font-weight: 700;
+		}
+		& .btn {
+			margin-top: 1rem;
+			background-color: $dark-grey;
+			border: none;
+			padding: 5px 15px;
+			&:active, &:hover {
+				background-color: $grey;
+			}
+			&:focus {
+				border: none;
+				box-shadow: none;
+			}
+		}
+	}
+	& .modal-footer {
+		color: $grey;
+		font-weight: 700;
+		border-top:	none;
+		& .nav-link {
+			padding: 0;
+			text-align: left;
+			color: $grey;
+		}
+	}
+}
