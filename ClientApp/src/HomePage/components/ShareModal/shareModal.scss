@@ -9,15 +9,28 @@
 .share-modal {
 	& .modal-content {
 		font-family: "Roboto", sans-serif;
-		background-color: $black;
+		background-color: #150101;
 		text-align: center;
 		justify-content: center;
 	}
 	& .modal-header {
 		padding-bottom: 0;
 		border-bottom: none;
+		& .modal-title {
+			position: relative;
+			left: 0;
+			right: 0;
+			margin: auto;
+			color: $white;
+			font-size: 1rem;
+			font-weight: 700;
+			padding: 1rem;
+		}
 		& .close {
 			color: #acacad;
+			margin: -1rem;
+			font-size: 1rem;
+			font-weight: 300;
 		}
 	}
 	& .modal-body {
@@ -48,6 +61,9 @@
 			padding: 0;
 			text-align: left;
 			color: $grey;
+			&:hover, &:active {
+				text-decoration: underline;
+			}
 		}
 	}
 }

@@ -18,6 +18,9 @@
 		padding: 1rem 1rem 0 0;
 		& .close {
 			color: $light-grey;
+			margin: -1rem;
+			font-size: 1rem;
+			font-weight: 300;
 		}
 	}
 	& .modal-body {
@@ -55,7 +58,7 @@
 				&:hover, &.active {
 					color: $white;
 					cursor: pointer;
-					text-decoration: underline;;
+					text-decoration: underline;
 				}
 			}
 		}

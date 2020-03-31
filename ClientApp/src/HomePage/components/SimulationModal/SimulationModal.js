@@ -10,7 +10,7 @@ export const SimulationModal = props => {
 					options: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = props;
    	return (		
 		<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} className="simulator-modal">
-			<ModalHeader toggle={toggle}></ModalHeader>
+			<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
 			<ModalBody>
 				<Row>
 					<Container className="choice">

@@ -23,6 +23,25 @@ html {
 		right: 0;
 		left: 0;
 		padding: 0;
+		transition: transform .5s;
+		&.hidden {
+			transform: translateY(-100%);
+		}
+		&__toggler {
+			position: absolute;
+			opacity: .5;
+			left: 50%;
+			right: 50%;
+			margin: auto;
+			z-index: 25;
+			vertical-align: baseline;
+			transform: translate(-70%, 100%);
+			transition: opacity .5s;
+			&.hidden {
+				opacity: 0;
+				cursor: auto;
+			}
+		}
 		&__left {
 			position: relative;
 			font-size: .9rem;

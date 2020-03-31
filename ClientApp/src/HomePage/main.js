@@ -30,8 +30,10 @@ export default class HomePage extends React.Component {
 			stop: true,
 			// nav & buttons
 			startButtonText: "STOP SIMULATION",
-			isNavBarOpen: false,
+			isNavbarExpanded: false,
+			isNavbarVisible: true,
 			// modals - popups
+			shareModalTitle: "",
 			shareModalOpen: true,
 			simulationModalOpen: false,
 			simulationOptions: {
@@ -51,12 +53,13 @@ export default class HomePage extends React.Component {
 		this._draw = _draw.bind(this);
 		this.playPause = this.playPause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
-		this.toggleNavItems = this.toggleNavItems.bind(this);
 		this.toggleShareModal = this.toggleShareModal.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		this.stopStartSimulation = this.stopStartSimulation.bind(this);
 		this.setSimulationOptions = this.setSimulationOptions.bind(this);
 		this.toggleSimulationModal = this.toggleSimulationModal.bind(this);
+		this.toggleNavbarVisibility = this.toggleNavbarVisibility.bind(this);
+		this.toggleNavbarItemsExpand = this.toggleNavbarItemsExpand.bind(this);
 	}
 	static getDerivedStateFromError(error) {
 		// Update state so the next render will show the fallback UI.
@@ -99,14 +102,19 @@ export default class HomePage extends React.Component {
 		const parsedData = JSON.parse(targetData) || {};
 		this.setState(prevState => ({ simulationOptions: {...prevState.simulationOptions, ...parsedData}}));
 	}
-	toggleShareModal() {
-		this.setState(prevState => ({ shareModalOpen: !prevState.shareModalOpen}));
+	toggleShareModal(e) {
+		const target = e.currentTarget;
+		const game = target.getAttribute("data");
+		this.setState(prevState => ({ shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
 	}
 	toggleSimulationModal() {
 		this.setState(prevState => ({ simulationModalOpen: !prevState.simulationModalOpen}));
 	}
-	toggleNavItems() {
-		this.setState(prevState => ({ isNavBarOpen: !prevState.isNavBarOpen}));
+	toggleNavbarItemsExpand() {
+		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
+	}
+	toggleNavbarVisibility() {
+		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
 	copyToClipboard() {
 		navigator.permissions.query({name: "clipboard-write"})
@@ -121,8 +129,10 @@ export default class HomePage extends React.Component {
 		return (
 			<section className="main">
 				<NavBar 
-					toggleNavItems={this.toggleNavItems} 
-					isNavBarOpen={this.state.isNavBarOpen}
+					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
+					toggleNavbarVisibility={this.toggleNavbarVisibility}
+					isNavbarExpanded={this.state.isNavbarExpanded}
+					isNavbarVisible={this.state.isNavbarVisible}
 					toggleSimulationModal={this.toggleSimulationModal}
 					toggleShareModal={this.toggleShareModal}
 				/>
@@ -138,6 +148,7 @@ export default class HomePage extends React.Component {
 					isOpen={this.state.shareModalOpen}
 					toggle={this.toggleShareModal}
 					copy={this.copyToClipboard}
+					shareModalTitle={this.state.shareModalTitle}
 				
 				/>
 				<article className="main__right">
