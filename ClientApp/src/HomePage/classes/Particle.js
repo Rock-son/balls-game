@@ -1,6 +1,6 @@
 
 export default class Particle {
-	constructor(context, contagious, x, y, radius, color, speed, mass) {
+	constructor(startVals, context, contagious, x, y, radius, color, speed, mass) {
 		this.context = context;
 		this.contagious = contagious;
 		this.x = x;
@@ -14,10 +14,10 @@ export default class Particle {
 		this.color = color;
 		this.mass = mass;
 		
-		this.hitCounter = 0;
+		this.startWidth = startVals.startWidth;
+		this.startHeight = startVals.startHeight;
 
-		this.windowWidth = window.innerWidth;
-		this.windowHeight = window.innerHeight
+		this.hitCounter = 0;
 		this.rotate = this.rotate.bind(this);
 		this.randomInt = this.randomInt.bind(this);
 		this.resolveCollision = this.resolveCollision.bind(this);
@@ -38,24 +38,21 @@ export default class Particle {
 	}
 	
 	update(particles, distance) {
-		//this.text = this.hitCounter;
+		const innerWidth = window.innerWidth;
+		const innerHeight = window.innerHeight;
 		// X BOUNDARIES
-		if ((this.x + this.radius) > this.windowWidth) {
+		if ((this.x + this.radius) > (innerWidth < this.startWidth ? this.startWidth : innerWidth )) {
 			this.velocity.x = -this.velocity.x;
-			this.hitCounter++;
 		}
 		if ((this.x - this.radius) < 0) {
 			this.velocity.x = -this.velocity.x;
-			this.hitCounter++;
 		}
 		// Y BOUNDARIES
-		if ((this.y + this.radius) > this.windowHeight) {
+		if ((this.y + this.radius) > (innerHeight < this.startHeight ? this.startHeight : innerHeight)) {
 			this.velocity.y = -this.velocity.y;
-			this.hitCounter++;
 		}
 		if ((this.y - this.radius) < 0) {
 			this.velocity.y = -this.velocity.y;
-			this.hitCounter++;
 		}
 		// CALCULATE COLLISION DETECTION TO ALL OTHER PARTICLES
 		for (let i = 0; i < particles.length; i++) {
