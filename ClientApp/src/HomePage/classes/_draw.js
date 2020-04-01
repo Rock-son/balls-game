@@ -13,17 +13,20 @@ export default function _draw() {
 	}
 
 	// CANVAS
-	const { 
-		size, 
-		speed, 
-		quantity, 
-		deactivateAfter, 
-		showTime, 
-		showStats, 
-		autorestart 
-	} = this.state.simulationOptions;
+	const {
+		simulationOptions: {
+			size, 
+			speed, 
+			quantity, 
+			deactivateAfter, 
+			showTime, 
+			showStats, 
+			autorestart 
+		}
+	} = this.state;
 	
 	const canvas = this.canvasRef.current;
+	const startingVals = { startWidth: this.startWidth, startHeight: this.startHeight};
 	if (canvas.getContext) {
 		let context = canvas.getContext("2d");
 		const particles = [];
@@ -48,15 +51,19 @@ export default function _draw() {
 					}
 				}
 			}
-			particles.push(new Particle(context, contagious, x, y, radius, color, speed, mass));			
+			particles.push(new Particle(startingVals, context, contagious, x, y, radius, color, speed, mass));			
 		}
 
 		// SIMULATION
 		if (this.state.simulation) {
 			this.interval = setDriftlessInterval(
-				() => {			
+				() => {
+				const innerWidth = window.innerWidth;
+				const innerHeight = window.innerHeight;
+				const currentCanvasWidth = innerWidth < this.startWidth ? this.startWidth : innerWidth;
+				const currentCanvasHeight = innerHeight < this.startHeight ? this.startHeight : innerHeight;
 				if (!this.state.pause && !this.state.stop) {
-					context.clearRect(0,0, window.innerWidth, window.innerHeight)			
+					context.clearRect(0,0, currentCanvasWidth, currentCanvasHeight)			
 					particles.forEach(particle => {
 						particle.draw();
 						particle.update(particles, distance);
@@ -64,7 +71,7 @@ export default function _draw() {
 				} else if (this.state.pause && !this.state.stop) {
 					return;
 				} else {
-					context.clearRect(0,0, window.innerWidth, window.innerHeight)
+					context.clearRect(0,0, currentCanvasWidth, currentCanvasHeight)
 					context = null;				
 					return clearDriftless(this.interval);
 				}
