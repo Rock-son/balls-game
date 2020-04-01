@@ -1,6 +1,6 @@
 
 export default class Particle {
-	constructor(context, contagious, x, y, radius, color, speed, mass) {
+	constructor(startVals, context, contagious, x, y, radius, color, speed, mass) {
 		this.context = context;
 		this.contagious = contagious;
 		this.x = x;
@@ -13,11 +13,11 @@ export default class Particle {
 		this.radius = radius;
 		this.color = color;
 		this.mass = mass;
-		
-		this.hitCounter = 0;
 
-		this.windowWidth = window.innerWidth;
-		this.windowHeight = window.innerHeight
+		this.startWidth = startVals.startWidth;
+		this.startHeight = startVals.startHeight;
+
+		this.hitCounter = 0;
 		this.rotate = this.rotate.bind(this);
 		this.randomInt = this.randomInt.bind(this);
 		this.resolveCollision = this.resolveCollision.bind(this);
@@ -36,33 +36,30 @@ export default class Particle {
 		this.context.fill();
 		this.context.closePath();
 	}
-	
+
 	update(particles, distance) {
-		//this.text = this.hitCounter;
+		const innerWidth = window.innerWidth;
+		const innerHeight = window.innerHeight;
 		// X BOUNDARIES
-		if ((this.x + this.radius) > this.windowWidth) {
+		if ((this.x + this.radius) > (innerWidth < this.startWidth ? this.startWidth : innerWidth )) {
 			this.velocity.x = -this.velocity.x;
-			this.hitCounter++;
 		}
 		if ((this.x - this.radius) < 0) {
 			this.velocity.x = -this.velocity.x;
-			this.hitCounter++;
 		}
 		// Y BOUNDARIES
-		if ((this.y + this.radius) > this.windowHeight) {
+		if ((this.y + this.radius) > (innerHeight < this.startHeight ? this.startHeight : innerHeight)) {
 			this.velocity.y = -this.velocity.y;
-			this.hitCounter++;
 		}
 		if ((this.y - this.radius) < 0) {
 			this.velocity.y = -this.velocity.y;
-			this.hitCounter++;
 		}
 		// CALCULATE COLLISION DETECTION TO ALL OTHER PARTICLES
 		for (let i = 0; i < particles.length; i++) {
 			if (this === particles[i]) {
 				continue;
 			}
-			
+
 			if ((distance(this.x, this.y, particles[i].x, particles[i].y) - (this.radius + particles[i].radius)) < 0) {
 				const particle = particles[i];
 				if (particle.contagious) {
@@ -94,10 +91,10 @@ export default class Particle {
 		const rotatedVelocities = {
 			x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
 			y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
-		};	
+		};
 		return rotatedVelocities;
 	}
-	
+
 	/**
 	 * Swaps out two colliding particles' x and y velocities after running through
 	 * an elastic collision reaction equation
@@ -106,40 +103,42 @@ export default class Particle {
 	 * @param  Object | otherParticle | A particle object with x and y coordinates, plus velocity
 	 * @return Null | Does not return a value
 	 */
-	
+
 	resolveCollision(particle, otherParticle) {
 		const xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
 		const yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
-	
+
 		const xDist = otherParticle.x - particle.x;
 		const yDist = otherParticle.y - particle.y;
-	
+
 		// Prevent accidental overlap of particles
 		if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
-	
+
 			// Grab angle between the two colliding particles
 			const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
-	
+
 			// Store mass in var for better readability in collision equation
 			const m1 = particle.mass;
 			const m2 = otherParticle.mass;
-			
+
 			// Velocity before equation
 			const u1 = this.rotate(particle.velocity, angle);
 			const u2 = this.rotate(otherParticle.velocity, angle);
-	
+
 			// Velocity after 1d collision equation
-			const v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
-			const v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
-			
+			// (mass) const v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
+			// (mass) const v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
+			const v1 = { x: u2.x, y: u1.y };
+			const v2 = { x: u1.x, y: u2.y };
+
 			// Final velocity after rotating axis back to original location
 			const vFinal1 = this.rotate(v1, -angle);
 			const vFinal2 = this.rotate(v2, -angle);
-	
+
 			// Swap particle velocities for realistic bounce effect
 			particle.velocity.x = vFinal1.x;
 			particle.velocity.y = vFinal1.y;
-	
+
 			otherParticle.velocity.x = vFinal2.x;
 			otherParticle.velocity.y = vFinal2.y;
 		}

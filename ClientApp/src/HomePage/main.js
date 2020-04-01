@@ -44,12 +44,15 @@ export default class HomePage extends React.Component {
 			}
 		}
 		this.interval = null;
+		this.startWidth = window.innerWidth;
+		this.startHeight = window.innerHeight;
 		this.canvasWidth = window.innerWidth;
 		this.canvasHeight = window.innerHeight;
 		
 		this._draw = _draw.bind(this);
 		this.playPause = this.playPause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
+		this.handleResize = this.handleResize.bind(this);
 		this.toggleShareModal = this.toggleShareModal.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		this.stopStartSimulation = this.stopStartSimulation.bind(this);
@@ -66,6 +69,7 @@ export default class HomePage extends React.Component {
 		// logErrorToMyService(error, errorInfo);
 	}
 	componentDidMount() {
+		window.addEventListener('resize', this.handleResize)
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 		this._draw();
 	}
@@ -74,6 +78,10 @@ export default class HomePage extends React.Component {
 	}
 	intervalTime() {
 		this.setState({currentTime: new Date().getTime()});
+	}
+	handleResize(e) {
+		this.canvasWidth = window.innerWidth < this.startingWidth ? this.startingWidth : window.innerWidth;
+		this.canvasHeight = window.innerHeight < this.startingHeight ? this.startingHeight : window.innerHeight;
 	}
 	// DEPRECATED
 	playPause() {		
@@ -124,7 +132,7 @@ export default class HomePage extends React.Component {
 
 	render() {
 		return (
-			<section className="main">
+			<section onClick={this.test} className="main">
 				<NavBar 
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
