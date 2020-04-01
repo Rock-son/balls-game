@@ -150,6 +150,7 @@ export default class HomePage extends React.Component {
 				/>
 				<article className="main__canvas">
 					<canvas 
+						onClick={this.toggleSimulationModal}
 						id="canvas"
 						ref={this.canvasRef} 
 						className="canvas" 
