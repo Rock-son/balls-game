@@ -28,7 +28,11 @@ export default function _draw() {
 	const canvas = this.canvasRef.current;
 	if (canvas.getContext) {
 		let context = canvas.getContext('2d', { alpha: false });
+		context.mozImageSmoothingEnabled = true;
+		context.webkitImageSmoothingEnabled = true;
 		context.imageSmoothingEnabled = true;
+		context.mozImageSmoothingQuality = "low";
+		context.webkitImageSmoothingQuality = "low";
 		context.imageSmoothingQuality = "low";
 		const particles = [];
 		let color, contagious;
