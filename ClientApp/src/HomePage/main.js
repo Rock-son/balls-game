@@ -162,7 +162,7 @@ export default class HomePage extends React.Component {
 						className="canvas" 
 						width={this.canvasWidth} 
 						height={this.canvasHeight}
-					/>
+					>Sorry, your browser doesn't support HTML5 </canvas>
 				</article>
 			</section>
 		);

@@ -26,7 +26,6 @@ export default class Particle {
 
 	draw() {
 		this.context.beginPath();
-
 		this.context.linewidth = 1;
 		this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
 		this.context.fillStyle = this.color;
@@ -35,17 +34,15 @@ export default class Particle {
 	}
 
 	update(particles, distance, canvasWidth, canvasHeight) {
-		const innerWidth = window.innerWidth;
-		const innerHeight = window.innerHeight;
 		// X BOUNDARIES
-		if ((this.x + this.radius) > (innerWidth < canvasWidth ? canvasWidth : innerWidth )) {
+		if ((this.x + this.radius) > (window.innerWidth < canvasWidth ? canvasWidth : window.innerWidth )) {
 			this.velocity.x = -this.velocity.x;
 		}
 		if ((this.x - this.radius) < 0) {
 			this.velocity.x = -this.velocity.x;
 		}
 		// Y BOUNDARIES
-		if ((this.y + this.radius) > (innerHeight < canvasHeight ? canvasHeight : innerHeight)) {
+		if ((this.y + this.radius) > (window.innerHeight < canvasHeight ? canvasHeight : window.innerHeight)) {
 			this.velocity.y = -this.velocity.y;
 		}
 		if ((this.y - this.radius) < 0) {
@@ -70,9 +67,9 @@ export default class Particle {
 			}
 		}
 
-		this.draw(this.context);
-		this.x += this.velocity.x > 2 ? 2 : this.velocity.x;
-		this.y += this.velocity.y > 2 ? 2 : this.velocity.y;
+		this.draw();
+		this.x += this.velocity.x;
+		this.y += this.velocity.y;
 
 	}
 	/**
