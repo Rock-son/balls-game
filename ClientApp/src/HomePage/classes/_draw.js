@@ -14,7 +14,7 @@ export default function _draw() {
 
 	// CANVAS
 	const {
-		simulationOptions: {
+		simulationSettings: {
 			size, 
 			speed, 
 			quantity, 
@@ -26,9 +26,10 @@ export default function _draw() {
 	} = this.state;
 	
 	const canvas = this.canvasRef.current;
-	const startingVals = { startWidth: this.startWidth, startHeight: this.startHeight};
 	if (canvas.getContext) {
-		let context = canvas.getContext("2d");
+		let context = canvas.getContext('2d', { alpha: false });
+		context.imageSmoothingEnabled = true;
+		context.imageSmoothingQuality = "low";
 		const particles = [];
 		let color, contagious;
 		const radius = size;
@@ -51,7 +52,7 @@ export default function _draw() {
 					}
 				}
 			}
-			particles.push(new Particle(startingVals, context, contagious, x, y, radius, color, speed, mass));			
+			particles.push(new Particle(context, contagious, x, y, radius, color, speed, mass));			
 		}
 
 		// SIMULATION
@@ -60,13 +61,13 @@ export default function _draw() {
 				() => {
 				const innerWidth = window.innerWidth;
 				const innerHeight = window.innerHeight;
-				const currentCanvasWidth = innerWidth < this.startWidth ? this.startWidth : innerWidth;
-				const currentCanvasHeight = innerHeight < this.startHeight ? this.startHeight : innerHeight;
+				const currentCanvasWidth = innerWidth < this.canvasWidth ? this.canvasWidth : innerWidth;
+				const currentCanvasHeight = innerHeight < this.canvasHeight ? this.canvasHeight : innerHeight;
 				if (!this.state.pause && !this.state.stop) {
 					context.clearRect(0,0, currentCanvasWidth, currentCanvasHeight)			
 					particles.forEach(particle => {
 						particle.draw();
-						particle.update(particles, distance);
+						particle.update(particles, distance, currentCanvasWidth, currentCanvasHeight);
 					});
 				} else if (this.state.pause && !this.state.stop) {
 					return;
