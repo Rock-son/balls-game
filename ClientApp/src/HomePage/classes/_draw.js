@@ -1,7 +1,5 @@
 import { update } from "./update";
 import * as PIXI from "pixi.js";
-import { setDriftlessInterval, clearDriftless } from 'driftless';
-import { text } from "body-parser";
 
 export default function _draw() {
 	// UTILITIES
@@ -17,18 +15,20 @@ export default function _draw() {
 	// CANVAS
 	const {
 		simulationSettings: {
-			size, 
-			speed, 
-			quantity, 
-			deactivateAfter, 
-			showTime, 
-			showStats, 
-			autorestart 
+			size,
+			speed,
+			quantity,
+			deactivateAfter,
+			showTime,
+			showStats,
+			autorestart
 		}
 	} = this.state;
-	
-	const canvas = this.canvasRef.current;	
-	const app = new PIXI.Application({		
+
+
+	const canvas = this.canvasRef.current;
+	const app = new PIXI.Application({
+		autoresize: true,
 		backgroundColor: 0x191919,
 		view: canvas,
 		width: this.canvasWidth,
@@ -47,11 +47,24 @@ export default function _draw() {
 		.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 		.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 		.on("error", err => console.error("load error", err))
-		.on("resize", () => console.warning("this is actualy working? NOT"))
 		.load(handleOnImageLoaded.bind(this));
 
+	// Resize function window
+	const resize = () => {
+		// Resize the renderer
+		app.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
+							window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
 
-	let color, contagion, img, texture;
+	// You can use the 'screen' property as the renderer visible
+	// area, this is more useful than view.width/height because
+	// it handles resolution
+	//rect.position.set(app.screen.width, app.screen.height);
+	}
+	// Listen for window resize events
+	window.addEventListener('resize', resize);
+
+
+	let color, contagion, img;
 	const images = [];
 	const radius = size;
 	const nrImages = +quantity;
@@ -87,20 +100,19 @@ export default function _draw() {
 			img.myID = i;
 			img.contagion = contagion;
 			img.radius = radius;
-			img.velocity = { 
-				x: (Math.random() - .5) * speed, 
-				y: (Math.random() - .5) * speed 
+			img.myContext = this;
+			img.velocity = {
+				x: (Math.random() - .5) * speed,
+				y: (Math.random() - .5) * speed
 			};
 			images.push(img);
-			console.warn("img.texture", img);
 		}
-		
+
 		const len = images.length;
-		const self = this;
 		// draw and animate
 		for (let index = 0; index < len; index++) {
 			container.addChild(images[index]);
-			app.ticker.add(update.bind(this, images[index], images, distance, loader, self.canvasWidth, self.canvasHeight));
+			app.ticker.add(update.bind(null, images[index], images, distance, loader));
 		}
 	}
 }

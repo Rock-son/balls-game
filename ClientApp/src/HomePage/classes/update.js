@@ -1,13 +1,13 @@
 export const update = (img, images, distance, loader, canvasWidth, canvasHeight) => {
 	// X BOUNDARIES
-	if ((img.x + img.radius) > (window.innerWidth < canvasWidth ? canvasWidth : window.innerWidth )) {
+	if ((img.x + img.radius) > (window.innerWidth < img.myContext.canvasWidth ? img.myContext.canvasWidth : window.innerWidth )) {
 		img.velocity.x = -img.velocity.x;
 	}
 	if ((img.x - img.radius) < 0) {
 		img.velocity.x = -img.velocity.x;
 	}
 	// Y BOUNDARIES
-	if ((img.y + img.radius) > (window.innerHeight < canvasHeight ? canvasHeight : window.innerHeight)) {
+	if ((img.y + img.radius) > (window.innerHeight < img.myContext.canvasHeight ? img.myContext.canvasHeight : window.innerHeight)) { // resize only up
 		img.velocity.y = -img.velocity.y;
 	}
 	if ((img.y - img.radius) < 0) {
@@ -15,11 +15,11 @@ export const update = (img, images, distance, loader, canvasWidth, canvasHeight)
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = 0; i < images.length; i++) {
-		if (img.myID === images[i].myID) {		
+		if (img.myID === images[i].myID) {
 			continue;
 		}
 
-		if ((distance(img.x, img.y, images[i].x, images[i].y) - (img.radius + images[i].radius)) < 0) {			
+		if ((distance(img.x, img.y, images[i].x, images[i].y) - (img.radius + images[i].radius)) < 0) {
 			const image = images[i];
 			if (image.contagion) {
 				img.contagion = 1;
