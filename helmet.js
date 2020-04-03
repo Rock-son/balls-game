@@ -8,14 +8,14 @@ module.exports = function a(app) {
 	}));
 	app.use(helmet.contentSecurityPolicy({
 		directives: {
-			"default-src": 	[ "'self'" ],
-			"script-src": 	[ "'self'" ],
-			"style-src": 	[ "'self'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com" ],
-			"font-src": 	[ "'self'" , "https://fonts.gstatic.com" ],
-			"img-src":	    [ "'self'", "data:" ],			
-			"object-src": ["'none'"],
-			"sandbox":	[ "allow-forms", "allow-scripts", "allow-same-origin" ],
-			"report-uri": '/report-violation',
+			"defaultSrc": 	[ "'self'" ],
+			"scriptSrc": 	[ "'self'", "'unsafe-eval'"],
+			"styleSrc": 	[ "'self'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com" ],
+			"fontSrc": 		[ "'self'" , "https://fonts.gstatic.com" ],
+			"imgSrc":	    [ "'self'", "data:" ],			
+			"objectSrc": 	[ "'none'"],
+			"sandbox":		[ "allow-forms", "allow-scripts", "allow-same-origin" ],
+			"reportUri": 	'/report-violation',
 			"upgradeInsecureRequests": true
 		},
 		// set up a POST route for notifying / logging data to server
