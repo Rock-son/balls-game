@@ -1,6 +1,5 @@
 import { update } from "./update";
-import * as PIXI from "@pixi/core";
-import { install } from "@pixi/unsafe-eval";
+import * as PIXI from "pixi.js";
 
 export default function _draw() {
 	// UTILITIES
@@ -26,7 +25,7 @@ export default function _draw() {
 		}
 	} = this.state;
 
-	install(PIXI);
+
 	const canvas = this.canvasRef.current;
 	const app = new PIXI.Application({
 		autoresize: true,
