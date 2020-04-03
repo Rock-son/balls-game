@@ -6,8 +6,8 @@ import { sizeOptions, quantityOptions, speedOptions, deactivateOptions, booleanO
 import "./simulationModal.scss";
 
 export const SimulationModal = props => {
-	const { isOpen, toggle, startSimulation, buttonText, setSimulationOptions, 
-					options: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = props;
+	const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, 
+					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = props;
    	return (		
 		<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} className="simulator-modal">
 			<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
@@ -24,7 +24,7 @@ export const SimulationModal = props => {
 													key={idx}
 													tabIndex="0"
 													data-option={`${JSON.stringify({size: sizeOption.value})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={sizeOption.value === size}>
 														{sizeOption.type}
 												</NavLink>;
@@ -44,7 +44,7 @@ export const SimulationModal = props => {
 													key={idx}
 													tabIndex="0"
 													data-option={`${JSON.stringify({quantity: quantityOption})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={quantityOption === quantity}>
 														{quantityOption}
 												</NavLink>;
@@ -64,7 +64,7 @@ export const SimulationModal = props => {
 													key={idx}
 													tabIndex="0" 
 													data-option={`${JSON.stringify({speed: speedOption.value})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={speedOption.value === speed}>
 														{speedOption.type}
 												</NavLink>;
@@ -84,7 +84,7 @@ export const SimulationModal = props => {
 													key={idx}
 													tabIndex="0" 
 													data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={deactivateOption === deactivateAfter}>
 														{deactivateOption === "0" ? "no" : `${deactivateOption}s`}
 												</NavLink>;
@@ -104,7 +104,7 @@ export const SimulationModal = props => {
 													key={idx}
 													tabIndex="0" 
 													data-option={`${JSON.stringify({showTime: timeOption.value})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={timeOption.value === showTime}>
 														{timeOption.type}
 												</NavLink>;
@@ -122,7 +122,7 @@ export const SimulationModal = props => {
 													key={idx} 
 													tabIndex="0" 
 													data-option={`${JSON.stringify({showStats: statOption.value})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={statOption.value === showStats}>
 														{statOption.type}
 												</NavLink>;
@@ -140,7 +140,7 @@ export const SimulationModal = props => {
 													key={idx}
 													tabIndex="0" 
 													data-option={`${JSON.stringify({autorestart: restartOption.value})}`}
-													onClick={setSimulationOptions}
+													onClick={setSimulationSettings}
 													active={restartOption.value === autorestart}>
 														{restartOption.type}
 												</NavLink>;
