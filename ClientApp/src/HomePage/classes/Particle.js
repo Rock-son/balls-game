@@ -1,6 +1,6 @@
 
 export default class Particle {
-	constructor(startVals, context, contagious, x, y, radius, color, speed, mass) {
+	constructor(context, contagious, x, y, radius, color, speed, mass) {
 		this.context = context;
 		this.contagious = contagious;
 		this.x = x;
@@ -14,9 +14,6 @@ export default class Particle {
 		this.color = color;
 		this.mass = mass;
 
-		this.startWidth = startVals.startWidth;
-		this.startHeight = startVals.startHeight;
-
 		this.hitCounter = 0;
 		this.rotate = this.rotate.bind(this);
 		this.randomInt = this.randomInt.bind(this);
@@ -29,7 +26,6 @@ export default class Particle {
 
 	draw() {
 		this.context.beginPath();
-
 		this.context.linewidth = 1;
 		this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
 		this.context.fillStyle = this.color;
@@ -37,18 +33,16 @@ export default class Particle {
 		this.context.closePath();
 	}
 
-	update(particles, distance) {
-		const innerWidth = window.innerWidth;
-		const innerHeight = window.innerHeight;
+	update(particles, distance, canvasWidth, canvasHeight) {
 		// X BOUNDARIES
-		if ((this.x + this.radius) > (innerWidth < this.startWidth ? this.startWidth : innerWidth )) {
+		if ((this.x + this.radius) > (window.innerWidth < canvasWidth ? canvasWidth : window.innerWidth )) {
 			this.velocity.x = -this.velocity.x;
 		}
 		if ((this.x - this.radius) < 0) {
 			this.velocity.x = -this.velocity.x;
 		}
 		// Y BOUNDARIES
-		if ((this.y + this.radius) > (innerHeight < this.startHeight ? this.startHeight : innerHeight)) {
+		if ((this.y + this.radius) > (window.innerHeight < canvasHeight ? canvasHeight : window.innerHeight)) {
 			this.velocity.y = -this.velocity.y;
 		}
 		if ((this.y - this.radius) < 0) {
@@ -73,9 +67,9 @@ export default class Particle {
 			}
 		}
 
-		this.draw(this.context);
-		this.x += this.velocity.x > 2 ? 2 : this.velocity.x;
-		this.y += this.velocity.y > 2 ? 2 : this.velocity.y;
+		this.draw();
+		this.x += this.velocity.x;
+		this.y += this.velocity.y;
 
 	}
 	/**
