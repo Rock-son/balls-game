@@ -37,13 +37,8 @@ export default function _draw() {
 		autoDensity: true
 	});
 	// for many animating objects
-	const container = new PIXI.ParticleContainer();
-	app.stage.addChild(container);
-
 	const loader = PIXI.Loader.shared;
-
-	loader.add("ball-red.png")
-		.add("ball-white.png")
+	loader.add("sheet", "myBalls.json")
 		.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 		.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 		.on("error", err => console.error("load error", err))
@@ -64,24 +59,24 @@ export default function _draw() {
 	window.addEventListener('resize', resize);
 
 
-	let color, contagion, img;
-	const images = [];
+	let contagion, sprite;
+	const spriteArr = [];
 	const radius = size;
 	const nrImages = +quantity;
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
 
 	function handleOnImageLoaded() {
-		const whiteBall = loader.resources["ball-white.png"].texture;
-		const redBall = loader.resources["ball-red.png"].texture;
+		const whiteBall = loader.resources.sheet.textures["ball-white.png"];
+		const redBall = loader.resources.sheet.textures["ball-red.png"];
 		for (let i = 0; i < nrImages; i++) {
 
 			contagion = i === 0 ? 1 : 0;
 			let x = randomIntNumber(radius * 2, maxWidth);
 			let y = randomIntNumber(radius * 2, maxHeight);
 			if (i !== 0) {
-				for (let j = 0; j < images.length; j++) {
-					if ((distance(x, y, images[j].x, images[j].y) - (radius + images[j].radius)) < 0) {
+				for (let j = 0; j < spriteArr.length; j++) {
+					if ((distance(x, y, spriteArr[j].x, spriteArr[j].y) - (radius + spriteArr[j].radius)) < 0) {
 						x = randomIntNumber(radius * 2, maxWidth);
 						y = randomIntNumber(radius * 2, maxHeight);
 						// set new x, y recursively
@@ -89,30 +84,33 @@ export default function _draw() {
 					}
 				}
 			}
-			const index = i;
-			img = new PIXI.Sprite(whiteBall);	// texture
-			img.x = x;
-			img.y = y;
-			img.scale.x = .1;
-			img.scale.y = .1;
-			img.anchor.x = .5;
-			img.anchor.y = .5;
-			img.myID = i;
-			img.contagion = contagion;
-			img.radius = radius;
-			img.myContext = this;
-			img.velocity = {
-				x: (Math.random() - .5) * speed,
-				y: (Math.random() - .5) * speed
+			if (contagion) {				
+				sprite = new PIXI.Sprite(redBall);
+			} else {
+				sprite = new PIXI.Sprite(whiteBall);
+			}
+			sprite.x = x;
+			sprite.y = y;
+			sprite.width = size * 2;
+			sprite.height = size * 2;
+			sprite.anchor.x = .5;
+			sprite.anchor.y = .5;
+			sprite.myID = i;
+			sprite.contagion = contagion;
+			sprite.radius = radius;
+			sprite.reactContext = this;
+			sprite.velocity = { 
+				x: (Math.random() - .5) * speed, 
+				y: (Math.random() - .5) * speed 
 			};
-			images.push(img);
+			spriteArr.push(sprite);
 		}
 
-		const len = images.length;
+		const len = spriteArr.length;
 		// draw and animate
 		for (let index = 0; index < len; index++) {
-			container.addChild(images[index]);
-			app.ticker.add(update.bind(null, images[index], images, distance, loader));
+			app.stage.addChild(spriteArr[index]);
+			app.ticker.add(update.bind(null, spriteArr[index], spriteArr, distance, loader));
 		}
 	}
 }

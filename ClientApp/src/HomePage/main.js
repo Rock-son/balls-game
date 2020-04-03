@@ -35,7 +35,7 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			simulationSettings: {
 				size: 6,
-				speed: 1,
+				speed: 2,
 				quantity: "250",
 				deactivateAfter: "0",
 				showTime: true,
@@ -111,7 +111,7 @@ export default class HomePage extends React.Component {
 		this.setState(prevState => ({ shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
 	}
 	toggleSimulationDialog() {
-		this.setState(prevState => ({ simulationSettingsOpen: !prevState.simulationSettingsOpen}));
+		this.setState(prevState => ({ simulationSettingsOpen: !prevState.simulationSettingsOpen, pause: !prevState.pause }));
 	}
 	toggleNavbarItemsExpand() {
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));

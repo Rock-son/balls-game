@@ -1,39 +1,42 @@
-export const update = (img, images, distance, loader, canvasWidth, canvasHeight) => {
-	// X BOUNDARIES
-	if ((img.x + img.radius) > (window.innerWidth < img.myContext.canvasWidth ? img.myContext.canvasWidth : window.innerWidth )) {
-		img.velocity.x = -img.velocity.x;
+export const update = (sprite, spriteArr, distance, loader) => {
+	if (sprite.reactContext.state.pause) {
+		return;
 	}
-	if ((img.x - img.radius) < 0) {
-		img.velocity.x = -img.velocity.x;
+	// X BOUNDARIES
+	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
+		sprite.velocity.x = -sprite.velocity.x;
+	}
+	if ((sprite.x - sprite.radius) < 0) {
+		sprite.velocity.x = -sprite.velocity.x;
 	}
 	// Y BOUNDARIES
-	if ((img.y + img.radius) > (window.innerHeight < img.myContext.canvasHeight ? img.myContext.canvasHeight : window.innerHeight)) { // resize only up
-		img.velocity.y = -img.velocity.y;
+	if ((sprite.y + sprite.radius) > (window.innerHeight < sprite.reactContext.canvasHeight ? sprite.reactContext.canvasHeight : window.innerHeight)) { // resize only up
+		sprite.velocity.y = -sprite.velocity.y;
 	}
-	if ((img.y - img.radius) < 0) {
-		img.velocity.y = -img.velocity.y;
+	if ((sprite.y - sprite.radius) < 0) {
+		sprite.velocity.y = -sprite.velocity.y;
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
-	for (let i = 0; i < images.length; i++) {
-		if (img.myID === images[i].myID) {
+	for (let i = 0; i < spriteArr.length; i++) {
+		if (sprite.myID === spriteArr[i].myID) {
 			continue;
 		}
 
-		if ((distance(img.x, img.y, images[i].x, images[i].y) - (img.radius + images[i].radius)) < 0) {
-			const image = images[i];
-			if (image.contagion) {
-				img.contagion = 1;
-				img.texture = loader.resources["ball-red.png"].texture;
-			} else if (img.contagion) {
-				image.contagion = 1;
-				image.texture = loader.resources["ball-white.png"].texture;
+		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius * 2)) < 0) {			
+			const otherImage = spriteArr[i];
+			if (otherImage.contagion) {
+				sprite.contagion = 1;
+				sprite.texture = loader.resources.sheet.textures["ball-red.png"];
+			} else if (sprite.contagion) {
+				otherImage.contagion = 1;
+				otherImage.texture = loader.resources.sheet.textures["ball-red.png"];
 			}
-			resolveCollision(img, image);
+			resolveCollision(sprite, otherImage);
 		}
 	}
 
-	img.x += img.velocity.x;
-	img.y += img.velocity.y;
+	sprite.x += sprite.velocity.x;
+	sprite.y += sprite.velocity.y;
 
 }
 /**
@@ -54,7 +57,7 @@ function rotate(velocity, angle) {
 }
 
 /**
- * Swaps out two colliding images' x and y velocities after running through
+ * Swaps out two colliding particles' x and y velocities after running through
  * an elastic collision reaction equation
  *
  * @param  Object | particle      | A particle object with x and y coordinates, plus velocity
