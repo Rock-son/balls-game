@@ -63,7 +63,6 @@ export default function _draw() {
 		const redBall = loader.resources["ball-red.png"].texture;
 		for (let i = 0; i < nrImages; i++) {
 
-			texture = i === 0 ? redBall : whiteBall;
 			contagion = i === 0 ? 1 : 0;
 			let x = randomIntNumber(radius * 2, maxWidth);
 			let y = randomIntNumber(radius * 2, maxHeight);
@@ -77,7 +76,8 @@ export default function _draw() {
 					}
 				}
 			}
-			img = new PIXI.Sprite(texture);
+			const index = i;
+			img = new PIXI.Sprite(whiteBall);	// texture
 			img.x = x;
 			img.y = y;
 			img.scale.x = .1;
@@ -92,7 +92,9 @@ export default function _draw() {
 				y: (Math.random() - .5) * speed 
 			};
 			images.push(img);
+			console.warn("img.texture", img);
 		}
+		
 		const len = images.length;
 		const self = this;
 		// draw and animate

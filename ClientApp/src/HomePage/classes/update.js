@@ -15,8 +15,7 @@ export const update = (img, images, distance, loader, canvasWidth, canvasHeight)
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = 0; i < images.length; i++) {
-		if (img.myID === images[i].myID) {
-			i === 0 && console.log("OK");			
+		if (img.myID === images[i].myID) {		
 			continue;
 		}
 
