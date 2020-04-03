@@ -49,7 +49,7 @@ bodyParser.json({
 	}),
 	(req, res) => {
     if (req.body) {
-		console.log('csp violation: ', req.body, process.env.INLINE_RUNTIME_CHUNK)
+		console.log('csp violation: ', req.body)
 	  } else {
 		console.log('csp violation: no data received!')
 	  }
