@@ -1,4 +1,4 @@
-export const update = (img, images, distance, loader, canvasWidth, canvasHeight) => {
+export const update = (img, images, distance, loader) => {
 	// X BOUNDARIES
 	if ((img.x + img.radius) > (window.innerWidth < img.myContext.canvasWidth ? img.myContext.canvasWidth : window.innerWidth )) {
 		img.velocity.x = -img.velocity.x;
