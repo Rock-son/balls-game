@@ -39,6 +39,10 @@
 		& .share {
 			font-weight: 700;
 		}
+		& .copied__link {
+			margin-top: 1rem;
+			padding: 5px 15px;
+		}
 		& .btn {
 			margin-top: 1rem;
 			background-color: $dark-grey;

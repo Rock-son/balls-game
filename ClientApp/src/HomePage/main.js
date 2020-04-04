@@ -30,6 +30,7 @@ export default class HomePage extends React.Component {
 			stop: false,
 			// nav & buttons
 			startButtonText: "STOP SIMULATION",
+			isCopied: false,
 			isNavbarExpanded: false,
 			isNavbarVisible: true,
 			// modals - popups
@@ -117,8 +118,11 @@ export default class HomePage extends React.Component {
 	toggleShareModal(e) {
 		this.togglePause();
 		const target = e.currentTarget;
-		const game = target.getAttribute("data");
-		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
+		const isGame = target.getAttribute("data");
+		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen, shareModalTitle: isGame ? "GAME COMING SOON" : ""}));
+		setTimeout(() => {
+			this.setState({ isCopied: false });
+		}, 1000);
 	}
 	toggleSimulationDialog() {
 		// unPause if previous state was pause, etc.
@@ -138,6 +142,7 @@ export default class HomePage extends React.Component {
 			.then(result => {
 				if (result.state == "granted" || result.state == "prompt") {
 					navigator.clipboard.writeText("https://www.covidsimulator.com");
+					this.setState({ isCopied: true });
 				}
 		 	});
 	}
@@ -165,6 +170,7 @@ export default class HomePage extends React.Component {
 					isOpen={this.state.shareModalOpen}
 					toggle={this.toggleShareModal}
 					copy={this.copyToClipboard}
+					isCopied={this.state.isCopied}
 					shareModalTitle={this.state.shareModalTitle}
 				
 				/>
