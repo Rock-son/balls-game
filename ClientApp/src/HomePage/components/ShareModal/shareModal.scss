@@ -57,6 +57,7 @@
 		color: $grey;
 		font-weight: 700;
 		border-top:	none;
+		padding-top: 0;
 		& .nav-link {
 			padding: 0;
 			text-align: left;
@@ -64,6 +65,13 @@
 			&:hover, &:active {
 				text-decoration: underline;
 			}
+		}
+		& .container {
+			font-size: 13px;
+		}
+		& .footer__link {
+			padding-bottom: 2.5rem;
+			font-size: 13px;
 		}
 	}
 }

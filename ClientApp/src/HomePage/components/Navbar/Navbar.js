@@ -51,7 +51,13 @@ export const NavBar = props => {
 				<Nav className="navbar__nav right " navbar>
 					<NavItem className=" d-inline-flex justify-content-between">
 						<NavbarText>Stay safe. For more visit&nbsp;</NavbarText>
-						<NavLink href="https://www.countdownkings.com/">CountdownKings.com</NavLink>
+						<NavLink 
+							href="https://www.countdownkings.com/"
+							target="_blank"
+							rel="nooperner noreferrer"	
+						>
+							CountdownKings.com
+						</NavLink>
 					</NavItem>
 				</Nav>
 			</Navbar>
