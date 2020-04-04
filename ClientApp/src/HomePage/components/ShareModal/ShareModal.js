@@ -32,6 +32,7 @@ export const ShareModal = props => {
 				<Container  className="col-12 d-inline-flex justify-content-center">
 					For more visit&nbsp;
 					<NavLink
+						className="footer__link"
 						target="_blank"
 						rel="noopener noreferrer"							
 						href="https://www.countdownkings.com">

@@ -1,7 +1,7 @@
 import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
-import _draw from "./classes/_draw";
+import { start, stop, pause, unPause } from "./helpers/actions";
 import { SimulationModal, NavBar, ShareModal } from "./components";
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -11,6 +11,10 @@ export default class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasRef = React.createRef();
+		this.autostart = true;
+		this.simulationApp = null;
+		this.ticker = null;
+		this.loader = null;
 
 		this.state = {
 			// playing choice
@@ -22,7 +26,6 @@ export default class HomePage extends React.Component {
 			// current time
 			currentTime: new Date().getTime(),
 			// canvas state
-			canvasAnimating: true,
 			pause: false,
 			stop: false,
 			// nav & buttons
@@ -33,10 +36,11 @@ export default class HomePage extends React.Component {
 			shareModalTitle: "",
 			shareModalOpen: false,
 			simulationSettingsOpen: false,
+			// SIMULATION
 			simulationSettings: {
-				size: 6,
+				size: 9,
 				speed: 2,
-				quantity: "250",
+				quantity: "50",
 				deactivateAfter: "0",
 				showTime: true,
 				showStats: true,
@@ -47,8 +51,12 @@ export default class HomePage extends React.Component {
 		this.canvasWidth = window.innerWidth;
 		this.canvasHeight = window.innerHeight;
 		
-		this._draw = _draw.bind(this);
-		this.playPause = this.playPause.bind(this);
+		this.simulationStop = stop.bind(this);
+		this.simulationStart = start.bind(this);
+		this.simulationPause = pause.bind(this);
+		this.simulationUnPause = unPause.bind(this);
+		
+		this.togglePause = this.togglePause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.toggleShareModal = this.toggleShareModal.bind(this);
@@ -59,20 +67,21 @@ export default class HomePage extends React.Component {
 		this.toggleNavbarVisibility = this.toggleNavbarVisibility.bind(this);
 		this.toggleNavbarItemsExpand = this.toggleNavbarItemsExpand.bind(this);
 	}
-	static getDerivedStateFromError(error) {
-		// Update state so the next render will show the fallback UI.
-		return { hasError: true };
+	componentDidMount() {
+		this.simulationStart(true);
+		window.addEventListener('resize', this.handleResize)
+		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
 	componentDidCatch(error, errorInfo) {
 		// logErrorToMyService(error, errorInfo);
 	}
-	componentDidMount() {
-		window.addEventListener('resize', this.handleResize)
-		this.interval = setDriftlessInterval(this.intervalTime, 1000);
-		this._draw();
+	static getDerivedStateFromError(error) {
+		// Update state so the next render will show the fallback UI.
+		return { hasError: true };
 	}
 	componentWillUnmount() {
 		clearDriftless(this.interval);
+		this.simulationApp.destroy(true);
 	}
 	intervalTime() {
 		this.setState({currentTime: new Date().getTime()});
@@ -81,37 +90,42 @@ export default class HomePage extends React.Component {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
-	// DEPRECATED
-	playPause() {		
-		const { canvasAnimating } = this.state;
-		if (canvasAnimating) {
-			this.shouldAnimationStop = true;
-			this.setState({ stop: false, canvasAnimating: false, pause: true, startButtonText: "Resume Simulation" });
-		} else {
-			this.shouldAnimationStop = false;
-			this.setState({ stop: false, canvasAnimating: true, pause: false, startButtonText: "Pause Simulation" });
-		}
-	}
 	stopStartSimulation() {
 		if (!this.state.stop) { // STOP
-			this.setState({ stop: true, canvasAnimating: false, pause: true, startButtonText: "START SIMULATION" });			
+			this.simulationStop();
+			this.setState(prevState => ({ stop: true, pause: true, startButtonText: "START SIMULATION" }));
 		} else { 				//PLAY
-			this.setState({ stop: false, canvasAnimating: true, pause: false, startButtonText: "STOP SIMULATION", simulationSettingsOpen: false  });
-			this._draw();	
+			this.simulationStart(true);
+			this.setState(prevState => ({ stop: false, pause: false, startButtonText: "STOP SIMULATION", simulationSettingsOpen: false }));
 		}
 	}
 	setSimulationSettings(e) {
 		const targetData = e.currentTarget.getAttribute("data-option");
 		const parsedData = JSON.parse(targetData) || {};
-		this.setState(prevState => ({ simulationSettings: {...prevState.simulationSettings, ...parsedData}}));
+		this.setState(prevState => {
+			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
+			if (parsedData["size"] || parsedData["quantity"]) {
+				this.simulationStop();
+				this.simulationStart(false, newSimulationSettings);
+			}
+			return ({ simulationSettings: newSimulationSettings, stop: true, pause: true, startButtonText: "START SIMULATION" });
+		}); 
+	}
+	togglePause() {
+		return this.state.pause && !this.state.stop ? this.simulationUnPause() : this.simulationPause();
 	}
 	toggleShareModal(e) {
+		this.togglePause();
 		const target = e.currentTarget;
 		const game = target.getAttribute("data");
-		this.setState(prevState => ({ shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
+		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
 	}
 	toggleSimulationDialog() {
-		this.setState(prevState => ({ simulationSettingsOpen: !prevState.simulationSettingsOpen, pause: !prevState.pause }));
+		// unPause if previous state was pause, etc.
+		this.togglePause();
+		this.setState(prevState => {
+			return ({ simulationSettingsOpen: !prevState.simulationSettingsOpen, pause: !prevState.pause })
+		});
 	}
 	toggleNavbarItemsExpand() {
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
@@ -130,7 +144,7 @@ export default class HomePage extends React.Component {
 
 	render() {
 		return (
-			<section onClick={this.test} className="main">
+			<section className="main">
 				<NavBar 
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
@@ -160,8 +174,6 @@ export default class HomePage extends React.Component {
 						id="canvas"
 						ref={this.canvasRef} 
 						className="canvas" 
-						width={this.canvasWidth} 
-						height={this.canvasHeight}
 					>Sorry, your browser doesn't support HTML5 </canvas>
 				</article>
 			</section>

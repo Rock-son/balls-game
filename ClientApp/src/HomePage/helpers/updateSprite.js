@@ -1,7 +1,4 @@
-export const update = (sprite, spriteArr, distance, loader) => {
-	if (sprite.reactContext.state.pause) {
-		return;
-	}
+export const updateSprite = (sprite, spriteArr, distance, loader) => {	
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
@@ -23,15 +20,15 @@ export const update = (sprite, spriteArr, distance, loader) => {
 		}
 
 		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius * 2)) < 0) {			
-			const otherImage = spriteArr[i];
-			if (otherImage.contagion) {
+			const otherSprite = spriteArr[i];
+			if (otherSprite.contagion && !sprite.contagion) {
 				sprite.contagion = 1;
 				sprite.texture = loader.resources.sheet.textures["ball-red.png"];
-			} else if (sprite.contagion) {
-				otherImage.contagion = 1;
-				otherImage.texture = loader.resources.sheet.textures["ball-red.png"];
+			} else if (sprite.contagion && !otherSprite.contagion) {
+				otherSprite.contagion = 1;
+				otherSprite.texture = loader.resources.sheet.textures["ball-red.png"];
 			}
-			resolveCollision(sprite, otherImage);
+			resolveCollision(sprite, otherSprite);
 		}
 	}
 
