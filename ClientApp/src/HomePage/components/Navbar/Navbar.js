@@ -4,7 +4,7 @@ import { Button, Navbar, Nav, NavbarToggler,
 
 
 export const NavBar = props => {
-	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, toggleSimulationModal, toggleShareModal } = props;
+	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, toggleSimulationDialog, toggleShareDialog } = props;
 	return(
 		<Navbar dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Button 
@@ -21,19 +21,19 @@ export const NavBar = props => {
 				<Collapse isOpen={isNavbarExpanded} navbar>
 				<Nav className="navbar__nav left" navbar>
 					<NavItem>
-						<NavLink className="navbar__nav__link" onClick={toggleSimulationModal}>Simulate</NavLink>
+						<NavLink className="navbar__nav__link" onClick={toggleSimulationDialog}>Simulate</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link" onClick={toggleShareModal}>Play game</NavLink>
+						<NavLink data="game" className="navbar__nav__link" onClick={toggleShareDialog}>Play game</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="navbar__nav__link" onClick={toggleShareModal}>Share</NavLink>
+						<NavLink className="navbar__nav__link" onClick={toggleShareDialog}>Share</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>

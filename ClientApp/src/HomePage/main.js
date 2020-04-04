@@ -29,7 +29,7 @@ export default class HomePage extends React.Component {
 			pause: false,
 			stop: false,
 			// nav & buttons
-			startButtonText: "STOP SIMULATION",
+			startButtonText: "CONTINUE SIMULATION",
 			isCopied: false,
 			isNavbarExpanded: false,
 			isNavbarVisible: true,
@@ -60,7 +60,7 @@ export default class HomePage extends React.Component {
 		this.togglePause = this.togglePause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
-		this.toggleShareModal = this.toggleShareModal.bind(this);
+		this.toggleShareDialog = this.toggleShareDialog.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		this.stopStartSimulation = this.stopStartSimulation.bind(this);
 		this.setSimulationSettings = this.setSimulationSettings.bind(this);
@@ -92,12 +92,11 @@ export default class HomePage extends React.Component {
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
 	stopStartSimulation() {
-		if (!this.state.stop) { // STOP
-			this.simulationStop();
-			this.setState(prevState => ({ stop: true, pause: true, startButtonText: "START SIMULATION" }));
+		if (this.state.pause && !this.state.stop) { // CONTINUE
+			this.toggleSimulationDialog();
 		} else { 				//PLAY
 			this.simulationStart(true);
-			this.setState(prevState => ({ stop: false, pause: false, startButtonText: "STOP SIMULATION", simulationSettingsOpen: false }));
+			this.setState(prevState => ({ stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false }));
 		}
 	}
 	setSimulationSettings(e) {
@@ -115,7 +114,7 @@ export default class HomePage extends React.Component {
 	togglePause() {
 		return this.state.pause && !this.state.stop ? this.simulationUnPause() : this.simulationPause();
 	}
-	toggleShareModal(e) {
+	toggleShareDialog(e) {
 		this.togglePause();
 		const target = e.currentTarget;
 		const isGame = target.getAttribute("data");
@@ -156,7 +155,7 @@ export default class HomePage extends React.Component {
 					isNavbarExpanded={this.state.isNavbarExpanded}
 					isNavbarVisible={this.state.isNavbarVisible}
 					toggleSimulationDialog={this.toggleSimulationDialog}
-					toggleShareModal={this.toggleShareModal}
+					toggleShareDialog={this.toggleShareDialog}
 				/>
 				<SimulationModal
 					startSimulation={this.stopStartSimulation}
@@ -168,7 +167,7 @@ export default class HomePage extends React.Component {
 				/>
 				<ShareModal 
 					isOpen={this.state.shareModalOpen}
-					toggle={this.toggleShareModal}
+					toggle={this.toggleShareDialog}
 					copy={this.copyToClipboard}
 					isCopied={this.state.isCopied}
 					shareModalTitle={this.state.shareModalTitle}
