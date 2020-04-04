@@ -38,9 +38,9 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			// SIMULATION
 			simulationSettings: {
-				size: 3,
+				size: 9,
 				speed: 2,
-				quantity: "500",
+				quantity: "50",
 				deactivateAfter: "0",
 				showTime: true,
 				showStats: true,
@@ -57,7 +57,6 @@ export default class HomePage extends React.Component {
 		this.simulationUnPause = unPause.bind(this);
 		
 		this.togglePause = this.togglePause.bind(this);
-		this.playPause = this.playPause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.toggleShareModal = this.toggleShareModal.bind(this);
@@ -82,7 +81,7 @@ export default class HomePage extends React.Component {
 	}
 	componentWillUnmount() {
 		clearDriftless(this.interval);
-		this.simulationApp.destroy();
+		this.simulationApp.destroy(true);
 	}
 	intervalTime() {
 		this.setState({currentTime: new Date().getTime()});
@@ -90,14 +89,6 @@ export default class HomePage extends React.Component {
 	handleResize(e) {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
-	}
-	playPause() {
-		this.togglePause();
-		if (!this.state.stop && !this.state.pause) {
-			this.setState({ stop: false, pause: true, startButtonText: "Resume Simulation" });
-		} else if (!this.state.stop && this.state.pause) {
-			this.setState({ stop: false, pause: false, startButtonText: "Pause Simulation" });
-		}
 	}
 	stopStartSimulation() {
 		if (!this.state.stop) { // STOP
@@ -113,8 +104,10 @@ export default class HomePage extends React.Component {
 		const parsedData = JSON.parse(targetData) || {};
 		this.setState(prevState => {
 			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
-			this.simulationStop();
-			this.simulationStart(false, newSimulationSettings);
+			if (parsedData["size"] || parsedData["quantity"]) {
+				this.simulationStop();
+				this.simulationStart(false, newSimulationSettings);
+			}
 			return ({ simulationSettings: newSimulationSettings, stop: true, pause: true, startButtonText: "START SIMULATION" });
 		}); 
 	}

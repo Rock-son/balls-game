@@ -12,6 +12,9 @@ export function unPause() {
 
 export function stop() {
 	if (this.simulationApp) {
+		// https://pixijs.download/dev/docs/PIXI.Application.html#destroy
+		// (everything should be destroyed when not needed —> garbage collector)
+		// removes children, but leaves canvas element
 		this.simulationApp.destroy(false, { stageOptions: { children: true }});
 		this.simulationApp = null;
 	}
