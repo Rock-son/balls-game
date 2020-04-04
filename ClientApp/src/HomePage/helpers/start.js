@@ -1,8 +1,8 @@
 import { updateSprite } from "./updateSprite";
 import * as PIXI from "pixi.js";
 
-export function start() {
-
+export function start(autostart, simulationSettings=null) {	
+	this.autostart = autostart || null;
 	// UTILITIES
 	function randomIntNumber(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -15,24 +15,24 @@ export function start() {
 
 	const canvas = this.canvasRef.current;
 	this.simulationApp = new PIXI.Application({
-		autoresize: true,
 		backgroundColor: 0x191919,
 		view: canvas,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,
-		autoDensity: true
+		autoDensity: true,
+		sharedLoader: true
 	});
-	// for many animating objects
-	this.loader = PIXI.Loader.shared;
-	if (this.loader.resources.sheet == null) {
-		this.loader.add("sheet", "myBalls.json")
+
+	
+	if (this.simulationApp.loader.resources.sheet == null) {
+		this.simulationApp.loader.add("sheet", "myBalls.json")
 		.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 		.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 		.on("error", err => console.error("load error", err))
-		.load(handleOnImageLoaded.bind(this));
+		.load(handleOnImageLoaded.bind(this, simulationSettings));
 	} else {
-		this.loader.load(handleOnImageLoaded.bind(this));
+		this.simulationApp.loader.load(handleOnImageLoaded.bind(this, simulationSettings));
 	}
 
 
@@ -51,26 +51,24 @@ export function start() {
 	window.addEventListener('resize', resize);
 
 
-	function handleOnImageLoaded() {
+	function handleOnImageLoaded(simulationSettings) {
 		const {
-			simulationSettings: {
-				size: radius,
-				speed,
-				quantity,
-				deactivateAfter,
-				showTime,
-				showStats,
-				autorestart
-			}
-		} = this.state;
+			size: radius,
+			speed,
+			quantity,
+			deactivateAfter,
+			showTime,
+			showStats,
+			autorestart
+		} = simulationSettings == null ? this.state.simulationSettings : simulationSettings;
 
 		let contagion, sprite;
 		const spriteArr = [];
 		const nrImages = +quantity;
 		const maxWidth = this.canvasWidth - radius * 2.5;
 		const maxHeight = this.canvasHeight - radius * 2.5;
-		const whiteBall = this.loader.resources.sheet.textures["ball-white.png"];
-		const redBall = this.loader.resources.sheet.textures["ball-red.png"];
+		const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white.png"];
+		const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red.png"];
 
 		for (let i = 0; i < nrImages; i++) {
 
@@ -110,10 +108,18 @@ export function start() {
 		}
 
 		const len = spriteArr.length;
+		
 		// draw and animate
-		for (let index = 0; index < len; index++) {
-			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.add(updateSprite.bind(null, spriteArr[index], spriteArr, distance, this.loader));
+		if (this.autostart) {
+			for (let index = 0; index < len; index++) {
+				this.simulationApp.stage.addChild(spriteArr[index]);
+				this.simulationApp.ticker.add(updateSprite.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			}
+		} else {
+			for (let index = 0; index < len; index++) {
+				this.simulationApp.stage.addChild(spriteArr[index]);
+				this.simulationApp.ticker.addOnce(updateSprite.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			}
 		}
 	}
 }

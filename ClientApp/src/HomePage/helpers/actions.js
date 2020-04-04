@@ -1,5 +1,5 @@
 export function pause() {
-	if (this.simulationApp) {
+	if (this.simulationApp && this.simulationApp.ticker && this.simulationApp.ticker.started) {
 		return this.simulationApp.ticker.stop();
 	}
 };
@@ -11,10 +11,12 @@ export function unPause() {
 };
 
 export function stop() {
-	if (this.simulationApp && this.simulationApp.ticker) {
-		console.log("wtf else");
+	if (this.simulationApp) {
+		this.simulationApp.destroy();
+		this.simulationApp = null
+		console.log("this.simulat", this.simulationApp);
 		
-		return this.simulationApp.ticker.destroy();
+		return;
 	}
 };
 

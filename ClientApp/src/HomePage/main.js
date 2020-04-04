@@ -11,7 +11,9 @@ export default class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasRef = React.createRef();
+		this.autostart = null;
 		this.simulationApp = null;
+		this.ticker = null;
 		this.loader = null;
 
 		this.state = {
@@ -67,7 +69,7 @@ export default class HomePage extends React.Component {
 		this.toggleNavbarItemsExpand = this.toggleNavbarItemsExpand.bind(this);
 	}
 	componentDidMount() {
-		this.simulationStart();
+		this.simulationStart(true);
 		window.addEventListener('resize', this.handleResize)
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
@@ -101,14 +103,19 @@ export default class HomePage extends React.Component {
 			this.simulationStop();
 			this.setState(prevState => ({ stop: true, pause: true, startButtonText: "START SIMULATION" }));
 		} else { 				//PLAY
-			this.simulationStart();
+			this.simulationStart(true);
 			this.setState(prevState => ({ stop: false, pause: false, startButtonText: "STOP SIMULATION", simulationSettingsOpen: false }));
 		}
 	}
 	setSimulationSettings(e) {
 		const targetData = e.currentTarget.getAttribute("data-option");
 		const parsedData = JSON.parse(targetData) || {};
-		this.setState(prevState => ({ simulationSettings: {...prevState.simulationSettings, ...parsedData}}));
+		this.setState(prevState => {
+			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
+			this.simulationStop();
+			this.simulationStart(false, newSimulationSettings);
+			return ({ simulationSettings: newSimulationSettings, stop: true, pause: true, startButtonText: "START SIMULATION" });
+		}); 
 	}
 	togglePause() {
 		return this.state.pause && !this.state.stop ? this.simulationUnPause() : this.simulationPause();
@@ -120,9 +127,9 @@ export default class HomePage extends React.Component {
 		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
 	}
 	toggleSimulationDialog() {
+		// unPause if previous state was pause, etc.
 		this.togglePause();
 		this.setState(prevState => {
-			// unPause if previous state was pause, etc.
 			return ({ simulationSettingsOpen: !prevState.simulationSettingsOpen, pause: !prevState.pause })
 		});
 	}

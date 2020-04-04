@@ -18,7 +18,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{sizeOptions.map((sizeOption, idx) => {
 								if (typeof sizeOption != "object") {
-									return <NavLink key={idx}>{sizeOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{sizeOption}</NavLink>;
 								}
 								return 	<NavLink 
 													key={idx}
@@ -38,7 +38,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{quantityOptions.map((quantityOption, idx) => {
 								if (quantityOption === "|") {
-									return <NavLink key={idx}>{quantityOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{quantityOption}</NavLink>;
 								}
 								return 	<NavLink 
 													key={idx}
@@ -58,7 +58,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{speedOptions.map((speedOption, idx) => {
 								if (typeof speedOption != "object") {
-									return <NavLink key={idx}>{speedOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{speedOption}</NavLink>;
 								}
 								return	<NavLink 
 													key={idx}
@@ -78,7 +78,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{deactivateOptions.map((deactivateOption, idx) => {
 								if (deactivateOption === "|") {
-									return <NavLink key={idx}>{deactivateOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{deactivateOption}</NavLink>;
 								}
 								return 	<NavLink 
 													key={idx}
@@ -98,7 +98,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{booleanOptions.map((timeOption, idx) => {
 								if (typeof timeOption !== "object") {
-									return <NavLink key={idx}>{timeOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{timeOption}</NavLink>;
 								}
 								return 	<NavLink 
 													key={idx}
@@ -116,7 +116,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{booleanOptions.map((statOption, idx) => {
 								if (typeof statOption !== "object") {
-									return <NavLink key={idx}>{statOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{statOption}</NavLink>;
 								}
 								return 	<NavLink 
 													key={idx} 
@@ -134,7 +134,7 @@ export const SimulationModal = props => {
 						<Nav className="choice__options">
 							{booleanOptions.map((restartOption, idx) => {
 								if (typeof restartOption !== "object") {
-									return <NavLink key={idx}>{restartOption}</NavLink>;
+									return <NavLink className="disabled" key={idx}>{restartOption}</NavLink>;
 								}
 								return 	<NavLink 
 													key={idx}
