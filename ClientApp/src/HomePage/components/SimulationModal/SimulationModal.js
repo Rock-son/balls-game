@@ -21,13 +21,13 @@ export const SimulationModal = props => {
 									return <NavLink className="disabled" key={idx}>{sizeOption}</NavLink>;
 								}
 								return 	<NavLink 
-													key={idx}
-													tabIndex="0"
-													data-option={`${JSON.stringify({size: sizeOption.value})}`}
-													onClick={setSimulationSettings}
-													active={sizeOption.value === size}>
-														{sizeOption.type}
-												</NavLink>;
+											key={idx}
+											tabIndex="0"
+											data-option={`${JSON.stringify({size: sizeOption.value})}`}
+											onClick={setSimulationSettings}
+											active={sizeOption.value === size}>
+												{sizeOption.type}
+										</NavLink>;
 							})}
 						</Nav>
 					</Container>
@@ -36,18 +36,18 @@ export const SimulationModal = props => {
 					<Container className="choice">
 						<div>Number of balls</div>
 						<Nav className="choice__options">
-							{quantityOptions.map((quantityOption, idx) => {
+							{quantityOptions[size].map((quantityOption, idx) => {
 								if (quantityOption === "|") {
 									return <NavLink className="disabled" key={idx}>{quantityOption}</NavLink>;
 								}
 								return 	<NavLink 
-													key={idx}
-													tabIndex="0"
-													data-option={`${JSON.stringify({quantity: quantityOption})}`}
-													onClick={setSimulationSettings}
-													active={quantityOption === quantity}>
-														{quantityOption}
-												</NavLink>;
+											key={idx}
+											tabIndex="0"
+											data-option={`${JSON.stringify({quantity: quantityOption})}`}
+											onClick={setSimulationSettings}
+											active={quantityOption === quantity}>
+												{quantityOption}
+										</NavLink>;
 							})}
 						</Nav>				
 					</Container>
@@ -61,13 +61,13 @@ export const SimulationModal = props => {
 									return <NavLink className="disabled" key={idx}>{speedOption}</NavLink>;
 								}
 								return	<NavLink 
-													key={idx}
-													tabIndex="0" 
-													data-option={`${JSON.stringify({speed: speedOption.value})}`}
-													onClick={setSimulationSettings}
-													active={speedOption.value === speed}>
-														{speedOption.type}
-												</NavLink>;
+											key={idx}
+											tabIndex="0" 
+											data-option={`${JSON.stringify({speed: speedOption.value})}`}
+											onClick={setSimulationSettings}
+											active={speedOption.value === speed}>
+												{speedOption.type}
+										</NavLink>;
 							})}
 						</Nav>
 					</Container>
@@ -81,13 +81,13 @@ export const SimulationModal = props => {
 									return <NavLink className="disabled" key={idx}>{deactivateOption}</NavLink>;
 								}
 								return 	<NavLink 
-													key={idx}
-													tabIndex="0" 
-													data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
-													onClick={setSimulationSettings}
-													active={deactivateOption === deactivateAfter}>
-														{deactivateOption === "0" ? "no" : `${deactivateOption}s`}
-												</NavLink>;
+											key={idx}
+											tabIndex="0" 
+											data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
+											onClick={setSimulationSettings}
+											active={deactivateOption === deactivateAfter}>
+												{deactivateOption === "0" ? "no" : `${deactivateOption}s`}
+										</NavLink>;
 							})}
 						</Nav>				
 					</Container>
@@ -101,13 +101,13 @@ export const SimulationModal = props => {
 									return <NavLink className="disabled" key={idx}>{timeOption}</NavLink>;
 								}
 								return 	<NavLink 
-													key={idx}
-													tabIndex="0" 
-													data-option={`${JSON.stringify({showTime: timeOption.value})}`}
-													onClick={setSimulationSettings}
-													active={timeOption.value === showTime}>
-														{timeOption.type}
-												</NavLink>;
+											key={idx}
+											tabIndex="0" 
+											data-option={`${JSON.stringify({showTime: timeOption.value})}`}
+											onClick={setSimulationSettings}
+											active={timeOption.value === showTime}>
+												{timeOption.type}
+										</NavLink>;
 							})}
 						</Nav>
 					</Container>
@@ -119,13 +119,13 @@ export const SimulationModal = props => {
 									return <NavLink className="disabled" key={idx}>{statOption}</NavLink>;
 								}
 								return 	<NavLink 
-													key={idx} 
-													tabIndex="0" 
-													data-option={`${JSON.stringify({showStats: statOption.value})}`}
-													onClick={setSimulationSettings}
-													active={statOption.value === showStats}>
-														{statOption.type}
-												</NavLink>;
+											key={idx} 
+											tabIndex="0" 
+											data-option={`${JSON.stringify({showStats: statOption.value})}`}
+											onClick={setSimulationSettings}
+											active={statOption.value === showStats}>
+												{statOption.type}
+										</NavLink>;
 							})}
 						</Nav>
 					</Container>
@@ -137,13 +137,13 @@ export const SimulationModal = props => {
 									return <NavLink className="disabled" key={idx}>{restartOption}</NavLink>;
 								}
 								return 	<NavLink 
-													key={idx}
-													tabIndex="0" 
-													data-option={`${JSON.stringify({autorestart: restartOption.value})}`}
-													onClick={setSimulationSettings}
-													active={restartOption.value === autorestart}>
-														{restartOption.type}
-												</NavLink>;
+											key={idx}
+											tabIndex="0" 
+											data-option={`${JSON.stringify({autorestart: restartOption.value})}`}
+											onClick={setSimulationSettings}
+											active={restartOption.value === autorestart}>
+												{restartOption.type}
+										</NavLink>;
 							})}
 						</Nav>
 					</Container>
