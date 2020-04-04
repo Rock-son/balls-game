@@ -1,3 +1,5 @@
+"use strict";
+
 export const updateSprite = (sprite, spriteArr, distance, loader) => {	
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {

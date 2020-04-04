@@ -1,8 +1,10 @@
+"use strict";
+
 import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { start, stop, pause, unPause } from "./helpers/actions";
-import { SimulationModal, NavBar, ShareModal } from "./components";
+import { SimulationDialog, NavBar, ShareDialog } from "./components";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
@@ -23,8 +25,9 @@ export default class HomePage extends React.Component {
 			// error handling
 			hasError: false, 
 			error: null,
-			// current time
+			// time
 			currentTime: new Date().getTime(),
+			startTime: new Date(0),
 			// canvas state
 			pause: false,
 			stop: false,
@@ -85,7 +88,12 @@ export default class HomePage extends React.Component {
 		this.simulationApp.destroy(true);
 	}
 	intervalTime() {
-		this.setState({currentTime: new Date().getTime()});
+		this.setState(prevState => {
+			if (this.state.pause || this.state.stop) {
+				return ({ currentTime: new Date().getTime() })
+			}
+			return ({ currentTime: new Date().getTime(), startTime: new Date(prevState.startTime.getTime() + 1000) })
+		});
 	}
 	handleResize(e) {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
@@ -104,11 +112,13 @@ export default class HomePage extends React.Component {
 		const parsedData = JSON.parse(targetData) || {};
 		this.setState(prevState => {
 			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
+			// only reset simulation for size and quantity - for preview
 			if (parsedData["size"] || parsedData["quantity"]) {
 				this.simulationStop();
 				this.simulationStart(false, newSimulationSettings);
+				return ({ simulationSettings: newSimulationSettings, stop: true, pause: true, startButtonText: "START SIMULATION" });
 			}
-			return ({ simulationSettings: newSimulationSettings, stop: true, pause: true, startButtonText: "START SIMULATION" });
+			return ({ simulationSettings: newSimulationSettings });
 		}); 
 	}
 	togglePause() {
@@ -150,14 +160,17 @@ export default class HomePage extends React.Component {
 		return (
 			<section className="main">
 				<NavBar 
+					currentTime={this.state.currentTime}
+					startTime={this.state.startTime}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}
 					isNavbarVisible={this.state.isNavbarVisible}
 					toggleSimulationDialog={this.toggleSimulationDialog}
 					toggleShareDialog={this.toggleShareDialog}
+					simulationSettings={this.state.simulationSettings}
 				/>
-				<SimulationModal
+				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
 					isOpen={this.state.simulationSettingsOpen} 
 					toggle={this.toggleSimulationDialog}
@@ -165,7 +178,7 @@ export default class HomePage extends React.Component {
 					settings={this.state.simulationSettings}
 					setSimulationSettings={this.setSimulationSettings}
 				/>
-				<ShareModal 
+				<ShareDialog 
 					isOpen={this.state.shareModalOpen}
 					toggle={this.toggleShareDialog}
 					copy={this.copyToClipboard}

@@ -3,9 +3,9 @@ import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
 import { sizeOptions, quantityOptions, speedOptions, deactivateOptions, booleanOptions } from "./modalOptions";
-import "./simulationModal.scss";
+import "./simulationDialog.scss";
 
-export const SimulationModal = props => {
+export const SimulationDialog = props => {
 	const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, 
 					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = props;
    	return (		

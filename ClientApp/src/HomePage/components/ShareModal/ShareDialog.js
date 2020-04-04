@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, NavLink } from "reactstrap";
 
-import "./shareModal.scss";
+import "./shareDialog.scss";
 
-export const ShareModal = props => {
+export const ShareDialog = props => {
 	const { isOpen, toggle, copy, isCopied, shareModalTitle } = props;
    	return (
 		<Modal key="sharemodal" isOpen={isOpen} toggle={toggle} centered={true} className="share-modal">

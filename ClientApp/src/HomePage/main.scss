@@ -92,6 +92,14 @@ html {
 		&.right {
 			font-size: .8rem;
 			text-align: right;
+			& .timer {
+				position: absolute;
+				font-weight: 300;;
+				font-size: 3rem;    
+				right: 10px;
+				margin-top: 2.5rem;
+				color: $white;
+			}
 		}
 	}
 }

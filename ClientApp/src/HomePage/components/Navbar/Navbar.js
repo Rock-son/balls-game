@@ -4,7 +4,11 @@ import { Button, Navbar, Nav, NavbarToggler,
 
 
 export const NavBar = props => {
-	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, toggleSimulationDialog, toggleShareDialog } = props;
+	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, 
+			toggleSimulationDialog, toggleShareDialog, currentTime, startTime, simulationSettings: { showTime } } = props;
+	const seconds = startTime.getSeconds();
+	const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
 	return(
 		<Navbar dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Button 
@@ -48,7 +52,7 @@ export const NavBar = props => {
 				<Nav className="navbar__nav caption" navbar>
 					<NavItem>TheCovidSimulator</NavItem>
 				</Nav>
-				<Nav className="navbar__nav right " navbar>
+				<Nav className="navbar__nav right" navbar>
 					<NavItem className=" d-inline-flex justify-content-between">
 						<NavbarText>Stay safe. For more visit&nbsp;</NavbarText>
 						<NavLink 
@@ -58,6 +62,11 @@ export const NavBar = props => {
 						>
 							CountdownKings.com
 						</NavLink>
+					</NavItem>
+					<NavItem className="timer">
+						{
+							showTime ? `${startTime.getMinutes()}:${formattedSeconds}` : ""
+						}
 					</NavItem>
 				</Nav>
 			</Navbar>
