@@ -11,7 +11,7 @@ export default class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasRef = React.createRef();
-		this.autostart = null;
+		this.autostart = true;
 		this.simulationApp = null;
 		this.ticker = null;
 		this.loader = null;
@@ -38,9 +38,9 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			// SIMULATION
 			simulationSettings: {
-				size: 6,
+				size: 3,
 				speed: 2,
-				quantity: "250",
+				quantity: "500",
 				deactivateAfter: "0",
 				showTime: true,
 				showStats: true,
@@ -82,6 +82,7 @@ export default class HomePage extends React.Component {
 	}
 	componentWillUnmount() {
 		clearDriftless(this.interval);
+		this.simulationApp.destroy();
 	}
 	intervalTime() {
 		this.setState({currentTime: new Date().getTime()});
