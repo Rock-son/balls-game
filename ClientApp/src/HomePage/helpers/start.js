@@ -1,7 +1,8 @@
-import { update } from "./update";
+import { updateSprite } from "./updateSprite";
 import * as PIXI from "pixi.js";
 
-export default function _draw() {
+export function start() {
+
 	// UTILITIES
 	function randomIntNumber(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -12,22 +13,8 @@ export default function _draw() {
 		return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 	}
 
-	// CANVAS
-	const {
-		simulationSettings: {
-			size,
-			speed,
-			quantity,
-			deactivateAfter,
-			showTime,
-			showStats,
-			autorestart
-		}
-	} = this.state;
-
-
 	const canvas = this.canvasRef.current;
-	const app = new PIXI.Application({
+	this.simulationApp = new PIXI.Application({
 		autoresize: true,
 		backgroundColor: 0x191919,
 		view: canvas,
@@ -37,17 +24,22 @@ export default function _draw() {
 		autoDensity: true
 	});
 	// for many animating objects
-	const loader = PIXI.Loader.shared;
-	loader.add("sheet", "myBalls.json")
+	this.loader = PIXI.Loader.shared;
+	if (this.loader.resources.sheet == null) {
+		this.loader.add("sheet", "myBalls.json")
 		.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 		.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 		.on("error", err => console.error("load error", err))
 		.load(handleOnImageLoaded.bind(this));
+	} else {
+		this.loader.load(handleOnImageLoaded.bind(this));
+	}
+
 
 	// Resize function window
 	const resize = () => {
 		// Resize the renderer
-		app.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
+		this.simulationApp.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
 							window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
 
 	// You can use the 'screen' property as the renderer visible
@@ -59,16 +51,27 @@ export default function _draw() {
 	window.addEventListener('resize', resize);
 
 
-	let contagion, sprite;
-	const spriteArr = [];
-	const radius = size;
-	const nrImages = +quantity;
-	const maxWidth = this.canvasWidth - radius * 2.5;
-	const maxHeight = this.canvasHeight - radius * 2.5;
-
 	function handleOnImageLoaded() {
-		const whiteBall = loader.resources.sheet.textures["ball-white.png"];
-		const redBall = loader.resources.sheet.textures["ball-red.png"];
+		const {
+			simulationSettings: {
+				size: radius,
+				speed,
+				quantity,
+				deactivateAfter,
+				showTime,
+				showStats,
+				autorestart
+			}
+		} = this.state;
+
+		let contagion, sprite;
+		const spriteArr = [];
+		const nrImages = +quantity;
+		const maxWidth = this.canvasWidth - radius * 2.5;
+		const maxHeight = this.canvasHeight - radius * 2.5;
+		const whiteBall = this.loader.resources.sheet.textures["ball-white.png"];
+		const redBall = this.loader.resources.sheet.textures["ball-red.png"];
+
 		for (let i = 0; i < nrImages; i++) {
 
 			contagion = i === 0 ? 1 : 0;
@@ -91,8 +94,8 @@ export default function _draw() {
 			}
 			sprite.x = x;
 			sprite.y = y;
-			sprite.width = size * 2;
-			sprite.height = size * 2;
+			sprite.width = radius * 2;
+			sprite.height = radius * 2;
 			sprite.anchor.x = .5;
 			sprite.anchor.y = .5;
 			sprite.myID = i;
@@ -109,8 +112,8 @@ export default function _draw() {
 		const len = spriteArr.length;
 		// draw and animate
 		for (let index = 0; index < len; index++) {
-			app.stage.addChild(spriteArr[index]);
-			app.ticker.add(update.bind(null, spriteArr[index], spriteArr, distance, loader));
+			this.simulationApp.stage.addChild(spriteArr[index]);
+			this.simulationApp.ticker.add(updateSprite.bind(null, spriteArr[index], spriteArr, distance, this.loader));
 		}
 	}
 }
