@@ -21,6 +21,7 @@ export const updateSprite = (sprite, spriteArr, distance, loader) => {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = 0;
 			sprite.texture = loader.resources.sheet.textures["ball-white.png"];
+			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
