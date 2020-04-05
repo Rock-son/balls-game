@@ -42,10 +42,10 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			// SIMULATION
 			simulationSettings: {
-				size: 6,
-				speed: 3,
-				quantity: "200",
-				deactivateAfter: "0",
+				size: 9,
+				speed: 1,
+				quantity: 50,
+				deactivateAfter: 0,
 				showTime: true,
 				showStats: true,
 				autorestart: true
@@ -113,7 +113,7 @@ export default class HomePage extends React.Component {
 		this.simulationStop();
 		this.simulationStart(true);
 		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
-					healthy: +prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
+					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setSimulationSettings(e) {
 		const targetData = e.currentTarget.getAttribute("data-option");
@@ -124,7 +124,7 @@ export default class HomePage extends React.Component {
 			if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
 				this.simulationStop();
 				this.simulationStart(false, newSimulationSettings);
-				return ({ simulationSettings: newSimulationSettings, startTime: new Date(0), healthy: +newSimulationSettings["quantity"] - 1, 
+				return ({ simulationSettings: newSimulationSettings, startTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1, 
 						contagious: 1, stop: true, pause: true, startButtonText: "START SIMULATION" });
 			}
 			return ({ simulationSettings: newSimulationSettings });

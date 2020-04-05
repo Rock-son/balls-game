@@ -101,6 +101,7 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.contagion = contagion;
 		sprite.radius = radius;
 		sprite.reactContext = this;
+		sprite.contagiousFrom = 0;
 		sprite.velocity = { 
 			x: (Math.random() - .5) * speed, 
 			y: (Math.random() - .5) * speed 
