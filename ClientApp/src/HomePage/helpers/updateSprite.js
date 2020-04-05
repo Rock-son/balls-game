@@ -23,11 +23,13 @@ export const updateSprite = (sprite, spriteArr, distance, loader) => {
 
 		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius * 2)) < 0) {			
 			const otherSprite = spriteArr[i];
-			if (otherSprite.contagion && !sprite.contagion) {
+			if (otherSprite.contagion && !sprite.contagion) {				
+				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 1 && sprite.reactContext.simulationRestart();
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				sprite.contagion = 1;
 				sprite.texture = loader.resources.sheet.textures["ball-red.png"];
 			} else if (sprite.contagion && !otherSprite.contagion) {
+				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 1 && sprite.reactContext.simulationRestart();
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				otherSprite.contagion = 1;
 				otherSprite.texture = loader.resources.sheet.textures["ball-red.png"];

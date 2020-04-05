@@ -5,7 +5,7 @@ import { Button, Navbar, Nav, NavbarToggler,
 
 export const NavBar = props => {
 	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healthy,
-			toggleSimulationDialog, toggleShareDialog, currentTime, startTime, simulationSettings: { showTime, showStats } } = props;
+			toggleSimulationDialog, toggleShareDialog, startTime, simulationSettings: { showTime, showStats } } = props;
 	const seconds = startTime.getSeconds();
 	const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
 
@@ -63,7 +63,7 @@ export const NavBar = props => {
 							CountdownKings.com
 						</NavLink>
 					</NavItem>
-					<NavItem className="stats">
+					<NavItem className={`stats ${!isNavbarVisible && "drop"}`}>
 						{
 							showStats ? 
 							<>
@@ -74,7 +74,7 @@ export const NavBar = props => {
 							""
 						}
 					</NavItem>
-					<NavItem className="timer">
+					<NavItem className={`timer ${!isNavbarVisible && "drop"}`}>
 						{
 							showTime ? `${startTime.getMinutes()}:${formattedSeconds}` : ""
 						}

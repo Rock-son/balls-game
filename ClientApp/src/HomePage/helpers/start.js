@@ -107,7 +107,6 @@ function handleOnImageLoaded(simulationSettings) {
 		};
 		spriteArr.push(sprite);
 	}
-		console.log("autostart", this.autostart);
 		
 	const len = spriteArr.length;	
 	// draw and animate
