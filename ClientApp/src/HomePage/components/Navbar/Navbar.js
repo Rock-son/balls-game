@@ -4,7 +4,11 @@ import { Button, Navbar, Nav, NavbarToggler,
 
 
 export const NavBar = props => {
-	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, toggleSimulationModal, toggleShareModal } = props;
+	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healthy,
+			toggleSimulationDialog, toggleShareDialog, startTime, simulationSettings: { showTime, showStats } } = props;
+	const seconds = startTime.getSeconds();
+	const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
 	return(
 		<Navbar dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Button 
@@ -21,19 +25,19 @@ export const NavBar = props => {
 				<Collapse isOpen={isNavbarExpanded} navbar>
 				<Nav className="navbar__nav left" navbar>
 					<NavItem>
-						<NavLink className="navbar__nav__link" onClick={toggleSimulationModal}>Simulate</NavLink>
+						<NavLink className="navbar__nav__link" onClick={toggleSimulationDialog}>Simulate</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link" onClick={toggleShareModal}>Play game</NavLink>
+						<NavLink data="game" className="navbar__nav__link" onClick={toggleShareDialog}>Play game</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="navbar__nav__link" onClick={toggleShareModal}>Share</NavLink>
+						<NavLink className="navbar__nav__link" onClick={toggleShareDialog}>Share</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
@@ -48,7 +52,7 @@ export const NavBar = props => {
 				<Nav className="navbar__nav caption" navbar>
 					<NavItem>TheCovidSimulator</NavItem>
 				</Nav>
-				<Nav className="navbar__nav right " navbar>
+				<Nav className="navbar__nav right" navbar>
 					<NavItem className=" d-inline-flex justify-content-between">
 						<NavbarText>Stay safe. For more visit&nbsp;</NavbarText>
 						<NavLink 
@@ -58,6 +62,22 @@ export const NavBar = props => {
 						>
 							CountdownKings.com
 						</NavLink>
+					</NavItem>
+					<NavItem className={`stats ${!isNavbarVisible && "drop"}`}>
+						{
+							showStats ? 
+							<>
+								<NavbarText className="stats__infected">Infected:&nbsp;{contagious}</NavbarText>
+								<NavbarText className="stats__healthy">Healthy:&nbsp;{healthy}</NavbarText>	
+							</>
+							:
+							""
+						}
+					</NavItem>
+					<NavItem className={`timer ${!isNavbarVisible && "drop"}`}>
+						{
+							showTime ? `${startTime.getMinutes()}:${formattedSeconds}` : ""
+						}
 					</NavItem>
 				</Nav>
 			</Navbar>

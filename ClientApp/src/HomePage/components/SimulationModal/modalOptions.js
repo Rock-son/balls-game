@@ -5,44 +5,32 @@ export const sizeOptions = [
 	"|",
 	{ type: "large", value: 9 },
 ];
-export const quantityOptions = [
-	"50",
-	"|",
-	"100",
-	"|",
-	"150",
-	"|",
-	"200",
-	"|",
-	"250",
-	"|",
-	"300",
-	"|",
-	"400",
-	"|",
-	"500"
-];
+export const quantityOptions = {
+	3: [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 700, "|", 800, "|", 1000 ],
+	6: [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 600, "|", 700, "|", 800 ],
+	9: [  50, "|", 100,"|", "150", "|", 200, "|", 300, "|", 400, "|", 500, "|", 500 ]
+};
 export const speedOptions = [
-	{ type: "slow", value: .5 },
+	{ type: "slow", value: 1 },
 	"|",
-	{ type: "medium", value: 1 },
+	{ type: "medium", value: 2 },
 	"|",
-	{ type: "fast", value: 2 },
+	{ type: "fast", value: 3 },
 ];
 export const deactivateOptions = [
-	"0",
+	0,
 	"|",
-	"10",
+	10000,
 	"|",
-	"15",
+	15000,
 	"|",
-	"20",
+	20000,
 	"|",
-	"30",
+	30000,
 	"|",
-	"45",
+	45000,
 	"|",
-	"60"
+	60000
 ];
 export const booleanOptions = [
 	{ type: "yes", value: true },

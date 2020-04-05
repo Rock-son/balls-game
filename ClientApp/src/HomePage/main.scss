@@ -10,7 +10,7 @@ html {
 	image-rendering: -moz-crisp-edges;          // FF 6.0+                       
 	image-rendering: -webkit-optimize-contrast; // Safari                        
 	image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+) 
-	image-rendering: smooth;				// 
+	image-rendering: optimize-contrast;				// 
 	-ms-interpolation-mode: bicubic;   			// IE                            
 }
 
@@ -21,6 +21,7 @@ html {
 	top: 0;
 	right: 0;
 	left: 0;
+	text-shadow: 1px 1px 2px black;
 	&__navbar {
 		position: absolute;
 		font-family: "Roboto", Arial, sans-serif;
@@ -92,6 +93,34 @@ html {
 		&.right {
 			font-size: .8rem;
 			text-align: right;
+			& .stats {
+				position: absolute;
+    			margin-top: 1.5rem;
+				font-size: .9rem;
+				transition: margin-top .5s;
+				&.drop {
+					margin-top: 2.5rem;
+				}
+				&__infected {
+					margin-right: 10px;
+					color: red;
+				}
+				&__healthy {
+					color: $white;
+				}
+			}
+			& .timer {
+				position: absolute;
+				font-weight: 300;;
+				font-size: 3rem;    
+				right: 10px;
+				margin-top: 2.5rem;
+				color: $white;
+				transition: margin-top .5s;
+				&.drop {
+					margin-top: 3.5rem;
+				}
+			}
 		}
 	}
 }
