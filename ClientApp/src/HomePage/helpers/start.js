@@ -60,8 +60,6 @@ function handleOnImageLoaded(simulationSettings) {
 		speed,
 		quantity,
 		deactivateAfter,
-		showTime,
-		showStats,
 		autorestart
 	} = simulationSettings == null ? this.state.simulationSettings : simulationSettings;
 	

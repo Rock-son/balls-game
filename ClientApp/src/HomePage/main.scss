@@ -10,7 +10,7 @@ html {
 	image-rendering: -moz-crisp-edges;          // FF 6.0+                       
 	image-rendering: -webkit-optimize-contrast; // Safari                        
 	image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+) 
-	image-rendering: smooth;				// 
+	image-rendering: optimize-contrast;				// 
 	-ms-interpolation-mode: bicubic;   			// IE                            
 }
 
@@ -32,7 +32,7 @@ html {
 		padding: 0;
 		transition: transform .5s;
 		&.hidden {
-			transform: translateY(-90%);
+			transform: translateY(-80%);
 		}
 		&__toggler {
 			position: absolute;
@@ -92,12 +92,24 @@ html {
 		&.right {
 			font-size: .8rem;
 			text-align: right;
+			& .stats {
+				position: absolute;
+    			margin-top: 1.7rem;
+				font-size: .9rem;
+				&__infected {
+					margin-right: 10px;
+					color: red;
+				}
+				&__healthy {
+					color: $white;
+				}
+			}
 			& .timer {
 				position: absolute;
 				font-weight: 300;;
 				font-size: 3rem;    
 				right: 10px;
-				margin-top: 2.5rem;
+				margin-top: 2.8rem;
 				color: $white;
 			}
 		}

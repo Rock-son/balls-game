@@ -15,8 +15,6 @@ export default class HomePage extends React.Component {
 		this.canvasRef = React.createRef();
 		this.autostart = true;
 		this.simulationApp = null;
-		this.ticker = null;
-		this.loader = null;
 
 		this.state = {
 			// playing choice
@@ -31,6 +29,8 @@ export default class HomePage extends React.Component {
 			// canvas state
 			pause: false,
 			stop: false,
+			contagious: 1,
+			healthy: 249,
 			// nav & buttons
 			startButtonText: "CONTINUE SIMULATION",
 			isCopied: false,
@@ -42,9 +42,9 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			// SIMULATION
 			simulationSettings: {
-				size: 9,
+				size: 6,
 				speed: 2,
-				quantity: "50",
+				quantity: "250",
 				deactivateAfter: "0",
 				showTime: true,
 				showStats: true,
@@ -169,6 +169,8 @@ export default class HomePage extends React.Component {
 					toggleSimulationDialog={this.toggleSimulationDialog}
 					toggleShareDialog={this.toggleShareDialog}
 					simulationSettings={this.state.simulationSettings}
+					contagious={this.state.contagious}
+					healthy={this.state.healthy}
 				/>
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
