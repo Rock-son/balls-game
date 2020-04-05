@@ -2,10 +2,10 @@ import React from "react";
 import { Button, Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, NavLink } from "reactstrap";
 
-import "./shareModal.scss";
+import "./shareDialog.scss";
 
-export const ShareModal = props => {
-	const { isOpen, toggle, copy, shareModalTitle } = props;
+export const ShareDialog = props => {
+	const { isOpen, toggle, copy, isCopied, shareModalTitle } = props;
    	return (
 		<Modal key="sharemodal" isOpen={isOpen} toggle={toggle} centered={true} className="share-modal">
 			<ModalHeader charCode="X" toggle={toggle}>
@@ -24,7 +24,11 @@ export const ShareModal = props => {
 				</Row>
 				<Row>
 					<Container>
-						<Button onClick={copy} >Copy link</Button>
+						{ isCopied ?
+							<div className="copied__link">Link copied &#128515;</div> 
+							:
+							<Button onClick={copy} >Copy link</Button>
+						}
 					</Container>
 				</Row>
 			</ModalBody>

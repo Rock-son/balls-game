@@ -1,3 +1,3 @@
-export { SimulationModal } from "./SimulationModal/SimulationModal";
+export { SimulationDialog } from "./SimulationModal/SimulationDialog";
 export { NavBar } from "./Navbar/Navbar";
-export { ShareModal } from "./ShareModal/ShareModal";
+export { ShareDialog } from "./ShareModal/ShareDialog";

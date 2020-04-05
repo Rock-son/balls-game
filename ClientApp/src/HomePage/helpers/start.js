@@ -60,8 +60,6 @@ function handleOnImageLoaded(simulationSettings) {
 		speed,
 		quantity,
 		deactivateAfter,
-		showTime,
-		showStats,
 		autorestart
 	} = simulationSettings == null ? this.state.simulationSettings : simulationSettings;
 	
@@ -103,13 +101,13 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.contagion = contagion;
 		sprite.radius = radius;
 		sprite.reactContext = this;
+		sprite.contagiousFrom = 0;
 		sprite.velocity = { 
 			x: (Math.random() - .5) * speed, 
 			y: (Math.random() - .5) * speed 
 		};
 		spriteArr.push(sprite);
 	}
-		console.log("autostart", this.autostart);
 		
 	const len = spriteArr.length;	
 	// draw and animate

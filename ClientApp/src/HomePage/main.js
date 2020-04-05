@@ -1,8 +1,10 @@
+"use strict";
+
 import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { start, stop, pause, unPause } from "./helpers/actions";
-import { SimulationModal, NavBar, ShareModal } from "./components";
+import { SimulationDialog, NavBar, ShareDialog } from "./components";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
@@ -13,8 +15,6 @@ export default class HomePage extends React.Component {
 		this.canvasRef = React.createRef();
 		this.autostart = true;
 		this.simulationApp = null;
-		this.ticker = null;
-		this.loader = null;
 
 		this.state = {
 			// playing choice
@@ -23,13 +23,17 @@ export default class HomePage extends React.Component {
 			// error handling
 			hasError: false, 
 			error: null,
-			// current time
+			// time
 			currentTime: new Date().getTime(),
+			startTime: new Date(0),
 			// canvas state
 			pause: false,
 			stop: false,
+			contagious: 1,
+			healthy: 199,
 			// nav & buttons
-			startButtonText: "STOP SIMULATION",
+			startButtonText: "CONTINUE SIMULATION",
+			isCopied: false,
 			isNavbarExpanded: false,
 			isNavbarVisible: true,
 			// modals - popups
@@ -39,9 +43,9 @@ export default class HomePage extends React.Component {
 			// SIMULATION
 			simulationSettings: {
 				size: 9,
-				speed: 2,
-				quantity: "50",
-				deactivateAfter: "0",
+				speed: 1,
+				quantity: 50,
+				deactivateAfter: 0,
 				showTime: true,
 				showStats: true,
 				autorestart: true
@@ -59,8 +63,9 @@ export default class HomePage extends React.Component {
 		this.togglePause = this.togglePause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
-		this.toggleShareModal = this.toggleShareModal.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
+		this.simulationRestart= this.simulationRestart.bind(this);
+		this.toggleShareDialog = this.toggleShareDialog.bind(this);
 		this.stopStartSimulation = this.stopStartSimulation.bind(this);
 		this.setSimulationSettings = this.setSimulationSettings.bind(this);
 		this.toggleSimulationDialog = this.toggleSimulationDialog.bind(this);
@@ -84,41 +89,58 @@ export default class HomePage extends React.Component {
 		this.simulationApp.destroy(true);
 	}
 	intervalTime() {
-		this.setState({currentTime: new Date().getTime()});
+		this.setState(prevState => {
+			if (this.state.pause || this.state.stop) {
+				return ({ currentTime: new Date().getTime() })
+			}
+			return ({ currentTime: new Date().getTime(), startTime: new Date(prevState.startTime.getTime() + 1000) })
+		});
 	}
 	handleResize(e) {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
 	stopStartSimulation() {
-		if (!this.state.stop) { // STOP
-			this.simulationStop();
-			this.setState(prevState => ({ stop: true, pause: true, startButtonText: "START SIMULATION" }));
-		} else { 				//PLAY
+		if (this.state.pause && !this.state.stop) { // CONTINUE
+			this.toggleSimulationDialog();
+		} else { 									// START
 			this.simulationStart(true);
-			this.setState(prevState => ({ stop: false, pause: false, startButtonText: "STOP SIMULATION", simulationSettingsOpen: false }));
+			this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false }));
 		}
+	}
+	simulationRestart() {
+		console.log("wtffff");		
+		this.simulationStop();
+		this.simulationStart(true);
+		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
+					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setSimulationSettings(e) {
 		const targetData = e.currentTarget.getAttribute("data-option");
 		const parsedData = JSON.parse(targetData) || {};
 		this.setState(prevState => {
 			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
-			if (parsedData["size"] || parsedData["quantity"]) {
+			// only reset simulation for size and quantity - for preview
+			if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
 				this.simulationStop();
 				this.simulationStart(false, newSimulationSettings);
+				return ({ simulationSettings: newSimulationSettings, startTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1, 
+						contagious: 1, stop: true, pause: true, startButtonText: "START SIMULATION" });
 			}
-			return ({ simulationSettings: newSimulationSettings, stop: true, pause: true, startButtonText: "START SIMULATION" });
+			return ({ simulationSettings: newSimulationSettings });
 		}); 
 	}
 	togglePause() {
 		return this.state.pause && !this.state.stop ? this.simulationUnPause() : this.simulationPause();
 	}
-	toggleShareModal(e) {
+	toggleShareDialog(e) {
 		this.togglePause();
 		const target = e.currentTarget;
-		const game = target.getAttribute("data");
-		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen, shareModalTitle: game ? "GAME COMING SOON" : ""}));
+		const isGame = target.getAttribute("data");
+		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen, shareModalTitle: isGame ? "GAME COMING SOON" : ""}));
+		setTimeout(() => {
+			this.setState({ isCopied: false });
+		}, 1000);
 	}
 	toggleSimulationDialog() {
 		// unPause if previous state was pause, etc.
@@ -138,6 +160,7 @@ export default class HomePage extends React.Component {
 			.then(result => {
 				if (result.state == "granted" || result.state == "prompt") {
 					navigator.clipboard.writeText("https://www.covidsimulator.com");
+					this.setState({ isCopied: true });
 				}
 		 	});
 	}
@@ -146,14 +169,19 @@ export default class HomePage extends React.Component {
 		return (
 			<section className="main">
 				<NavBar 
+					currentTime={this.state.currentTime}
+					startTime={this.state.startTime}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}
 					isNavbarVisible={this.state.isNavbarVisible}
 					toggleSimulationDialog={this.toggleSimulationDialog}
-					toggleShareModal={this.toggleShareModal}
+					toggleShareDialog={this.toggleShareDialog}
+					simulationSettings={this.state.simulationSettings}
+					contagious={this.state.contagious}
+					healthy={this.state.healthy}
 				/>
-				<SimulationModal
+				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
 					isOpen={this.state.simulationSettingsOpen} 
 					toggle={this.toggleSimulationDialog}
@@ -161,10 +189,11 @@ export default class HomePage extends React.Component {
 					settings={this.state.simulationSettings}
 					setSimulationSettings={this.setSimulationSettings}
 				/>
-				<ShareModal 
+				<ShareDialog 
 					isOpen={this.state.shareModalOpen}
-					toggle={this.toggleShareModal}
+					toggle={this.toggleShareDialog}
 					copy={this.copyToClipboard}
+					isCopied={this.state.isCopied}
 					shareModalTitle={this.state.shareModalTitle}
 				
 				/>
