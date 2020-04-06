@@ -20,7 +20,7 @@ export const updateSprite = (sprite, spriteArr, distance, loader) => {
 		if (sprite.contagiousFrom && (sprite.reactContext.state.currentTime - sprite.contagiousFrom > sprite.reactContext.state.simulationSettings["deactivateAfter"])) {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = 0;
-			sprite.texture = loader.resources.sheet.textures["ball-white.png"];
+			sprite.texture = loader.resources.sheet.textures["ball-white-15.png"];
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}
@@ -33,17 +33,17 @@ export const updateSprite = (sprite, spriteArr, distance, loader) => {
 		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius * 2)) < 0) {			
 			const otherSprite = spriteArr[i];
 			if (otherSprite.contagion && !sprite.contagion) {				
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 1 && sprite.reactContext.simulationRestart();	// ON AUTORESTART=TRUE
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				sprite.contagion = 1;
 				sprite.contagiousFrom = new Date().getTime();
-				sprite.texture = loader.resources.sheet.textures["ball-red.png"];
+				sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.simulationRestart();	// ON AUTORESTART=TRUE
 			} else if (sprite.contagion && !otherSprite.contagion) {
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 1 && sprite.reactContext.simulationRestart(); // ON AUTORESTART=TRUE
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				otherSprite.contagion = 1;
-				otherSprite.contagiousFrom = new Date().getTime();;
-				otherSprite.texture = loader.resources.sheet.textures["ball-red.png"];
+				otherSprite.contagiousFrom = new Date().getTime();
+				otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.simulationRestart(); // ON AUTORESTART=TRUE
 			}
 			resolveCollision(sprite, otherSprite);
 		}

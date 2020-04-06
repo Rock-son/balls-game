@@ -7,9 +7,9 @@ export function start(autostart, simulationSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
-	const canvas = this.canvasRef.current;	
+	const canvas = this.canvasRef.current;
 	this.simulationApp = new PIXI.Application({
-		backgroundColor: 0x191919,
+		backgroundColor: 0x000,
 		view: canvas,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
@@ -17,10 +17,9 @@ export function start(autostart, simulationSettings = null) {
 		autoDensity: true,
 		sharedLoader: true
 	});
-
 	
 	if (this.simulationApp.loader.resources.sheet == null) {
-		this.simulationApp.loader.add("sheet", "myBalls.json")
+		this.simulationApp.loader.add("sheet", "balls-15.json")
 		.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 		.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 		.on("error", err => console.error("load error", err))
@@ -58,9 +57,7 @@ function handleOnImageLoaded(simulationSettings) {
 	const {
 		size: radius,
 		speed,
-		quantity,
-		deactivateAfter,
-		autorestart
+		quantity
 	} = simulationSettings == null ? this.state.simulationSettings : simulationSettings;
 	
 	let contagion, sprite;
@@ -68,8 +65,8 @@ function handleOnImageLoaded(simulationSettings) {
 	const nrImages = +quantity;
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
-	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white.png"];
-	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red.png"];
+	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white-15.png"];
+	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red-15.png"];
 
 	for (let i = 0; i < nrImages; i++) {
 
@@ -89,7 +86,7 @@ function handleOnImageLoaded(simulationSettings) {
 		if (contagion) {				
 			sprite = new PIXI.Sprite(redBall);
 		} else {
-			sprite = new PIXI.Sprite(whiteBall);
+			sprite = new PIXI.Sprite(whiteBall);;
 		}
 		sprite.x = x;
 		sprite.y = y;
@@ -98,9 +95,9 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.anchor.x = .5;
 		sprite.anchor.y = .5;
 		sprite.myID = i;
-		sprite.contagion = contagion;
 		sprite.radius = radius;
 		sprite.reactContext = this;
+		sprite.contagion = contagion;
 		sprite.contagiousFrom = 0;
 		sprite.velocity = { 
 			x: (Math.random() - .5) * speed, 

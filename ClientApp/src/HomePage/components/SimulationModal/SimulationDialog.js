@@ -32,7 +32,7 @@ export class SimulationDialog extends React.Component {
 		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, 
 					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = this.props;
 		return (		
-			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} className="simulator-modal">
+			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
 				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
 				<ModalBody>
 					<Row>
