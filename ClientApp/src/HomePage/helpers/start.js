@@ -100,9 +100,11 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.contagion = contagion;
 		sprite.contagiousFrom = 0;
 		sprite.velocity = { 
-			x: (Math.random() - .5) * speed, 
-			y: (Math.random() - .5) * speed 
+			x: (Math.random() > .5 ? randomIntNumber(-1, -1.3) : randomIntNumber(1, 1.3)) * speed,
+			y: (Math.random() > .5 ? randomIntNumber(-1, -1.3) : randomIntNumber(1, 1.3)) * speed,
 		};
+		// calculate hypothenuse
+		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
 		

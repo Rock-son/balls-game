@@ -110,11 +110,25 @@ function resolveCollision(particle, otherParticle) {
 		const vFinal1 = rotate(v1, -angle);
 		const vFinal2 = rotate(v2, -angle);
 
-		// Swap particle velocities for realistic bounce effect
-		particle.velocity.x = vFinal1.x;
-		particle.velocity.y = vFinal1.y;
+		// PRESERVE SPEED - calculate startSpeed and newSpeed ratio and apply it to particle x and y velocities
+		const particlePreservedSpeed = preserveSpeed(particle, vFinal1);
+		const otherParticlePreservedSpeed = preserveSpeed(otherParticle, vFinal2);
 
-		otherParticle.velocity.x = vFinal2.x;
-		otherParticle.velocity.y = vFinal2.y;
+		// Swap particle velocities for realistic bounce effect
+		particle.velocity.x = particlePreservedSpeed.x;
+		particle.velocity.y = particlePreservedSpeed.y;
+
+		otherParticle.velocity.x = otherParticlePreservedSpeed.x;
+		otherParticle.velocity.y = otherParticlePreservedSpeed.y;
 	}
+}
+
+function preserveSpeed(particle, vFinal) {
+	const newSpeed = Math.sqrt(Math.pow(vFinal.x, 2) + Math.pow(vFinal.y, 2));
+	
+	return { // RETURN SPEED RATIO
+		x: vFinal.x * particle.startSpeed / newSpeed,
+		y: vFinal.y * particle.startSpeed / newSpeed
+	}
+
 }
