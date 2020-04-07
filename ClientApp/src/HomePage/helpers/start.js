@@ -18,19 +18,20 @@ export function start(autostart, simulationSettings = null) {
 		sharedLoader: true
 	});
 	
-	if (this.simulationApp.loader.resources.sheet == null) {
-		this.simulationApp.loader.add("sheet", "balls-15.json")
-		.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
-		.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
-		.on("error", err => console.error("load error", err))
-		.load(handleOnImageLoaded.bind(this, simulationSettings));
+	if (this.simulationApp.loader.resources.sheet15 == null) {
+		this.simulationApp.loader.add("sheet15", "balls-15.json")
+			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
+			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
+			.on("error", err => console.error("load error", err))
+			.load(handleOnImageLoaded.bind(this, simulationSettings));
 	} else {
 		this.simulationApp.loader.load(handleOnImageLoaded.bind(this, simulationSettings));
 	}
 
 
 	// Resize function window
-	const resize = () => {
+	const resize = (e) => {
+		
 		// Resize the renderer
 		this.simulationApp.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
 							window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
@@ -65,8 +66,8 @@ function handleOnImageLoaded(simulationSettings) {
 	const nrImages = +quantity;
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
-	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white-15.png"];
-	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red-15.png"];
+	const whiteBall = this.simulationApp.loader.resources.sheet15.textures["ball-white-15.png"];
+	const redBall = this.simulationApp.loader.resources.sheet15.textures["ball-red-15.png"];
 
 	for (let i = 0; i < nrImages; i++) {
 
@@ -100,8 +101,8 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.contagion = contagion;
 		sprite.contagiousFrom = 0;
 		sprite.velocity = { 
-			x: (Math.random() > .5 ? randomIntNumber(-1, -1.3) : randomIntNumber(1, 1.3)) * speed,
-			y: (Math.random() > .5 ? randomIntNumber(-1, -1.3) : randomIntNumber(1, 1.3)) * speed,
+			x: (Math.random() > .5 ? randomIntNumber(-.8, -1.2) : randomIntNumber(.8, 1.2)) * speed,
+			y: (Math.random() > .5 ? randomIntNumber(-.8, -1.2) : randomIntNumber(.8, 1.2)) * speed,
 		};
 		// calculate hypothenuse
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
