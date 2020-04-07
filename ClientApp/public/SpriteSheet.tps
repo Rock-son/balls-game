@@ -34,7 +34,7 @@
         <key>dataFormat</key>
         <string>pixijs4</string>
         <key>textureFileName</key>
-        <filename></filename>
+        <filename>balls-100.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -132,7 +132,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>myBalls.json</filename>
+                <filename>balls-100.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -181,8 +181,8 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">ball-red.png</key>
-            <key type="filename">ball-white.png</key>
+            <key type="filename">ball-red.svg</key>
+            <key type="filename">ball-white.svg</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -200,8 +200,8 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>ball-red.png</filename>
-            <filename>ball-white.png</filename>
+            <filename>ball-red.svg</filename>
+            <filename>ball-white.svg</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
