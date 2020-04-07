@@ -100,10 +100,13 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.reactContext = this;
 		sprite.contagion = contagion;
 		sprite.contagiousFrom = 0;
+		const randomX = Math.random() - .5;
+		const randomY = Math.random() - .5;
 		sprite.velocity = { 
-			x: (Math.random() > .5 ? randomIntNumber(-.8, -1.2) : randomIntNumber(.8, 1.2)) * speed,
-			y: (Math.random() > .5 ? randomIntNumber(-.8, -1.2) : randomIntNumber(.8, 1.2)) * speed,
+			x: randomX < 0  && randomX > -.3 ? (randomX*speed) - speed : (randomX > 0  && randomX < .3 ? (randomX) + speed : randomX * speed),
+			y: randomY < 0  && randomY > -.3 ? (randomY*speed) - speed : (randomY > 0  && randomY < .3 ? (randomY) + speed : randomY * speed),
 		};
+		
 		// calculate hypothenuse
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
