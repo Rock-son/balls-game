@@ -42,7 +42,7 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			// SIMULATION
 			simulationSettings: {
-				size: 5,
+				size: 7.5,
 				speed: 2,
 				quantity: 200,
 				deactivateAfter: 0,
