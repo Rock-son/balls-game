@@ -42,7 +42,7 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			// SIMULATION
 			simulationSettings: {
-				size: 7.5,
+				size: window.innerWidth < 800 ? 2.5 : 5,
 				speed: 1,
 				quantity: 200,
 				deactivateAfter: 0,
@@ -108,8 +108,7 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false }));
 		}
 	}
-	simulationRestart() {
-		console.log("wtffff");		
+	simulationRestart() {	
 		this.simulationStop();
 		this.simulationStart(true);
 		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
