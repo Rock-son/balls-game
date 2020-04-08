@@ -1,6 +1,6 @@
 "use strict";
 
-import { updateSprite } from "./updateSprite";
+import { updateSimulation } from "./updateSimulation";
 import * as PIXI from "pixi.js";
 
 export function start(autostart, simulationSettings = null) {
@@ -117,12 +117,12 @@ function handleOnImageLoaded(simulationSettings) {
 	if (this.autostart) {
 		for (let index = 0; index < len; index++) {
 			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.add(updateSprite.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			this.simulationApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
 		}
 	} else {
 		for (let index = 0; index < len; index++) {
 			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.addOnce(updateSprite.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			this.simulationApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
 		}
 	}
 }

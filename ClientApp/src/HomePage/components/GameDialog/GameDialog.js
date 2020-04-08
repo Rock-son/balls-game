@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, Nav, NavLink } from "reactstrap";
 
-import { sizeOptions, quantityOptions, speedOptions, deactivateOptions, booleanOptions } from "./modalOptions";
+import { sizeOptions, quantityOptions, speedOptions, deactivateOptions, booleanOptions } from "./gameOptions";
 import "./simulationDialog.scss";
 
 export class SimulationDialog extends React.Component {
