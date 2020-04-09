@@ -45,7 +45,7 @@ export class GameDialog extends React.Component {
 
 	render() {
 
-		const { isOpen, toggle, startSimulation, buttonText, setGameSettings, 
+		const { isOpen, toggle, startGame, buttonText, setGameSettings, 
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
 		return (		
 			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
@@ -161,7 +161,7 @@ export class GameDialog extends React.Component {
 						</Container>
 					</Row>
 				</ModalBody>
-				<ModalFooter onClick={startSimulation} className="simulator-modal__footer">
+				<ModalFooter onClick={startGame} className="simulator-modal__footer">
 					&gt;&gt;&gt;&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;&lt;&lt;&lt;
 				</ModalFooter>
 		</Modal>

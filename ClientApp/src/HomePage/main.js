@@ -18,9 +18,6 @@ export default class HomePage extends React.Component {
 		this.gameApp = null;
 
 		this.state = {
-			// playing choice
-			simulation: true,
-			game: false,
 			// error handling
 			hasError: false, 
 			error: null,
@@ -70,11 +67,13 @@ export default class HomePage extends React.Component {
 		this.pause = pause.bind(this);
 		this.unpause = unPause.bind(this);
 		
+		this.toggleDialog = this.toggleDialog.bind(this);
 		this.togglePause = this.togglePause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
+		this.gameRestart = this.gameRestart.bind(this);
 		this.stopStartGame = this.stopStartGame.bind(this);
 		this.setGameSettings = this.setGameSettings.bind(this);
 		this.toggleGameDialog = this.toggleGameDialog.bind(this);
@@ -101,7 +100,8 @@ export default class HomePage extends React.Component {
 	}
 	componentWillUnmount() {
 		clearDriftless(this.interval);
-		this.simulationApp.destroy(true);
+		this.simulationApp && this.simulationApp.destroy(true);
+		this.gameApp && this.gameApp.destroy(true);
 	}
 	intervalTime() {
 		this.setState(prevState => {
@@ -115,6 +115,13 @@ export default class HomePage extends React.Component {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
+	toggleDialog() {
+		if (this.simulationApp) {
+			this.toggleSimulationDialog();
+		} else {
+			this.toggleGameDialog();
+		}
+	}
 	// SIMULATION
 	stopStartSimulation() {
 		if (this.state.pause && !this.state.stop) { // CONTINUE
@@ -124,7 +131,7 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false }));
 		}
 	}
-	simulationRestart() {	
+	simulationRestart() {
 		this.stop();
 		this.startSimulation(true);
 		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
@@ -156,10 +163,16 @@ export default class HomePage extends React.Component {
 	stopStartGame() {
 		if (this.state.pause && !this.state.stop) { // CONTINUE
 			this.toggleGameDialog();
-		} else { 									// START
+		} else {								// START
 			this.startGame(true);
 			this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE GAME", gameSettingsOpen: false }));
 		}
+	}	
+	gameRestart() {
+		this.stop();
+		this.startGame(true);
+		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
+					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setGameSettings(e) {
 		let targetData, parsedData;
@@ -264,7 +277,7 @@ export default class HomePage extends React.Component {
 				/>
 				<article className="main__canvas">
 					<canvas 
-						onClick={this.toggleSimulationDialog}
+						onClick={this.toggleDialog}
 						id="canvas"
 						ref={this.canvasRef} 
 						className="canvas" 
