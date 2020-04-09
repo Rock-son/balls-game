@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, Nav, NavLink } from "reactstrap";
 
-import { sizeOptions, quantityOptions, speedOptions, deactivateOptions, booleanOptions } from "./simulationOptions";
+import { sizeOptions, quantityValues, speedOptions, deactivateOptions, booleanOptions } from "./simulationOptions";
 import "./simulationDialog.scss";
 
 export class SimulationDialog extends React.Component {
@@ -27,10 +27,23 @@ export class SimulationDialog extends React.Component {
 		return false;
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		const minQuantity = quantityValues[this.props.settings.size][0] || 0;
+		const maxQuantity = quantityValues[this.props.settings.size].slice(-1)[0] || 1000;		
+		// if quantity is greater or smaller than it should be according to size
+		if (this.props.settings.quantity > maxQuantity ) {
+			return this.props.setSimulationSettings({ quantity: maxQuantity });
+		}
+		if (this.props.settings.quantity < minQuantity ) {
+			return this.props.setSimulationSettings({ quantity: minQuantity });
+		}
+	}
+
 	render() {
 
 		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, 
 					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = this.props;
+
 		return (		
 			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
 				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
@@ -59,17 +72,17 @@ export class SimulationDialog extends React.Component {
 						<Container className="choice">
 							<div>Number of balls</div>
 							<Nav className="choice__options">
-								{quantityOptions[size].map((quantityOption, idx) => {
-									if (quantityOption === "|") {
-										return <NavLink className="disabled" key={idx}>{quantityOption}</NavLink>;
+								{quantityValues[size].map((quantityValue, idx) => {
+									if (quantityValue === "|") {
+										return <NavLink className="disabled" key={idx}>{quantityValue}</NavLink>;
 									}
 									return 	<NavLink 
 												key={idx}
 												tabIndex="0"
-												data-option={`${JSON.stringify({quantity: quantityOption})}`}
+												data-option={`${JSON.stringify({quantity: quantityValue})}`}
 												onClick={setSimulationSettings}
-												active={quantityOption === quantity}>
-													{quantityOption}
+												active={quantityValue === quantity}>
+													{quantityValue}
 											</NavLink>;
 								})}
 							</Nav>				
