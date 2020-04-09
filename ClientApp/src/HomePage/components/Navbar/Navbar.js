@@ -5,7 +5,7 @@ import { Button, Navbar, Nav, NavbarToggler,
 
 export const NavBar = props => {
 	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healthy,
-			toggleSimulationDialog, toggleShareDialog, startTime, simulationSettings: { showTime, showStats } } = props;
+			toggleSimulationDialog, toggleShareDialog, toggleGameDialog, startTime, simulationSettings: { showTime, showStats } } = props;
 	const seconds = startTime.getSeconds();
 	const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
 
@@ -28,19 +28,31 @@ export const NavBar = props => {
 						<NavLink className="navbar__nav__link" onClick={toggleSimulationDialog}>Simulate</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
+						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link" onClick={toggleShareDialog}>Play game</NavLink>
+						<NavLink data="game" className="navbar__nav__link" onClick={toggleGameDialog}>Play game</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
+						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink data="game" className="navbar__nav__link" >Stay Safe</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="navbar__nav__link" onClick={toggleShareDialog}>Share</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="d-none d-sm-block navbar__nav__separator">|</NavLink>
+						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink className="navbar__nav__link" >About</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="navbar__nav__link" onClick={toggleNavbarVisibility}>Hide</NavLink>
