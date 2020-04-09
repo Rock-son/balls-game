@@ -6,24 +6,21 @@ import { sizeOptions, quantityValues, speedOptions, deactivateOptions, booleanOp
 import "./simulationDialog.scss";
 
 export class SimulationDialog extends React.Component {
-	constructor(props) {
-		super(props);
-		
-	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		if (!nextProps.isSimulationActive) {
 			return false;
 		}
-		if (this.props.isOpen != nextProps.isOpen || this.props.buttonText != nextProps.buttonText) {
+		if (this.props.isOpen !== nextProps.isOpen || this.props.buttonText !== nextProps.buttonText) {
 			return true;
 		}
-		if (this.props.settings["size"] != nextProps.settings["size"] ||
-			this.props.settings["speed"] != nextProps.settings["speed"] ||
-			this.props.settings["quantity"] != nextProps.settings["quantity"] ||
-			this.props.settings["deactivateAfter"] != nextProps.settings["deactivateAfter"] ||
-			this.props.settings["showTime"] != nextProps.settings["showTime"] ||
-			this.props.settings["showStats"] != nextProps.settings["showStats"] ||
-			this.props.settings["autorestart"] != nextProps.settings["autorestart"]
+		if (this.props.settings["size"] !== nextProps.settings["size"] ||
+			this.props.settings["speed"] !== nextProps.settings["speed"] ||
+			this.props.settings["quantity"] !== nextProps.settings["quantity"] ||
+			this.props.settings["deactivateAfter"] !== nextProps.settings["deactivateAfter"] ||
+			this.props.settings["showTime"] !== nextProps.settings["showTime"] ||
+			this.props.settings["showStats"] !== nextProps.settings["showStats"] ||
+			this.props.settings["autorestart"] !== nextProps.settings["autorestart"]
 			) {
 				return true;
 		}

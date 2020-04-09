@@ -6,23 +6,19 @@ import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDi
 import "./gameDialog.scss";
 
 export class GameDialog extends React.Component {
-	constructor(props) {
-		super(props);
-		
-	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		if (!nextProps.isGameActive) {
 			return false;
 		}
-		if (this.props.isOpen != nextProps.isOpen || this.props.buttonText != nextProps.buttonText) {
+		if (this.props.isOpen !== nextProps.isOpen || this.props.buttonText !== nextProps.buttonText) {
 			return true;
 		}
-		if (this.props.settings["mode"] != nextProps.settings["mode"] ||
-			this.props.settings["difficulty"] != nextProps.settings["difficulty"] ||
-			this.props.settings["size"] != nextProps.settings["size"] ||
-			this.props.settings["quantity"] != nextProps.settings["quantity"] ||
-			this.props.settings["speed"] != nextProps.settings["speed"]
+		if (this.props.settings["mode"] !== nextProps.settings["mode"] ||
+			this.props.settings["difficulty"] !== nextProps.settings["difficulty"] ||
+			this.props.settings["size"] !== nextProps.settings["size"] ||
+			this.props.settings["quantity"] !== nextProps.settings["quantity"] ||
+			this.props.settings["speed"] !== nextProps.settings["speed"]
 			) {
 				return true;
 		}
@@ -127,8 +123,8 @@ export class GameDialog extends React.Component {
 										return <NavLink className="disabled" key={idx}>{quantityValue}</NavLink>;
 									}
 									// if quantity is outside of min / max values
-									if (quantityDiffVals[difficulty][size] && (quantityValue < quantityDiffVals[difficulty][size].min) ||
-										quantityDiffVals[difficulty][size] && (quantityValue > quantityDiffVals[difficulty][size].max)
+									if ((quantityDiffVals[difficulty][size] && (quantityValue < quantityDiffVals[difficulty][size].min)) ||
+										(quantityDiffVals[difficulty][size] && (quantityValue > quantityDiffVals[difficulty][size].max))
 									) {
 										return <NavLink disabled={true} key={idx}>{quantityValue}</NavLink>;
 									}
@@ -152,7 +148,7 @@ export class GameDialog extends React.Component {
 									if (typeof speedOption != "object") {
 										return <NavLink className="disabled" key={idx}>{speedOption}</NavLink>;
 									}
-									if (speedOption.difficulty != difficulty ) {
+									if (speedOption.difficulty !== difficulty ) {
 										return <NavLink className="disabled" key={idx}>{speedOption.type}</NavLink>;
 									}
 									return	<NavLink 

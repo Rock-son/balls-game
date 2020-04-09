@@ -110,8 +110,9 @@ export default class HomePage extends React.Component {
 	}
 	intervalTime() {
 		this.setState(prevState => {
-			if (this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped) || 
-				this.state.isGameActive && (this.state.gamePaused || this.state.gameStopped)
+			// in case of simulation /game either stopped or paused 
+			if ((this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped)) || 
+				(this.state.isGameActive && (this.state.gamePaused || this.state.gameStopped))
 			) {
 				// stop calculating currentTime because of deactivate time
 				return ({ currentTime: prevState.currentTime })
@@ -216,8 +217,6 @@ export default class HomePage extends React.Component {
 		return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();
 	}
 	toggleShareDialog(e) {
-		const target = e.currentTarget;
-		const isGame = target.getAttribute("data");
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareModalOpen: !prevState.shareModalOpen }));
@@ -299,7 +298,7 @@ export default class HomePage extends React.Component {
 	copyToClipboard() {		
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
-				if (result.state == "granted" || result.state == "prompt") {
+				if (result.state === "granted" || result.state === "prompt") {
 					navigator.clipboard.writeText("https://www.covidsimulator.com");
 					this.setState({ isCopied: true });
 				}
