@@ -5,11 +5,10 @@ import { Button, Row, Modal, ModalHeader, ModalBody, ModalFooter,
 import "./shareDialog.scss";
 
 export const ShareDialog = props => {
-	const { isOpen, toggle, copy, isCopied, shareModalTitle } = props;
+	const { isOpen, toggle, copy, isCopied } = props;
    	return (
 		<Modal key="sharemodal" isOpen={isOpen} toggle={toggle} centered={true} className="share-modal">
 			<ModalHeader charCode="X" toggle={toggle}>
-				{shareModalTitle}
 			</ModalHeader>
 			<ModalBody className="justify-content-center">
 				<Row>

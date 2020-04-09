@@ -2,39 +2,95 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, Nav, NavLink } from "reactstrap";
 
-import { sizeOptions, quantityOptions, speedOptions, deactivateOptions, booleanOptions } from "./gameOptions";
-import "./simulationDialog.scss";
+import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDiffVals, speedOptions, speedDiffValues } from "./gameOptions";
+import "./gameDialog.scss";
 
-export class SimulationDialog extends React.Component {
+export class GameDialog extends React.Component {
 	constructor(props) {
 		super(props);
 		
 	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.isOpen != nextProps.isOpen || this.props.buttonText != nextProps.buttonText) {
 			return true;
 		}
-		if (this.props.settings["size"] != nextProps.settings["size"] ||
-			this.props.settings["speed"] != nextProps.settings["speed"] ||
+		if (this.props.settings["mode"] != nextProps.settings["mode"] ||
+			this.props.settings["difficulty"] != nextProps.settings["difficulty"] ||
+			this.props.settings["size"] != nextProps.settings["size"] ||
 			this.props.settings["quantity"] != nextProps.settings["quantity"] ||
-			this.props.settings["deactivateAfter"] != nextProps.settings["deactivateAfter"] ||
-			this.props.settings["showTime"] != nextProps.settings["showTime"] ||
-			this.props.settings["showStats"] != nextProps.settings["showStats"] ||
-			this.props.settings["autorestart"] != nextProps.settings["autorestart"]
+			this.props.settings["speed"] != nextProps.settings["speed"]
 			) {
 				return true;
 		}
 		return false;
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		const minQuantity = (quantityDiffVals[this.props.settings.difficulty][this.props.settings.size] || { min: 0 }).min;
+		const maxQuantity = (quantityDiffVals[this.props.settings.difficulty][this.props.settings.size] || { max: 1000 }).max;
+		const changedSpeed = speedDiffValues[this.props.settings.difficulty];
+		// if quantity is greater or smaller than it should be according to size
+		if (this.props.settings.quantity > maxQuantity ) {
+			return this.props.setGameSettings({ quantity: maxQuantity, speed: changedSpeed });
+		}
+		if (this.props.settings.quantity < minQuantity ) {			
+			return this.props.setGameSettings({ quantity: minQuantity, speed: changedSpeed });
+		}
+		// if min, max values are not a problem, then set speed
+		if (this.props.settings.speed !== changedSpeed) {
+			return this.props.setGameSettings({ speed: changedSpeed });
+		}
+	}
+
 	render() {
 
-		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, 
-					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = this.props;
+		const { isOpen, toggle, startSimulation, buttonText, setGameSettings, 
+					settings: { mode, difficulty, size, quantity, speed } } = this.props;
 		return (		
 			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
 				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
 				<ModalBody>
+					<Row>
+						<Container className="choice">
+							<div>Game Mode</div>
+							<Nav className="choice__options">
+								{modeOptions.map((modeOption, idx) => {
+									if (typeof modeOption != "object") {
+										return <NavLink className="disabled" key={idx}>{modeOption}</NavLink>;
+									}
+									return 	<NavLink 
+												key={idx}
+												tabIndex="0"
+												data-option={`${JSON.stringify({ mode: modeOption.value })}`}
+												onClick={setGameSettings}
+												active={modeOption.value === mode}>
+													{modeOption.type}
+											</NavLink>;
+								})}
+							</Nav>
+						</Container>
+					</Row>
+					<Row>
+						<Container className="choice">
+							<div>Difficulty level (also affects Quarantine)</div>
+							<Nav className="choice__options">
+								{difficultyOptions.map((difficultyOption, idx) => {
+									if (difficultyOption === "|") {
+										return <NavLink className="disabled" key={idx}>{difficultyOption}</NavLink>;
+									}
+									return 	<NavLink 
+												key={idx}
+												tabIndex="0"
+												data-option={`${JSON.stringify({ difficulty: difficultyOption.value })}`}
+												onClick={setGameSettings}
+												active={difficultyOption.value === difficulty}>
+													{difficultyOption.type}
+											</NavLink>;
+								})}
+							</Nav>				
+						</Container>
+					</Row>
 					<Row>
 						<Container className="choice">
 							<div>Size of balls</div>
@@ -43,11 +99,11 @@ export class SimulationDialog extends React.Component {
 									if (typeof sizeOption != "object") {
 										return <NavLink className="disabled" key={idx}>{sizeOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return	<NavLink 
 												key={idx}
-												tabIndex="0"
+												tabIndex="0" 
 												data-option={`${JSON.stringify({size: sizeOption.value})}`}
-												onClick={setSimulationSettings}
+												onClick={setGameSettings}
 												active={sizeOption.value === size}>
 													{sizeOption.type}
 											</NavLink>;
@@ -59,20 +115,26 @@ export class SimulationDialog extends React.Component {
 						<Container className="choice">
 							<div>Number of balls</div>
 							<Nav className="choice__options">
-								{quantityOptions[size].map((quantityOption, idx) => {
-									if (quantityOption === "|") {
-										return <NavLink className="disabled" key={idx}>{quantityOption}</NavLink>;
+								{quantityValues[size].map((quantityValue, idx) => {
+									if (quantityValue === "|") {
+										return <NavLink className="disabled" key={idx}>{quantityValue}</NavLink>;
+									}
+									// if quantity is outside of min / max values
+									if (quantityDiffVals[difficulty][size] && (quantityValue < quantityDiffVals[difficulty][size].min) ||
+										quantityDiffVals[difficulty][size] && (quantityValue > quantityDiffVals[difficulty][size].max)
+									) {
+										return <NavLink disabled={true} key={idx}>{quantityValue}</NavLink>;
 									}
 									return 	<NavLink 
 												key={idx}
 												tabIndex="0"
-												data-option={`${JSON.stringify({quantity: quantityOption})}`}
-												onClick={setSimulationSettings}
-												active={quantityOption === quantity}>
-													{quantityOption}
+												data-option={`${JSON.stringify({quantity: quantityValue})}`}
+												onClick={setGameSettings}
+												active={quantityValue === quantity}>
+													{quantityValue}
 											</NavLink>;
 								})}
-							</Nav>				
+							</Nav>	
 						</Container>
 					</Row>
 					<Row>
@@ -83,89 +145,16 @@ export class SimulationDialog extends React.Component {
 									if (typeof speedOption != "object") {
 										return <NavLink className="disabled" key={idx}>{speedOption}</NavLink>;
 									}
+									if (speedOption.difficulty != difficulty ) {
+										return <NavLink className="disabled" key={idx}>{speedOption.type}</NavLink>;
+									}
 									return	<NavLink 
 												key={idx}
 												tabIndex="0" 
 												data-option={`${JSON.stringify({speed: speedOption.value})}`}
-												onClick={setSimulationSettings}
+												onClick={setGameSettings}
 												active={speedOption.value === speed}>
 													{speedOption.type}
-											</NavLink>;
-								})}
-							</Nav>
-						</Container>
-					</Row>
-					<Row>
-						<Container className="choice">
-							<div>Deactivate ball after</div>
-							<Nav className="choice__options">
-								{deactivateOptions.map((deactivateOption, idx) => {
-									if (deactivateOption === "|") {
-										return <NavLink className="disabled" key={idx}>{deactivateOption}</NavLink>;
-									}
-									return 	<NavLink 
-												key={idx}
-												tabIndex="0" 
-												data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
-												onClick={setSimulationSettings}
-												active={deactivateOption === deactivateAfter}>
-													{deactivateOption === 0 ? "no" : `${deactivateOption/1000}s`}
-											</NavLink>;
-								})}
-							</Nav>				
-						</Container>
-					</Row>				
-					<Row className="col-12">
-						<Container className="col-4 choice">
-							<div>Show time</div>
-							<Nav className="choice__options">
-								{booleanOptions.map((timeOption, idx) => {
-									if (typeof timeOption !== "object") {
-										return <NavLink className="disabled" key={idx}>{timeOption}</NavLink>;
-									}
-									return 	<NavLink 
-												key={idx}
-												tabIndex="0" 
-												data-option={`${JSON.stringify({showTime: timeOption.value})}`}
-												onClick={setSimulationSettings}
-												active={timeOption.value === showTime}>
-													{timeOption.type}
-											</NavLink>;
-								})}
-							</Nav>
-						</Container>
-						<Container className="col-4 choice">
-							<div>Show stats</div>
-							<Nav className="choice__options">
-								{booleanOptions.map((statOption, idx) => {
-									if (typeof statOption !== "object") {
-										return <NavLink className="disabled" key={idx}>{statOption}</NavLink>;
-									}
-									return 	<NavLink 
-												key={idx} 
-												tabIndex="0" 
-												data-option={`${JSON.stringify({showStats: statOption.value})}`}
-												onClick={setSimulationSettings}
-												active={statOption.value === showStats}>
-													{statOption.type}
-											</NavLink>;
-								})}
-							</Nav>
-						</Container>
-						<Container className="col-4 choice">
-							<div>Autorestart</div>
-							<Nav className="choice__options">
-								{booleanOptions.map((restartOption, idx) => {
-									if (typeof restartOption !== "object") {
-										return <NavLink className="disabled" key={idx}>{restartOption}</NavLink>;
-									}
-									return 	<NavLink 
-												key={idx}
-												tabIndex="0" 
-												data-option={`${JSON.stringify({autorestart: restartOption.value})}`}
-												onClick={setSimulationSettings}
-												active={restartOption.value === autorestart}>
-													{restartOption.type}
 											</NavLink>;
 								})}
 							</Nav>

@@ -3,7 +3,7 @@
 import { updateSimulation } from "./updateSimulation";
 import * as PIXI from "pixi.js";
 
-export function start(autostart, simulationSettings = null) {
+export function startGame(autostart, simulationSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
