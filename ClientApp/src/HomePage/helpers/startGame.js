@@ -1,14 +1,12 @@
-"use strict";
-
 import { updateSimulation } from "./updateSimulation";
 import * as PIXI from "pixi.js";
 
-export function startGame(autostart, simulationSettings = null) {
+export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
 	const canvas = this.canvasRef.current;
-	this.simulationApp = new PIXI.Application({
+	this.gameApp = new PIXI.Application({
 		backgroundColor: 0x000,
 		view: canvas,
 		width: this.canvasWidth,
@@ -18,24 +16,22 @@ export function startGame(autostart, simulationSettings = null) {
 		sharedLoader: true
 	});
 	
-	if (this.simulationApp.loader.resources.sheet == null) {
-		this.simulationApp.loader.add("sheet", "balls-15.json")
+	if (this.gameApp.loader.resources.sheet == null) {
+		this.gameApp.loader.add("sheet", "balls-15.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
-			.load(handleOnImageLoaded.bind(this, simulationSettings));
+			.load(handleOnImageLoaded.bind(this, gameSettings));
 	} else {
-		this.simulationApp.loader.load(handleOnImageLoaded.bind(this, simulationSettings));
+		this.gameApp.loader.load(handleOnImageLoaded.bind(this, gameSettings));
 	}
-
-
 	// Resize function window
 	const resize = (e) => {
-		
-		// Resize the renderer
-		this.simulationApp.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
-							window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
-
+		if (this.gameApp) {
+			// Resize the renderer
+			this.gameApp.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
+								window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
+		}
 	// You can use the 'screen' property as the renderer visible
 	// area, this is more useful than view.width/height because
 	// it handles resolution
@@ -54,20 +50,20 @@ function distance(x1, y1, x2, y2) {
 	return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 }
 
-function handleOnImageLoaded(simulationSettings) {
+function handleOnImageLoaded(gameSettings) {
 	const {
 		size: radius,
 		speed,
 		quantity
-	} = simulationSettings == null ? this.state.simulationSettings : simulationSettings;
+	} = gameSettings == null ? this.state.gameSettings : gameSettings;
 	
 	let contagion, sprite;
 	const spriteArr = [];
 	const nrImages = +quantity;
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
-	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white-15.png"];
-	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red-15.png"];
+	const whiteBall = this.gameApp.loader.resources.sheet.textures["ball-white-15.png"];
+	const redBall = this.gameApp.loader.resources.sheet.textures["ball-red-15.png"];
 
 	for (let i = 0; i < nrImages; i++) {
 
@@ -107,22 +103,22 @@ function handleOnImageLoaded(simulationSettings) {
 			y: randomY < 0  && randomY > -.3 ? (randomY*speed) - speed : (randomY > 0  && randomY < .3 ? (randomY) + speed : randomY * speed),
 		};
 		
-		// calculate hypothenuse
+		// calculate starting speed (hypothenuse from x, y)
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
 		
-	const len = spriteArr.length;	
+	const len = spriteArr.length;
 	// draw and animate
 	if (this.autostart) {
 		for (let index = 0; index < len; index++) {
-			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			this.gameApp.stage.addChild(spriteArr[index]);
+			this.gameApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
 		}
 	} else {
 		for (let index = 0; index < len; index++) {
-			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			this.gameApp.stage.addChild(spriteArr[index]);
+			this.gameApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
 		}
 	}
 }

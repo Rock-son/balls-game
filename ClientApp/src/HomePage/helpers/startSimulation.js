@@ -1,5 +1,3 @@
-"use strict";
-
 import { updateSimulation } from "./updateSimulation";
 import * as PIXI from "pixi.js";
 
@@ -31,11 +29,11 @@ export function startSimulation(autostart, simulationSettings = null) {
 
 	// Resize function window
 	const resize = (e) => {
-		
-		// Resize the renderer
-		this.simulationApp.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
-							window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
-
+		if (this.simulationApp) {
+			// Resize the renderer
+			this.simulationApp.renderer.resize(window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth,
+								window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight);
+		}
 	// You can use the 'screen' property as the renderer visible
 	// area, this is more useful than view.width/height because
 	// it handles resolution
@@ -99,7 +97,7 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.radius = radius;
 		sprite.reactContext = this;
 		sprite.contagion = contagion;
-		sprite.contagiousFrom = 0;
+		sprite.contagiousFrom = null;
 		const randomX = Math.random() - .5;
 		const randomY = Math.random() - .5;
 		sprite.velocity = { 
@@ -107,7 +105,7 @@ function handleOnImageLoaded(simulationSettings) {
 			y: randomY < 0  && randomY > -.3 ? (randomY*speed) - speed : (randomY > 0  && randomY < .3 ? (randomY) + speed : randomY * speed),
 		};
 		
-		// calculate hypothenuse
+		// calculate starting speed (hypothenuse from x, y)
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}

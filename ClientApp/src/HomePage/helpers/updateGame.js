@@ -1,6 +1,6 @@
 "use strict";
 
-export const updateGame = (sprite, spriteArr, distance, loader) => {	
+export const updateGame = (sprite, spriteArr, distance, loader) => {
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
@@ -15,7 +15,7 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 	if ((sprite.y - sprite.radius) < 0) {
 		sprite.velocity.y = -sprite.velocity.y;
 	}
-	// CALCULATE DEACTIVATION TIME IF APPLIED
+	/* CALCULATE DEACTIVATION TIME IF APPLIED - MAYBE WILL BE USED FOR PREVOIUS INFECTED - VIOLET
 	if (sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0) {
 		if (sprite.contagiousFrom && (sprite.reactContext.state.currentTime - sprite.contagiousFrom > sprite.reactContext.state.simulationSettings["deactivateAfter"])) {
 			sprite.contagion = 0;
@@ -23,7 +23,7 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 			sprite.texture = loader.resources.sheet.textures["ball-white-15.png"];
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
-	}
+	}*/
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = 0; i < spriteArr.length; i++) {
 		if (sprite.myID === spriteArr[i].myID) {
@@ -37,13 +37,13 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 				sprite.contagion = 1;
 				sprite.contagiousFrom = new Date().getTime();
 				sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.simulationRestart();	// ON AUTORESTART=TRUE
+				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart();	// ON AUTORESTART=TRUE
 			} else if (sprite.contagion && !otherSprite.contagion) {
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				otherSprite.contagion = 1;
 				otherSprite.contagiousFrom = new Date().getTime();
 				otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.simulationRestart(); // ON AUTORESTART=TRUE
+				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart(); // ON AUTORESTART=TRUE
 			}
 			resolveCollision(sprite, otherSprite);
 		}
@@ -124,9 +124,10 @@ function resolveCollision(particle, otherParticle) {
 }
 
 function preserveSpeed(particle, vFinal) {
+	// calculate hypothenuse of the new speed
 	const newSpeed = Math.sqrt(Math.pow(vFinal.x, 2) + Math.pow(vFinal.y, 2));
-	
-	return { // RETURN SPEED RATIO
+	// and compare it to the old speed hypothenuse and shorten / prolong x & y with calculated ratio
+	return {
 		x: vFinal.x * particle.startSpeed / newSpeed,
 		y: vFinal.y * particle.startSpeed / newSpeed
 	}

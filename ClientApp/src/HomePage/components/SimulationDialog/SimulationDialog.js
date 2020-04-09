@@ -11,6 +11,9 @@ export class SimulationDialog extends React.Component {
 		
 	}
 	shouldComponentUpdate(nextProps, nextState) {
+		if (!nextProps.isSimulationActive) {
+			return false;
+		}
 		if (this.props.isOpen != nextProps.isOpen || this.props.buttonText != nextProps.buttonText) {
 			return true;
 		}
@@ -28,8 +31,11 @@ export class SimulationDialog extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+		if (!this.props.isSimulationActive) {
+			return false;
+		}
 		const minQuantity = quantityValues[this.props.settings.size][0] || 0;
-		const maxQuantity = quantityValues[this.props.settings.size].slice(-1)[0] || 1000;		
+		const maxQuantity = quantityValues[this.props.settings.size].slice(-1)[0] || 1000;
 		// if quantity is greater or smaller than it should be according to size
 		if (this.props.settings.quantity > maxQuantity ) {
 			return this.props.setSimulationSettings({ quantity: maxQuantity });

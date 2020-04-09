@@ -2,7 +2,7 @@ export function pause() {
 	if (this.simulationApp) {
 		return this.simulationApp.ticker.stop();
 	}
-	if (this.gameApp) {
+	else if (this.gameApp) {
 		return this.gameApp.ticker.stop();
 
 	}
@@ -12,7 +12,7 @@ export function unPause() {
 	if (this.simulationApp) {
 		return this.simulationApp.ticker.start();
 	}
-	if (this.gameApp) {
+	else if (this.gameApp) {
 		return this.gameApp.ticker.start();
 	}
 };
@@ -25,7 +25,7 @@ export function stop() {
 		this.simulationApp.destroy(false, { stageOptions: { children: true }});
 		this.simulationApp = null;
 	}
-	if (this.gameApp) {
+	else if (this.gameApp) {
 		// https://pixijs.download/dev/docs/PIXI.Application.html#destroy
 		// (everything should be destroyed when not needed —> garbage collector)
 		// removes children, but leaves canvas element

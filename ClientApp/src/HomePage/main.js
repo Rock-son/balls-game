@@ -1,5 +1,3 @@
-"use strict";
-
 import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
@@ -18,6 +16,8 @@ export default class HomePage extends React.Component {
 		this.gameApp = null;
 
 		this.state = {
+			isSimulationActive: true,
+			isGameActive: false,
 			// error handling
 			hasError: false, 
 			error: null,
@@ -25,8 +25,10 @@ export default class HomePage extends React.Component {
 			currentTime: new Date().getTime(),
 			startTime: new Date(0),
 			// canvas state
-			pause: false,
-			stop: false,
+			simulationPaused: false,
+			gamePaused: true,
+			simulationStopped: false,
+			gameStopped: true,
 			contagious: 1,
 			healthy: 199,
 			// nav & buttons
@@ -68,9 +70,11 @@ export default class HomePage extends React.Component {
 		this.unpause = unPause.bind(this);
 		
 		this.toggleDialog = this.toggleDialog.bind(this);
-		this.togglePause = this.togglePause.bind(this);
+		this.toggleSimulationPause = this.toggleSimulationPause.bind(this);
+		this.toggleGamePause = this.toggleGamePause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
 		this.gameRestart = this.gameRestart.bind(this);
@@ -88,7 +92,8 @@ export default class HomePage extends React.Component {
 	}
 	componentDidMount() {
 		this.startSimulation(true);
-		window.addEventListener('resize', this.handleResize)
+		window.addEventListener('resize', this.handleResize);
+		window.addEventListener("blur", this.handleBlur);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
 	componentDidCatch(error, errorInfo) {
@@ -105,18 +110,27 @@ export default class HomePage extends React.Component {
 	}
 	intervalTime() {
 		this.setState(prevState => {
-			if (this.state.pause || this.state.stop) {
-				return ({ currentTime: new Date().getTime() })
+			if (this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped) || 
+				this.state.isGameActive && (this.state.gamePaused || this.state.gameStopped)
+			) {
+				// stop calculating currentTime because of deactivate time
+				return ({ currentTime: prevState.currentTime })
 			}
+			// if simulation / game is not paused, calculate start time a new
 			return ({ currentTime: new Date().getTime(), startTime: new Date(prevState.startTime.getTime() + 1000) })
 		});
+	}
+	handleBlur() {
+		if (this.state.isGameActive && !this.state.gamePaused) {
+			this.toggleDialog();
+		}
 	}
 	handleResize(e) {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
 	toggleDialog() {
-		if (this.simulationApp) {
+		if (this.state.isSimulationActive) {
 			this.toggleSimulationDialog();
 		} else {
 			this.toggleGameDialog();
@@ -124,23 +138,24 @@ export default class HomePage extends React.Component {
 	}
 	// SIMULATION
 	stopStartSimulation() {
-		if (this.state.pause && !this.state.stop) { // CONTINUE
+		if (this.state.simulationPaused && !this.state.simulationStopped) { // CONTINUE
 			this.toggleSimulationDialog();
 		} else { 									// START
 			this.startSimulation(true);
-			this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false }));
+			this.setState(prevState => ({ startTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", 
+									simulationSettingsOpen: false, healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1  }));
 		}
 	}
 	simulationRestart() {
 		this.stop();
 		this.startSimulation(true);
-		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
+		this.setState(prevState => ({ startTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
 					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setSimulationSettings(e) {
 		let targetData, parsedData;
 		// triggered on event
-		if (e.currentTarget) {
+		if (e.currentTarget) {			
 			targetData = e.currentTarget.getAttribute("data-option");
 			parsedData = JSON.parse(targetData) || {};
 		} else {
@@ -148,30 +163,31 @@ export default class HomePage extends React.Component {
 			parsedData = e;
 		}
 		this.setState(prevState => {
-			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
+			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};			
 			// only reset simulation for size and quantity - for preview
 			if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
 				this.stop();
 				this.startSimulation(false, newSimulationSettings);
 				return ({ simulationSettings: newSimulationSettings, startTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1, 
-						contagious: 1, stop: true, pause: true, startButtonText: "START SIMULATION" });
+						contagious: 1, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
 			}
 			return ({ simulationSettings: newSimulationSettings });
 		}); 
 	}
 	// GAME
 	stopStartGame() {
-		if (this.state.pause && !this.state.stop) { // CONTINUE
+		if (this.state.gamePaused && !this.state.gameStopped) { // CONTINUE
 			this.toggleGameDialog();
 		} else {								// START
 			this.startGame(true);
-			this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE GAME", gameSettingsOpen: false }));
+			this.setState(prevState => ({ startTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE GAME", 
+									gameSettingsOpen: false, healthy: prevState.gameSettings["quantity"] - 1, contagious: 1 }));
 		}
 	}	
 	gameRestart() {
 		this.stop();
 		this.startGame(true);
-		this.setState(prevState => ({ startTime: new Date(0), stop: false, pause: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
+		this.setState(prevState => ({ startTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE SIMULATION", gameSettingsOpen: false,
 					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setGameSettings(e) {
@@ -183,41 +199,96 @@ export default class HomePage extends React.Component {
 		} else {
 			// triggered directly from dialog
 			parsedData = e;
-		}
+		}		
 		this.setState(prevState => {
 			const newGameSettings = {...prevState.gameSettings, ...parsedData};
 			// only reset game for size and quantity - for preview
 			this.stop();
 			this.startGame(false, newGameSettings);
 			return ({ gameSettings: newGameSettings, healthy: newGameSettings["quantity"] - 1, 
-					contagious: 1, stop: true, pause: true, startButtonText: "START GAME" });
+					contagious: 1, gameStopped: true, gamePaused: true, startButtonText: "START GAME" });
 		}); 
 	}
-	togglePause() {
-		return this.state.pause && !this.state.stop ? this.unpause() : this.pause();
+	toggleSimulationPause() {
+		return this.state.simulationPaused && !this.state.simulationStopped ? this.unpause() : this.pause();
+	}
+	toggleGamePause() {
+		return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();
 	}
 	toggleShareDialog(e) {
-		this.togglePause();
 		const target = e.currentTarget;
 		const isGame = target.getAttribute("data");
-		this.setState(prevState => ({ pause: !prevState.pause, shareModalOpen: !prevState.shareModalOpen }));
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareModalOpen: !prevState.shareModalOpen }));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, shareModalOpen: !prevState.shareModalOpen }));
+		}
 		setTimeout(() => {
 			this.setState({ isCopied: false });
 		}, 1000);
 	}
 	toggleSimulationDialog() {
-		// unPause if previous state was pause, etc.
-		this.togglePause();
-		this.setState(prevState => {
-			return ({ simulationSettingsOpen: !prevState.simulationSettingsOpen, pause: !prevState.pause })
-		});
+		if (this.state.isGameActive) {
+			this.stop();
+			// only when clicking on navbar link -> stop game and show dialog
+			this.setState(prevState => {
+				return ({ 
+					simulationSettingsOpen: true, 
+					simulationPaused: true, 
+					startButtonText: "START SIMULATION", 
+					isSimulationActive: true, 
+					isGameActive: false, 
+					gamePaused: true, 
+					gameStopped: true 
+				})
+			});
+		} else {
+			// in all other cases toggle
+			this.toggleSimulationPause();
+			this.setState(prevState => {
+				return ({ 
+					simulationSettingsOpen: !prevState.simulationSettingsOpen, 
+					simulationPaused: !prevState.simulationPaused, 
+					startButtonText: prevState.simulationStopped ? "START SIMULATION" : "CONTINUE SIMULATION", 
+					isSimulationActive: true, 
+					isGameActive: false, 
+					gamePaused: true, 
+					gameStopped: true 
+				})
+			});
+		}
 	}
 	toggleGameDialog() {
-		// unPause if previous state was pause, etc.
-		this.togglePause();
-		this.setState(prevState => {
-			return ({ gameSettingsOpen: !prevState.gameSettingsOpen, pause: !prevState.pause })
-		});
+		if (this.state.isSimulationActive) {
+			this.stop();
+			// only when clicking on navbar link -> stop simulation and show dialog
+			this.setState(prevState => {
+				return ({ 
+					gameSettingsOpen: true, 
+					gamePaused: true, 
+					startButtonText: "START GAME", 
+					isSimulationActive: false,
+					isGameActive: true, 
+					simulationPaused: true, 
+					simulationStopped: true 
+				})
+			});
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => {
+				return ({ 
+					gameSettingsOpen: !prevState.gameSettingsOpen, 
+					gamePaused: !prevState.gamePaused, 
+					startButtonText: prevState.gameStopped ? "START GAME" : "CONTINUE GAME", 
+					isSimulationActive: false, 
+					isGameActive: true, 
+					simulationPaused: true, 
+					simulationStopped: true 
+				})
+			});
+		}
 	}
 	toggleNavbarItemsExpand() {
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
@@ -225,7 +296,7 @@ export default class HomePage extends React.Component {
 	toggleNavbarVisibility() {
 		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
-	copyToClipboard() {
+	copyToClipboard() {		
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state == "granted" || result.state == "prompt") {
@@ -249,11 +320,14 @@ export default class HomePage extends React.Component {
 					toggleShareDialog={this.toggleShareDialog}
 					toggleGameDialog={this.toggleGameDialog}
 					simulationSettings={this.state.simulationSettings}
+					gameSettings={this.state.gameSettings}
+					isSimulationActive={this.state.isSimulationActive}
 					contagious={this.state.contagious}
 					healthy={this.state.healthy}
 				/>
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
+					isSimulationActive={this.state.isSimulationActive}
 					isOpen={this.state.simulationSettingsOpen} 
 					toggle={this.toggleSimulationDialog}
 					buttonText={this.state.startButtonText}
@@ -263,6 +337,7 @@ export default class HomePage extends React.Component {
 				<GameDialog
 					startGame={this.stopStartGame}
 					isOpen={this.state.gameSettingsOpen} 
+					isGameActive={this.state.isGameActive}
 					toggle={this.toggleGameDialog}
 					buttonText={this.state.startButtonText}
 					settings={this.state.gameSettings}

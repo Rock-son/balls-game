@@ -12,6 +12,9 @@ export class GameDialog extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		if (!nextProps.isGameActive) {
+			return false;
+		}
 		if (this.props.isOpen != nextProps.isOpen || this.props.buttonText != nextProps.buttonText) {
 			return true;
 		}
@@ -27,6 +30,9 @@ export class GameDialog extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+		if (!this.props.isGameActive) {
+			return false;
+		}
 		const minQuantity = (quantityDiffVals[this.props.settings.difficulty][this.props.settings.size] || { min: 0 }).min;
 		const maxQuantity = (quantityDiffVals[this.props.settings.difficulty][this.props.settings.size] || { max: 1000 }).max;
 		const changedSpeed = speedDiffValues[this.props.settings.difficulty];
@@ -47,8 +53,9 @@ export class GameDialog extends React.Component {
 
 		const { isOpen, toggle, startGame, buttonText, setGameSettings, 
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
+		
 		return (		
-			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
+			<Modal key="game" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
 				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
 				<ModalBody>
 					<Row>

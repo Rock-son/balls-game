@@ -24,7 +24,7 @@ export const ShareDialog = props => {
 				<Row>
 					<Container>
 						{ isCopied ?
-							<div className="copied__link">Link copied &#128515;</div> 
+							<div className="copied__link">Link copied <span role="img" aria-label="smiley face">&#128515;</span></div> 
 							:
 							<Button onClick={copy} >Copy link</Button>
 						}
