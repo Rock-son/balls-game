@@ -63,6 +63,10 @@ html {
 			font-size: .9rem;
 			font-weight: 900;
 			line-height: 0;
+			& .nav-link.stick {
+				padding-left: 2px;
+				padding-right: 2px;
+			}
 		}
 		&__right {
 			position: relative;
