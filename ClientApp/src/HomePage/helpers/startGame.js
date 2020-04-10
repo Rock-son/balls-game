@@ -5,16 +5,15 @@ export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
-	const canvas = this.canvasRef.current;
 	this.gameApp = new PIXI.Application({
 		backgroundColor: 0x000,
-		view: canvas,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,
 		autoDensity: true,
 		sharedLoader: true
 	});
+	document.getElementById("canvas-container").appendChild(this.gameApp.view);
 	
 	if (this.gameApp.loader.resources.sheet == null) {
 		this.gameApp.loader.add("sheet", "balls.json")

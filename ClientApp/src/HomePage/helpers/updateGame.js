@@ -1,5 +1,3 @@
-"use strict";
-
 export const updateGame = (sprite, spriteArr, distance, loader) => {
 	if (sprite.time && (new Date().getTime() - sprite.time) > 10000) {
 		sprite.x = -500;
