@@ -17,7 +17,7 @@ export function startSimulation(autostart, simulationSettings = null) {
 	});
 	
 	if (this.simulationApp.loader.resources.sheet == null) {
-		this.simulationApp.loader.add("sheet", "balls-15.json")
+		this.simulationApp.loader.add("sheet", "balls.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))

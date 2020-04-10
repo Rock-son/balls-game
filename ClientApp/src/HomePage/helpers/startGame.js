@@ -1,4 +1,4 @@
-import { updateSimulation } from "./updateSimulation";
+import { updateGame } from "./updateGame";
 import * as PIXI from "pixi.js";
 
 export function startGame(autostart, gameSettings = null) {
@@ -17,7 +17,7 @@ export function startGame(autostart, gameSettings = null) {
 	});
 	
 	if (this.gameApp.loader.resources.sheet == null) {
-		this.gameApp.loader.add("sheet", "balls-15.json")
+		this.gameApp.loader.add("sheet", "balls.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
@@ -56,6 +56,28 @@ function handleOnImageLoaded(gameSettings) {
 		speed,
 		quantity
 	} = gameSettings == null ? this.state.gameSettings : gameSettings;
+
+	const redQuarantine = this.gameApp.loader.resources.sheet.textures["ball-red.png"];
+	// TEST QUARANTINE
+	const quarantine = new PIXI.Sprite(redQuarantine);
+	quarantine.x = 300;
+	quarantine.y = 300;
+	quarantine.alpha = .1;
+	quarantine.time = new Date().getTime();
+	quarantine.width = 100 * 2;
+	quarantine.height = 100 * 2;
+	quarantine.anchor.x = .5;
+	quarantine.anchor.y = .5;
+	quarantine.myID = this.state.gameSettings.quantity;
+	quarantine.radius = 100;
+	quarantine.reactContext = this;
+	quarantine.contagion = 0;
+	quarantine.contagiousFrom = null;
+	quarantine.velocity = { 
+		x: 0,
+		y: 0
+	};
+	quarantine.startSpeed = 0;
 	
 	let contagion, sprite;
 	const spriteArr = [];
@@ -107,18 +129,18 @@ function handleOnImageLoaded(gameSettings) {
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
-		
-	const len = spriteArr.length;
+	spriteArr.push(quarantine);
+	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {
 		for (let index = 0; index < len; index++) {
 			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
 		}
 	} else {
 		for (let index = 0; index < len; index++) {
 			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
+			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
 		}
 	}
 }

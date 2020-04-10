@@ -75,6 +75,7 @@ export default class HomePage extends React.Component {
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
+		this.handleRefocus = this.handleRefocus.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
 		this.gameRestart = this.gameRestart.bind(this);
@@ -94,6 +95,7 @@ export default class HomePage extends React.Component {
 		this.startSimulation(true);
 		window.addEventListener('resize', this.handleResize);
 		window.addEventListener("blur", this.handleBlur);
+		window.addEventListener("focus", this.handleRefocus);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
 	componentDidCatch(error, errorInfo) {
@@ -123,6 +125,11 @@ export default class HomePage extends React.Component {
 	}
 	handleBlur() {
 		if (this.state.isGameActive && !this.state.gamePaused) {
+			this.toggleDialog();
+		}
+	}
+	handleRefocus() {
+		if (this.state.isGameActive && this.state.gamePaused) {
 			this.toggleDialog();
 		}
 	}
@@ -189,7 +196,7 @@ export default class HomePage extends React.Component {
 		this.stop();
 		this.startGame(true);
 		this.setState(prevState => ({ startTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE SIMULATION", gameSettingsOpen: false,
-					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
+					healthy: prevState.gameSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setGameSettings(e) {
 		let targetData, parsedData;
