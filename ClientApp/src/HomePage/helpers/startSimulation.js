@@ -5,17 +5,16 @@ export function startSimulation(autostart, simulationSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
-	const canvas = this.canvasRef.current;
 	this.simulationApp = new PIXI.Application({
 		backgroundColor: 0x000,
-		view: canvas,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,
 		autoDensity: true,
 		sharedLoader: true
 	});
-	
+	document.getElementById("canvas-container").appendChild(this.simulationApp.view);
+
 	if (this.simulationApp.loader.resources.sheet == null) {
 		this.simulationApp.loader.add("sheet", "balls.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))

@@ -10,7 +10,6 @@ import "./main.scss";
 export default class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
-		this.canvasRef = React.createRef();
 		this.autostart = true;
 		this.simulationApp = null;
 		this.gameApp = null;
@@ -148,7 +147,8 @@ export default class HomePage extends React.Component {
 	stopStartSimulation() {
 		if (this.state.simulationPaused && !this.state.simulationStopped) { // CONTINUE
 			this.toggleSimulationDialog();
-		} else { 									// START
+		} else { 			
+			this.stop();						// START
 			this.startSimulation(true);
 			this.setState(prevState => ({ startTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", 
 									simulationSettingsOpen: false, healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1  }));
@@ -187,6 +187,7 @@ export default class HomePage extends React.Component {
 		if (this.state.gamePaused && !this.state.gameStopped) { // CONTINUE
 			this.toggleGameDialog();
 		} else {								// START
+			this.stop();
 			this.startGame(true);
 			this.setState(prevState => ({ startTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE GAME", 
 									gameSettingsOpen: false, healthy: prevState.gameSettings["quantity"] - 1, contagious: 1 }));
@@ -353,18 +354,20 @@ export default class HomePage extends React.Component {
 					isOpen={this.state.shareModalOpen}
 					toggle={this.toggleShareDialog}
 					copy={this.copyToClipboard}
-					isCopied={this.state.isCopied}
-				
+					isCopied={this.state.isCopied}				
 				/>
-				<article className="main__canvas">
-					<canvas 
-						onClick={this.toggleDialog}
-						id="canvas"
-						ref={this.canvasRef} 
-						className="canvas" 
-					>Sorry, your browser doesn't support HTML5 </canvas>
+				<article id="canvas-container" onClick={this.toggleDialog}>
 				</article>
 			</section>
 		);
 	}
 }
+
+/*
+	<canvas 
+		onClick={this.toggleDialog}
+		id="canvas"
+		ref={this.canvasRef} 
+		className="canvas" 
+	>Sorry, your browser doesn't support HTML5 </canvas>
+*/
