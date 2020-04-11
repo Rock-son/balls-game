@@ -4,6 +4,7 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 		sprite.y = -500;
 		sprite.time = null;		
 	}
+	
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
@@ -29,15 +30,17 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 	}*/
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = 0; i < spriteArr.length; i++) {
+		// don't calculate collisions for same or quarantined objects
 		if (sprite.myID === spriteArr[i].myID || (spriteArr[i].velocity.x === 0 && spriteArr[i].velocity.y === 0)) {
 			continue;
 		}
-
+		// check if distance minus radia is less then 0 --> crash
 		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius + spriteArr[i].radius)) < 0) {
-			const otherSprite = spriteArr[i];
-			// quarantine check
-			if (!otherSprite.myID > sprite.reactContext.state.gameSettings.quantity && !sprite.myID > sprite.reactContext.state.gameSettings.quantity) {
-				if (otherSprite.contagion && !sprite.contagion) {				
+			const otherSprite = spriteArr[i]
+			// don't calculate contagion for quarantine particle which has id > particle quantity
+			if (otherSprite.myID < sprite.reactContext.state.gameSettings.quantity && sprite.myID < sprite.reactContext.state.gameSettings.quantity) {	
+				// only calculating contagion transmission (one contagious, one healthy)
+				if (otherSprite.contagion && !sprite.contagion) {						
 					sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 					sprite.contagion = 1;
 					sprite.contagiousFrom = new Date().getTime();
@@ -51,7 +54,7 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 					sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart(); // ON AUTORESTART=TRUE
 				}
 			}
-			resolveCollision(sprite, otherSprite);
+			resolveCollision(sprite, otherSprite, distance);
 		}
 	}
 	if (sprite.velocity.x === 0 && sprite.velocity.y === 0) {
@@ -89,33 +92,20 @@ function rotate(velocity, angle) {
  * @return Null | Does not return a value
  */
 
-function resolveCollision(particle, otherParticle) {
+function resolveCollision(particle, otherParticle, distance) {
 	const quantity = particle.reactContext.state.gameSettings.quantity;
 	let xVelocityDiff, yVelocityDiff, xDist, yDist;
 
-	if (particle.myID >= quantity) {
-		xVelocityDiff = otherParticle.velocity.x;
-		yVelocityDiff = otherParticle.velocity.y;
-	
-		xDist = otherParticle.x - particle.x;
-		yDist = otherParticle.y - particle.y;
-	} else if (otherParticle.myID >= quantity) {
-		xVelocityDiff = particle.velocity.x;
-		yVelocityDiff = particle.velocity.y;
-	
-		xDist = otherParticle.x - particle.x;
-		yDist = otherParticle.y - particle.y;
-	} else {
-		xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
-		yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
-	
-		xDist = otherParticle.x - particle.x;
-		yDist = otherParticle.y - particle.y;
-	}
+	xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
+	yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
+
+	xDist = otherParticle.x - particle.x;
+	yDist = otherParticle.y - particle.y;
+
 
 
 	// Prevent accidental overlap of images
-	if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0) {
 		// Grab angle between the two colliding images
 		const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
 
@@ -147,15 +137,13 @@ function resolveCollision(particle, otherParticle) {
 
 		otherParticle.velocity.x = otherParticlePreservedSpeed.x;
 		otherParticle.velocity.y = otherParticlePreservedSpeed.y;
-
-	}  else if (xVelocityDiff * xDist + yVelocityDiff * yDist < 0) {
-		console.log("yo", otherParticle.myID, ":", xVelocityDiff, xDist, yVelocityDiff, yDist, xVelocityDiff * xDist + yVelocityDiff * yDist, );
-					
-		if (particle.myID >= quantity && (otherParticle.velocity.x !== 0 && otherParticle.velocity.y !== 0)) {
+	} else if (particle.myID >= quantity) {		
+		if ((distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - (particle.radius + otherParticle.radius)) < -2) {
+			particle.velocity.x = 0;
+			particle.velocity.y = 0;
+	
 			otherParticle.velocity.x = 0;
 			otherParticle.velocity.y = 0;
-			particle.velocity.x = 0;
-			particle.velocity.y = 0;	
 		}
 	}
 }
@@ -170,3 +158,16 @@ function preserveSpeed(particle, vFinal) {
 	}
 
 }
+
+
+/*
+  else if (particle.myID >= quantity) {
+		 
+		if (particle.myID >= quantity && (otherParticle.velocity.x !== 0 && otherParticle.velocity.y !== 0)) {
+			otherParticle.velocity.x = 0;
+			otherParticle.velocity.y = 0;
+			particle.velocity.x = 0;
+			particle.velocity.y = 0;	
+		}
+	}
+*/

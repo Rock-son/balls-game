@@ -1,5 +1,5 @@
 import { updateGame } from "./updateGame";
-import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js-legacy";
 
 export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
@@ -58,10 +58,18 @@ function handleOnImageLoaded(gameSettings) {
 
 	const redQuarantine = this.gameApp.loader.resources.sheet.textures["ball-red.png"];
 	// TEST QUARANTINE
-	const quarantine = new PIXI.Sprite(redQuarantine);
+	const gt = new PIXI.Graphics();
+	gt.beginFill();
+	gt.lineStyle(5,0x85e312,1);
+	gt.drawCircle(0,0,50);
+	gt.endFill();
+	const texture = gt.generateCanvasTexture();
+
+
+	const quarantine = new PIXI.Sprite(texture);
 	quarantine.x = 300;
 	quarantine.y = 300;
-	quarantine.alpha = .1;
+	quarantine.alpha = .5;
 	quarantine.time = new Date().getTime();
 	quarantine.width = 100 * 2;
 	quarantine.height = 100 * 2;

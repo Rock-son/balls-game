@@ -1,5 +1,5 @@
 import { updateSimulation } from "./updateSimulation";
-import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js-legacy";
 
 export function startSimulation(autostart, simulationSettings = null) {
 	this.autostart = autostart || false;
@@ -108,7 +108,7 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
-		
+	
 	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {

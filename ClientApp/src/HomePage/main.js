@@ -362,12 +362,3 @@ export default class HomePage extends React.Component {
 		);
 	}
 }
-
-/*
-	<canvas 
-		onClick={this.toggleDialog}
-		id="canvas"
-		ref={this.canvasRef} 
-		className="canvas" 
-	>Sorry, your browser doesn't support HTML5 </canvas>
-*/
