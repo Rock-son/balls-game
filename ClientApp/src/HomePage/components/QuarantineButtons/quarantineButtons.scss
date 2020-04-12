@@ -1,0 +1,23 @@
+.quarantine__btn {
+	position: absolute;
+	z-index: 20;
+	&--left-top {
+		top: 5rem;
+		left: 10px;
+	}
+	&--left-bottom {
+		bottom: 10px;
+		left: 10px;
+	}
+	&--right-top {
+		top: 5rem;
+		right: 10px;
+	}
+	&--right-bottom {
+		bottom: 10px;
+		right: 10px;
+	}
+	&.disabled {
+		display: none;
+	}
+}

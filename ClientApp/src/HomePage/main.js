@@ -2,7 +2,7 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
@@ -40,6 +40,17 @@ export default class HomePage extends React.Component {
 			simulationSettingsOpen: false,
 			gameSettingsOpen: false,
 			// GAME
+			// quarantine settings
+			quarantineButtonsActive: false,
+			quarantineDropped: false,
+			availableQuarantines: Array.apply(0, {length: 5}).map((x,i) => i),
+			activeQuarantines: [],
+			draggedQuarantine: {
+				id: 0,
+				x: 0,
+				y: 0,
+			},
+			// game settings
 			gameSettings: {
 				mode: 0,
 				difficulty: 0,
@@ -68,7 +79,9 @@ export default class HomePage extends React.Component {
 		this.pause = pause.bind(this);
 		this.unpause = unPause.bind(this);
 		
+		this.shuffle = this.shuffle.bind(this);
 		this.toggleDialog = this.toggleDialog.bind(this);
+		this.onMouseMove = this.onMouseMove.bind(this);
 		this.toggleSimulationPause = this.toggleSimulationPause.bind(this);
 		this.toggleGamePause = this.toggleGamePause.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
@@ -81,6 +94,7 @@ export default class HomePage extends React.Component {
 		this.stopStartGame = this.stopStartGame.bind(this);
 		this.setGameSettings = this.setGameSettings.bind(this);
 		this.toggleGameDialog = this.toggleGameDialog.bind(this);
+		this.setQuarantineInMotion = this.setQuarantineInMotion.bind(this);
 		// SIMULATION
 		this.simulationRestart= this.simulationRestart.bind(this);
 		this.toggleShareDialog = this.toggleShareDialog.bind(this);
@@ -136,12 +150,28 @@ export default class HomePage extends React.Component {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
-	toggleDialog() {
-		if (this.state.isSimulationActive) {
-			this.toggleSimulationDialog();
-		} else {
-			this.toggleGameDialog();
-		}
+	onMouseMove(e) {	
+		if (this.state.quarantineButtonsActive) {
+			const pageX = e.pageX;
+			const pageY = e.pageY;
+			this.setState(prevstate => { 
+				return { draggedQuarantine: {...prevstate.draggedQuarantine, ...{ x: pageX, y: pageY }} }
+			});
+		}	
+	}
+	shuffle(arr) {
+		let currentIndex = arr.length, temporaryValue, randomIndex;
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+		  // Pick a remaining element...
+		  randomIndex = Math.floor(Math.random() * currentIndex);
+		  currentIndex -= 1;	  
+		  // And swap it with the current element.
+		  temporaryValue = arr[currentIndex];
+		  arr[currentIndex] = arr[randomIndex];
+		  arr[randomIndex] = temporaryValue;
+		}	  
+		return arr;
 	}
 	// SIMULATION
 	stopStartSimulation() {
@@ -188,11 +218,25 @@ export default class HomePage extends React.Component {
 			this.toggleGameDialog();
 		} else {								// START
 			this.stop();
+			const shuffledQuarantines = this.shuffle(this.state.availableQuarantines); 
+			this.setState(prevState => {
+				return {
+					startTime: new Date(0), 
+					gameStopped: false, 
+					gamePaused: false, 
+					startButtonText: "CONTINUE GAME",
+					gameSettingsOpen: false, 
+					healthy: prevState.gameSettings["quantity"] - 1, 
+					contagious: 1,
+					quarantineButtonsActive: true,
+					quarantineDropped: true,
+					availableQuarantines: shuffledQuarantines
+				}
+			});
 			this.startGame(true);
-			this.setState(prevState => ({ startTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE GAME", 
-									gameSettingsOpen: false, healthy: prevState.gameSettings["quantity"] - 1, contagious: 1 }));
 		}
-	}	
+	}
+	// TODO: not so simple
 	gameRestart() {
 		this.stop();
 		this.startGame(true);
@@ -218,11 +262,42 @@ export default class HomePage extends React.Component {
 					contagious: 1, gameStopped: true, gamePaused: true, startButtonText: "START GAME" });
 		}); 
 	}
+	setQuarantineInMotion(e) {
+		const pageX = e.pageX;
+		const pageY = e.pageY;
+		// loop through available quarantines
+		const targetID = this.state.gameSettings["quantity"] + this.state.availableQuarantines[this.state.activeQuarantines.length];
+		this.setState(prevState => {
+			return {draggedQuarantine: {...prevState.draggedQuarantine, 
+										...{ id: targetID, x: pageX, y: pageY }
+									},
+					quarantineButtonsActive: true,
+					quarantineDropped: false,
+					activeQuarantines: prevState.activeQuarantines.length === this.state.availableQuarantines.length ? [] : prevState.activeQuarantines.concat(targetID)
+			};
+		});
+
+	}
 	toggleSimulationPause() {
 		return this.state.simulationPaused && !this.state.simulationStopped ? this.unpause() : this.pause();
 	}
 	toggleGamePause() {
 		return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();
+	}
+	toggleDialog(e) {
+		const target = e && e.currentTarget || null;
+		// on simulation -> show dialog
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationDialog();
+		// on quarantineButtonsActive -> should trigger quarantineDrop - user should have quarantine attached to cursor
+		} else if (this.state.quarantineButtonsActive && !this.state.quarantineDropped) {
+			this.setState({
+				quarantineButtonsActive: false,
+				quarantineDropped: true
+			});
+		} else {
+			this.toggleGameDialog();
+		}
 	}
 	toggleShareDialog(e) {
 		if (this.state.isSimulationActive) {
@@ -356,7 +431,15 @@ export default class HomePage extends React.Component {
 					copy={this.copyToClipboard}
 					isCopied={this.state.isCopied}				
 				/>
-				<article id="canvas-container" onClick={this.toggleDialog}>
+				<QuarantineButtons 
+					quarantineButtonsActive={this.state.quarantineButtonsActive}
+					setQuarantineInMotion={this.setQuarantineInMotion}
+				/>
+				<article 
+					id="canvas-container" 
+					onClick={this.toggleDialog}
+					onMouseMove={this.onMouseMove}
+					>
 				</article>
 			</section>
 		);

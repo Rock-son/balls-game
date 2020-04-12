@@ -1,8 +1,13 @@
 export const updateGame = (sprite, spriteArr, distance, loader) => {
-	if (sprite.time && (new Date().getTime() - sprite.time) > 10000) {
+	if (sprite.time && (new Date().getTime() - sprite.time) > 20000) {
 		sprite.x = -500;
 		sprite.y = -500;
-		sprite.time = null;		
+		sprite.time = null;
+	}
+	// DRAG QUARANTINE AROUND - when quarantineDropped === false
+	if (sprite.time && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {		
+		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+		sprite.y = sprite.reactContext.state.draggedQuarantine.y;		
 	}
 	
 	// X BOUNDARIES
@@ -28,6 +33,10 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}*/
+	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
+	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
+		return;
+	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = 0; i < spriteArr.length; i++) {
 		// don't calculate collisions for same or quarantined objects
@@ -158,16 +167,3 @@ function preserveSpeed(particle, vFinal) {
 	}
 
 }
-
-
-/*
-  else if (particle.myID >= quantity) {
-		 
-		if (particle.myID >= quantity && (otherParticle.velocity.x !== 0 && otherParticle.velocity.y !== 0)) {
-			otherParticle.velocity.x = 0;
-			otherParticle.velocity.y = 0;
-			particle.velocity.x = 0;
-			particle.velocity.y = 0;	
-		}
-	}
-*/

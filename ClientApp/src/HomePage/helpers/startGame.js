@@ -53,39 +53,51 @@ function handleOnImageLoaded(gameSettings) {
 	const {
 		size: radius,
 		speed,
-		quantity
+		quantity,
+		difficulty,
+		availableQuarantines
 	} = gameSettings == null ? this.state.gameSettings : gameSettings;
-
-	const redQuarantine = this.gameApp.loader.resources.sheet.textures["ball-red.png"];
-	// TEST QUARANTINE
-	const gt = new PIXI.Graphics();
-	gt.beginFill();
-	gt.lineStyle(5,0x85e312,1);
-	gt.drawCircle(0,0,50);
-	gt.endFill();
-	const texture = gt.generateCanvasTexture();
-
-
-	const quarantine = new PIXI.Sprite(texture);
-	quarantine.x = 300;
-	quarantine.y = 300;
-	quarantine.alpha = .5;
-	quarantine.time = new Date().getTime();
-	quarantine.width = 100 * 2;
-	quarantine.height = 100 * 2;
-	quarantine.anchor.x = .5;
-	quarantine.anchor.y = .5;
-	quarantine.myID = this.state.gameSettings.quantity;
-	quarantine.radius = 100;
-	quarantine.reactContext = this;
-	quarantine.contagion = 0;
-	quarantine.contagiousFrom = null;
-	quarantine.velocity = { 
-		x: 0,
-		y: 0
-	};
-	quarantine.startSpeed = 0;
 	
+	
+	const quarantineArr = [];
+	// QUARANTINES - create and hide them from the screen & use them randomly when needed
+	for (let index = 1; index < this.state.availableQuarantines.length+1; index++) {
+		const randomLength = randomIntNumber(index*50, index*70);
+		const width = randomLength;
+		const height = randomLength;
+		const radius = randomLength / 2;
+
+		const gt = new PIXI.Graphics();
+		gt.beginFill();
+		gt.lineStyle(5,0x85e312,1);
+		gt.drawCircle(0,0,radius);
+		gt.endFill();
+		const texture = gt.generateCanvasTexture();	
+	
+		const particleID = this.state.gameSettings.quantity + index-1;
+		const quarantine = new PIXI.Sprite(texture);
+		quarantine.x = -500;
+		quarantine.y = -500;
+		quarantine.alpha = .5;
+		quarantine.time = new Date().getTime();
+		quarantine.width = width;
+		quarantine.height = height;
+		quarantine.anchor.x = .5;
+		quarantine.anchor.y = .5;
+		quarantine.myID = particleID;
+		quarantine.radius = radius;
+		quarantine.reactContext = this;
+		quarantine.contagion = 0;
+		quarantine.contagiousFrom = null;
+		quarantine.velocity = { 
+			x: 0,
+			y: 0
+		};
+		quarantine.startSpeed = 0;
+		quarantineArr.push(quarantine);
+	}
+
+		
 	let contagion, sprite;
 	const spriteArr = [];
 	const nrImages = +quantity;
@@ -136,7 +148,9 @@ function handleOnImageLoaded(gameSettings) {
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
-	spriteArr.push(quarantine);
+	
+	quarantineArr.forEach(item => spriteArr.push(item));
+	
 	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {
