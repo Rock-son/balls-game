@@ -46,21 +46,38 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 		// check if distance minus radia is less then 0 --> crash
 		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius + spriteArr[i].radius)) < 0) {
 			const otherSprite = spriteArr[i]
-			// don't calculate contagion for quarantine particle which has id > particle quantity
+			// don't calculate contagion for quarantine particles (which have id > particle quantity)
 			if (otherSprite.myID < sprite.reactContext.state.gameSettings.quantity && sprite.myID < sprite.reactContext.state.gameSettings.quantity) {	
 				// only calculating contagion transmission (one contagious, one healthy)
-				if (otherSprite.contagion && !sprite.contagion) {						
-					sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
-					sprite.contagion = 1;
-					sprite.contagiousFrom = new Date().getTime();
-					sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-					sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart();	// ON AUTORESTART=TRUE
+				if (otherSprite.contagion && !sprite.contagion) {		
+					const d = Math.random();
+					if (sprite.reactContext.state.gameSettings["difficulty"] === 2) {
+						// 100% chance of being here - hard difficulty
+						getContagion(sprite, loader);
+					} else if (d < 0.5 && sprite.reactContext.state.gameSettings["difficulty"] === 1) {
+						// 50% chance of being here - medium
+						getContagion(sprite, loader);
+					} else if (d < 0.67) {
+						// 17% chance of being here
+					} else {
+						// 33% chance of being here - easy
+						getContagion(sprite, loader);
+					}
+					
 				} else if (sprite.contagion && !otherSprite.contagion) {
-					sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
-					otherSprite.contagion = 1;
-					otherSprite.contagiousFrom = new Date().getTime();
-					otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-					sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart(); // ON AUTORESTART=TRUE
+					const d = Math.random();
+					if (sprite.reactContext.state.gameSettings["difficulty"] === 2) {
+						// 100% chance of being here - hard difficulty
+						getContagion(otherSprite, loader);
+					} else if (d < 0.5 && sprite.reactContext.state.gameSettings["difficulty"] === 1) {
+						// 50% chance of being here - medium
+						getContagion(otherSprite, loader);
+					} else if (d < 0.67) {
+						// 17% chance of being here
+					} else {
+						// 33% chance of being here - easy
+						getContagion(otherSprite, loader);
+					}
 				}
 			}
 			resolveCollision(sprite, otherSprite, distance);
@@ -75,6 +92,17 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 	}
 
 }
+
+function getContagion(sprite, loader) {
+	sprite.contagion = 1;
+	sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
+	sprite.contagiousFrom = new Date().getTime();
+	sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+	sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart();	// ON AUTORESTART=TRUE
+}
+
+
+
 /**
  * Rotates coordinate system for velocities
  *
