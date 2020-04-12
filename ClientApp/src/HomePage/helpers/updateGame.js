@@ -145,7 +145,7 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 
 
 	// Prevent accidental overlap of images - calculate only when objects are moving towards each other
-	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0 && particle.myID < quantity) {
+	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0 && particle.myID < quantity && otherParticle.myID < quantity) {
 		// Grab angle between the two colliding images
 		const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
 
@@ -177,13 +177,23 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 
 		otherParticle.velocity.x = otherParticlePreservedSpeed.x;
 		otherParticle.velocity.y = otherParticlePreservedSpeed.y;
-	}	// if otherParticle touches the inside border of quarantine (-5 < border < -2)
-	else if (particle.myID >= quantity && (distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius) > -5) {
-		const newVX = otherParticle.velocity.x;
-		const newVY = otherParticle.velocity.y;
-		quarantineCollision(particle, otherParticle);
-		particle.velocity.x = 0;
-		particle.velocity.y = 0;
+	}	// QUARANTENE
+	else if (particle.myID >= quantity){
+		const particleDistance = distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius;
+		// make a border > -2 for outside particles
+		if (particleDistance > -2) {
+			otherParticle.velocity.x = -otherParticle.velocity.x;
+			otherParticle.velocity.y = -otherParticle.velocity.y;
+			particle.velocity.x = 0;
+			particle.velocity.y = 0;
+		}
+		// border < -2 for inside particles (so inside / outside don+t touch!)
+		if (particleDistance > -5 && particleDistance < -2) {
+			otherParticle.velocity.x = -otherParticle.velocity.x;
+			otherParticle.velocity.y = -otherParticle.velocity.y;
+			particle.velocity.x = 0;
+			particle.velocity.y = 0;
+		}
 	} 
 }
 
@@ -221,6 +231,6 @@ function quarantineCollision(particle, otherParticle) {
 	const otherParticlePreservedSpeed = preserveSpeed(otherParticle, vFinal2);
 
 	// 
-	otherParticle.velocity.x = otherParticlePreservedSpeed.x;
-	otherParticle.velocity.y = otherParticlePreservedSpeed.y;
+	otherParticle.velocity.x = -otherParticlePreservedSpeed.x;
+	otherParticle.velocity.y = -otherParticlePreservedSpeed.y;
 }
