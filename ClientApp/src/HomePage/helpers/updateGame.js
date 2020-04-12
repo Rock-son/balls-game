@@ -1,4 +1,9 @@
-export const updateGame = (sprite, spriteArr, distance, loader) => {
+export const updateGame = (sprite, spriteArr, distance, loader, startTime) => {
+
+	if (new Date().getTime() - startTime < 3000) {
+		return;
+	}
+
 	if (sprite.time && (new Date().getTime() - sprite.time) > 20000) {
 		sprite.x = -500;
 		sprite.y = -500;

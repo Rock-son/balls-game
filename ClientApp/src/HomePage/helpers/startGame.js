@@ -156,7 +156,7 @@ function handleOnImageLoaded(gameSettings) {
 	if (this.autostart) {
 		for (let index = 0; index < len; index++) {
 			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader, new Date().getTime()));
 		}
 	} else {
 		for (let index = 0; index < len; index++) {
