@@ -25,14 +25,14 @@ export const quantityValues = {
 };
 export const quantityDiffVals = {
 	0: {
-		"2.5": { min: 100, max: 300},
-		5: { min: 100, max: 300},
-		"7.5": { min: 50, max: 100},
+		"2.5": { min: 100, max: 1000},
+		5: { min: 100, max: 800},
+		"7.5": { min: 50, max: 600},
 	},
 	1: {
-		"2.5": { min: 300, max: 500},
-		5: { min: 300, max: 500},
-		"7.5": { min: 150, max: 300},
+		"2.5": { min: 300, max: 1000},
+		5: { min: 300, max: 800},
+		"7.5": { min: 150, max: 600},
 	},
 	2: {
 		"2.5": { min: 700, max: 1000},
