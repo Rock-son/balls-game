@@ -45,10 +45,24 @@ export function startSimulation(autostart, simulationSettings = null) {
 function randomIntNumber(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-function distance(x1, y1, x2, y2) {
-	const xDist = x2 - x1;
-	const yDist = y2 - y1;
-	return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+/**
+ * Intersection calculation. Multiplication is much faster than getting the square root with Math.sqrt(), so distance is calculated without getting the root 
+ * and the sum of the radii is multiplied by itself. The outcome stays the same, but the performance is better.
+ * @param {Float} x1 
+ * @param {Float} y1 
+ * @param {Int}   r1 
+ * @param {Float} x2 
+ * @param {Float} y2 
+ * @param {Int}	  r2 
+ */
+function circleIntersect(x1, y1, r1, x2, y2, r2) {
+
+    // Calculate the distance between the two circles
+    var squareDistance = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2);
+
+    // When the distance is smaller or equal to the sum
+    // of the two radius, the circles touch or overlap
+    return squareDistance <= ((r1 + r2) * (r1 + r2))
 }
 
 function handleOnImageLoaded(simulationSettings) {
@@ -73,7 +87,7 @@ function handleOnImageLoaded(simulationSettings) {
 		let y = randomIntNumber(radius * 2, maxHeight);
 		if (i !== 0) {
 			for (let j = 0; j < spriteArr.length; j++) {
-				if ((distance(x, y, spriteArr[j].x, spriteArr[j].y) - (radius + spriteArr[j].radius)) < 0) {
+				if (circleIntersect(x, y, radius, spriteArr[j].x, spriteArr[j].y, spriteArr[j].radius)) {	
 					x = randomIntNumber(radius * 2, maxWidth);
 					y = randomIntNumber(radius * 2, maxHeight);
 					// set new x, y recursively
@@ -114,12 +128,12 @@ function handleOnImageLoaded(simulationSettings) {
 	if (this.autostart) {
 		for (let index = 0; index < len; index++) {
 			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			this.simulationApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, circleIntersect, this.simulationApp.loader));
 		}
 	} else {
 		for (let index = 0; index < len; index++) {
 			this.simulationApp.stage.addChild(spriteArr[index]);
-			this.simulationApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.simulationApp.loader));
+			this.simulationApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, circleIntersect, this.simulationApp.loader));
 		}
 	}
 }

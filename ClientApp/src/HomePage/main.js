@@ -37,8 +37,8 @@ export default class HomePage extends React.Component {
 			isNavbarVisible: true,
 			// modals - popups
 			shareModalOpen: false,
-			simulationSettingsOpen: false,
 			gameSettingsOpen: false,
+			simulationSettingsOpen: false,
 			// GAME
 			// quarantine settings
 			quarantineButtonsActive: false,
@@ -151,7 +151,7 @@ export default class HomePage extends React.Component {
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
 	onMouseMove(e) {	
-		if (this.state.quarantineButtonsActive) {
+		if (this.state.quarantineButtonsActive) {			
 			const pageX = e.pageX;
 			const pageY = e.pageY;
 			this.setState(prevstate => { 
@@ -180,8 +180,17 @@ export default class HomePage extends React.Component {
 		} else { 			
 			this.stop();						// START
 			this.startSimulation(true);
-			this.setState(prevState => ({ startTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", 
-									simulationSettingsOpen: false, healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1  }));
+			this.setState(prevState => ({ 
+				startTime: new Date(0), 
+				simulationStopped: false, 
+				simulationPaused: false, 
+				startButtonText: "CONTINUE SIMULATION", 
+				simulationSettingsOpen: false, 
+				healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
+				// reset game settings
+				quarantineButtonsActive: false,
+				quarantineDropped: false,
+			}));
 		}
 	}
 	simulationRestart() {
