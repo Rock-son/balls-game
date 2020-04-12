@@ -1,6 +1,15 @@
-"use strict";
-
 export const updateGame = (sprite, spriteArr, distance, loader) => {
+	if (sprite.time && (new Date().getTime() - sprite.time) > 20000) {
+		sprite.x = -500;
+		sprite.y = -500;
+		sprite.time = null;
+	}
+	// DRAG QUARANTINE AROUND - when quarantineDropped === false
+	if (sprite.time && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {		
+		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+		sprite.y = sprite.reactContext.state.draggedQuarantine.y;		
+	}
+	
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
@@ -24,33 +33,46 @@ export const updateGame = (sprite, spriteArr, distance, loader) => {
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}*/
+	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
+	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
+		return;
+	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = 0; i < spriteArr.length; i++) {
-		if (sprite.myID === spriteArr[i].myID) {
+		// don't calculate collisions for same or quarantined objects
+		if (sprite.myID === spriteArr[i].myID || (spriteArr[i].velocity.x === 0 && spriteArr[i].velocity.y === 0)) {
 			continue;
 		}
-
-		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius * 2)) < 0) {			
-			const otherSprite = spriteArr[i];
-			if (otherSprite.contagion && !sprite.contagion) {				
-				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
-				sprite.contagion = 1;
-				sprite.contagiousFrom = new Date().getTime();
-				sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart();	// ON AUTORESTART=TRUE
-			} else if (sprite.contagion && !otherSprite.contagion) {
-				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
-				otherSprite.contagion = 1;
-				otherSprite.contagiousFrom = new Date().getTime();
-				otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart(); // ON AUTORESTART=TRUE
+		// check if distance minus radia is less then 0 --> crash
+		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius + spriteArr[i].radius)) < 0) {
+			const otherSprite = spriteArr[i]
+			// don't calculate contagion for quarantine particle which has id > particle quantity
+			if (otherSprite.myID < sprite.reactContext.state.gameSettings.quantity && sprite.myID < sprite.reactContext.state.gameSettings.quantity) {	
+				// only calculating contagion transmission (one contagious, one healthy)
+				if (otherSprite.contagion && !sprite.contagion) {						
+					sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
+					sprite.contagion = 1;
+					sprite.contagiousFrom = new Date().getTime();
+					sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+					sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart();	// ON AUTORESTART=TRUE
+				} else if (sprite.contagion && !otherSprite.contagion) {
+					sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
+					otherSprite.contagion = 1;
+					otherSprite.contagiousFrom = new Date().getTime();
+					otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+					sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart(); // ON AUTORESTART=TRUE
+				}
 			}
-			resolveCollision(sprite, otherSprite);
+			resolveCollision(sprite, otherSprite, distance);
 		}
 	}
-
-	sprite.x += sprite.velocity.x;
-	sprite.y += sprite.velocity.y;
+	if (sprite.velocity.x === 0 && sprite.velocity.y === 0) {
+		sprite.x = sprite.x;
+		sprite.y = sprite.y;
+	} else {
+		sprite.x += sprite.velocity.x;
+		sprite.y += sprite.velocity.y;
+	}
 
 }
 /**
@@ -79,16 +101,20 @@ function rotate(velocity, angle) {
  * @return Null | Does not return a value
  */
 
-function resolveCollision(particle, otherParticle) {
-	const xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
-	const yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
+function resolveCollision(particle, otherParticle, distance) {
+	const quantity = particle.reactContext.state.gameSettings.quantity;
+	let xVelocityDiff, yVelocityDiff, xDist, yDist;
 
-	const xDist = otherParticle.x - particle.x;
-	const yDist = otherParticle.y - particle.y;
+	xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
+	yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
+
+	xDist = otherParticle.x - particle.x;
+	yDist = otherParticle.y - particle.y;
+
+
 
 	// Prevent accidental overlap of images
-	if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
-
+	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0) {
 		// Grab angle between the two colliding images
 		const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
 
@@ -120,6 +146,14 @@ function resolveCollision(particle, otherParticle) {
 
 		otherParticle.velocity.x = otherParticlePreservedSpeed.x;
 		otherParticle.velocity.y = otherParticlePreservedSpeed.y;
+	} else if (particle.myID >= quantity) {		
+		if ((distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - (particle.radius + otherParticle.radius)) < -2) {
+			particle.velocity.x = 0;
+			particle.velocity.y = 0;
+	
+			otherParticle.velocity.x = 0;
+			otherParticle.velocity.y = 0;
+		}
 	}
 }
 

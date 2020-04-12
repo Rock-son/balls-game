@@ -8,6 +8,7 @@ import "./gameDialog.scss";
 export class GameDialog extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
+		// starightforward - in case simulation is active, this component should not update
 		if (!nextProps.isGameActive) {
 			return false;
 		}
@@ -26,6 +27,7 @@ export class GameDialog extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+		// in case simulation is active, this component should not trigger update
 		if (!this.props.isGameActive) {
 			return false;
 		}

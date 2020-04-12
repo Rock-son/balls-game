@@ -1,5 +1,5 @@
 import { updateSprite } from "../helpers/updateSprite";
-import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js-legacy";
 
 
 // USE OF CLASSES IS OBSOLETE DUE TO HIGH CPU DEMAND

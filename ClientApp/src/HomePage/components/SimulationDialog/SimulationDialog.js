@@ -8,6 +8,7 @@ import "./simulationDialog.scss";
 export class SimulationDialog extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
+		// starightforward - in case simulation is active, this component should not update
 		if (!nextProps.isSimulationActive) {
 			return false;
 		}
@@ -28,6 +29,7 @@ export class SimulationDialog extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+		// in case simulation is active, this component should not trigger update
 		if (!this.props.isSimulationActive) {
 			return false;
 		}

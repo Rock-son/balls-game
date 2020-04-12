@@ -1,23 +1,22 @@
-import { updateSimulation } from "./updateSimulation";
-import * as PIXI from "pixi.js";
+import { updateGame } from "./updateGame";
+import * as PIXI from "pixi.js-legacy";
 
 export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
-	const canvas = this.canvasRef.current;
 	this.gameApp = new PIXI.Application({
 		backgroundColor: 0x000,
-		view: canvas,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,
 		autoDensity: true,
 		sharedLoader: true
 	});
+	document.getElementById("canvas-container").appendChild(this.gameApp.view);
 	
 	if (this.gameApp.loader.resources.sheet == null) {
-		this.gameApp.loader.add("sheet", "balls-15.json")
+		this.gameApp.loader.add("sheet", "balls.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
@@ -54,9 +53,51 @@ function handleOnImageLoaded(gameSettings) {
 	const {
 		size: radius,
 		speed,
-		quantity
+		quantity,
+		difficulty,
+		availableQuarantines
 	} = gameSettings == null ? this.state.gameSettings : gameSettings;
 	
+	
+	const quarantineArr = [];
+	// QUARANTINES - create and hide them from the screen & use them randomly when needed
+	for (let index = 1; index < this.state.availableQuarantines.length+1; index++) {
+		const randomLength = randomIntNumber(index*50, index*70);
+		const width = randomLength;
+		const height = randomLength;
+		const radius = randomLength / 2;
+
+		const gt = new PIXI.Graphics();
+		gt.beginFill();
+		gt.lineStyle(5,0x85e312,1);
+		gt.drawCircle(0,0,radius);
+		gt.endFill();
+		const texture = gt.generateCanvasTexture();	
+	
+		const particleID = this.state.gameSettings.quantity + index-1;
+		const quarantine = new PIXI.Sprite(texture);
+		quarantine.x = -500;
+		quarantine.y = -500;
+		quarantine.alpha = .5;
+		quarantine.time = new Date().getTime();
+		quarantine.width = width;
+		quarantine.height = height;
+		quarantine.anchor.x = .5;
+		quarantine.anchor.y = .5;
+		quarantine.myID = particleID;
+		quarantine.radius = radius;
+		quarantine.reactContext = this;
+		quarantine.contagion = 0;
+		quarantine.contagiousFrom = null;
+		quarantine.velocity = { 
+			x: 0,
+			y: 0
+		};
+		quarantine.startSpeed = 0;
+		quarantineArr.push(quarantine);
+	}
+
+		
 	let contagion, sprite;
 	const spriteArr = [];
 	const nrImages = +quantity;
@@ -107,18 +148,20 @@ function handleOnImageLoaded(gameSettings) {
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
-		
-	const len = spriteArr.length;
+	
+	quarantineArr.forEach(item => spriteArr.push(item));
+	
+	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {
 		for (let index = 0; index < len; index++) {
 			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.add(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
 		}
 	} else {
 		for (let index = 0; index < len; index++) {
 			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.addOnce(updateSimulation.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
+			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
 		}
 	}
 }
