@@ -11,11 +11,11 @@ export const quantityValues = {
 	"7.5": [  50, "|", 100,"|", 150, "|", 200, "|", 300, "|", 400, "|", 500 ]
 };
 export const speedOptions = [
-	{ type: "slow", value: .5 },
+	{ type: "slow", value: .3 },
 	"|",
-	{ type: "medium", value: 1 },
+	{ type: "medium", value: .6 },
 	"|",
-	{ type: "fast", value: 1.5 },
+	{ type: "fast", value: 1 },
 ];
 export const deactivateOptions = [
 	0,

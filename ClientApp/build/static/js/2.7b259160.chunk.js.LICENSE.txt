@@ -11,10 +11,90 @@ object-assign
 */
 
 /*!
+ * @pixi/accessibility - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/accessibility is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
  * @pixi/app - v5.2.1
  * Compiled Tue, 28 Jan 2020 23:33:11 UTC
  *
  * @pixi/app is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-display - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-display is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-extract - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-extract is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-graphics - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-graphics is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-mesh - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-mesh is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-particles - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-particles is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-prepare - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-prepare is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-sprite - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-sprite is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-sprite-tiling - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-sprite-tiling is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/canvas-text - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * @pixi/canvas-text is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 
@@ -159,6 +239,14 @@ object-assign
  * Compiled Tue, 28 Jan 2020 23:33:11 UTC
  *
  * @pixi/utils is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * pixi.js-legacy - v5.2.1
+ * Compiled Tue, 28 Jan 2020 23:33:11 UTC
+ *
+ * pixi.js-legacy is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 

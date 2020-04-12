@@ -5,13 +5,18 @@ html {
 	overflow: hidden;
 }
 
-#canvas {
+canvas {
 	image-rendering: optimizeQuality;             // Older versions of FF          
 	image-rendering: -moz-crisp-edges;          // FF 6.0+                       
 	image-rendering: -webkit-optimize-contrast; // Safari                        
 	image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+) 
 	image-rendering: auto;				// 
 	-ms-interpolation-mode: bicubic;   			// IE                            
+}
+#canvas-container {
+	background-color: #000;
+	width: 100vw;
+	height: 100vh;
 }
 
 // NAVBAR

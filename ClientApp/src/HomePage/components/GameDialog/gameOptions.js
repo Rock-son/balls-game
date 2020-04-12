@@ -41,11 +41,11 @@ export const quantityDiffVals = {
 }
 // depends on difficulty
 export const speedOptions = [
-	{ type: "Slow", value: 0.5, difficulty: 0 },
+	{ type: "Slow", value: 0.3, difficulty: 0 },
 	"|",
-	{ type: "Medium", value: 1, difficulty: 1 },
+	{ type: "Medium", value: .6, difficulty: 1 },
 	"|",
-	{ type: "Fast", value: 1.5, difficulty: 2 }
+	{ type: "Fast", value: 1, difficulty: 2 }
 ];
 
 export const speedDiffValues = {

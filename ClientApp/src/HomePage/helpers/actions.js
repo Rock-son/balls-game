@@ -22,14 +22,14 @@ export function stop() {
 		// https://pixijs.download/dev/docs/PIXI.Application.html#destroy
 		// (everything should be destroyed when not needed —> garbage collector)
 		// removes children, but leaves canvas element
-		this.simulationApp.destroy(false, { stageOptions: { children: true }});
+		this.simulationApp.destroy(true);
 		this.simulationApp = null;
 	}
 	else if (this.gameApp) {
 		// https://pixijs.download/dev/docs/PIXI.Application.html#destroy
 		// (everything should be destroyed when not needed —> garbage collector)
 		// removes children, but leaves canvas element
-		this.gameApp.destroy(false, { stageOptions: { children: true }});
+		this.gameApp.destroy(true);
 		this.gameApp = null;
 	}
 };

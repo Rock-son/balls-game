@@ -1,23 +1,22 @@
 import { updateSimulation } from "./updateSimulation";
-import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js-legacy";
 
 export function startSimulation(autostart, simulationSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
 
-	const canvas = this.canvasRef.current;
 	this.simulationApp = new PIXI.Application({
 		backgroundColor: 0x000,
-		view: canvas,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,
 		autoDensity: true,
 		sharedLoader: true
 	});
-	
+	document.getElementById("canvas-container").appendChild(this.simulationApp.view);
+
 	if (this.simulationApp.loader.resources.sheet == null) {
-		this.simulationApp.loader.add("sheet", "balls-15.json")
+		this.simulationApp.loader.add("sheet", "balls.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
@@ -109,7 +108,7 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
 		spriteArr.push(sprite);
 	}
-		
+	
 	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {
