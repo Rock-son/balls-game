@@ -87,6 +87,7 @@ export class GameDialog extends React.Component {
 									return 	<NavLink 
 												key={idx}
 												tabIndex="0"
+												title={difficultyOption.value === 0 ? "33% infection rate" : difficultyOption.value === 1 ? "50% infection rate" : "100% infection rate"}
 												data-option={`${JSON.stringify({ difficulty: difficultyOption.value })}`}
 												onClick={setGameSettings}
 												active={difficultyOption.value === difficulty}>
