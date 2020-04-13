@@ -1,4 +1,4 @@
-export const updateSimulation = (sprite, spriteArr, distance, loader) => {	
+export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => {	
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
@@ -28,7 +28,7 @@ export const updateSimulation = (sprite, spriteArr, distance, loader) => {
 			continue;
 		}
 
-		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius * 2)) < 0) {			
+		if (circleIntersect(sprite.x, sprite.y, sprite.radius, spriteArr[i].x, spriteArr[i].y, spriteArr[i].radius)) {		
 			const otherSprite = spriteArr[i];
 			// with deactivation time on, any red can infect another red again
 			if (sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0 && (otherSprite.contagion || sprite.contagion)) {
@@ -57,6 +57,7 @@ export const updateSimulation = (sprite, spriteArr, distance, loader) => {
 	sprite.y += sprite.velocity.y;
 
 }
+
 /**
  * Rotates coordinate system for velocities
  *
@@ -91,7 +92,7 @@ function resolveCollision(particle, otherParticle) {
 	const yDist = otherParticle.y - particle.y;
 
 	// Prevent accidental overlap of images
-	if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0) {
 
 		// Grab angle between the two colliding images
 		const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
@@ -128,7 +129,7 @@ function resolveCollision(particle, otherParticle) {
 }
 
 function preserveSpeed(particle, vFinal) {
-	const newSpeed = Math.sqrt(Math.pow(vFinal.x, 2) + Math.pow(vFinal.y, 2));
+	const newSpeed = Math.sqrt(vFinal.x * vFinal.x + vFinal.y * vFinal.y);
 	
 	return { // RETURN SPEED RATIO
 		x: vFinal.x * particle.startSpeed / newSpeed,

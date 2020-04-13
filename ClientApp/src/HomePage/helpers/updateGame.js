@@ -1,18 +1,46 @@
-export const updateGame = (sprite, spriteArr, distance, loader, startTime) => {
+import * as PIXI from "pixi.js-legacy";
 
-	if (new Date().getTime() - startTime < 3000) {
+export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime) => {
+	// DELAY START TIME
+	if (new Date().getTime() - startTime < sprite.reactContext.state.gameSettings["delay"]) {
 		return;
 	}
-
-	if (sprite.time && (new Date().getTime() - sprite.time) > 20000) {
+	// SET DROP TIME - check duration prop (only on quarantine & text), then check drop time null
+	if (sprite.duration && (sprite.myID === sprite.reactContext.state.draggedQuarantine.id || sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)
+		&& sprite.dropTime == null && sprite.reactContext.state.quarantineDropped ) {
+			sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
+			if (sprite.velocity) {
+				const empty = new PIXI.Graphics();
+				empty.beginFill();
+				empty.lineStyle(5,0x85e312,1);
+				empty.drawCircle(0,0,sprite.radius);
+				empty.endFill();
+				sprite.texture = empty.generateCanvasTexture();
+			}		
+	}
+	// HIDE QUARANTINE AND TEXT - when clock goes beyond duration (duration + dropTime)
+	if (sprite.duration && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
 		sprite.x = -500;
 		sprite.y = -500;
-		sprite.time = null;
+		sprite.dropTime = null;
 	}
-	// DRAG QUARANTINE AROUND - when quarantineDropped === false
-	if (sprite.time && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {		
+	// DRAG QUARANTINE AROUND - when quarantine is not dropped, it is not calculated in the collisions
+	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
 		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 		sprite.y = sprite.reactContext.state.draggedQuarantine.y;		
+	}
+	// DRAG TEXT AROUND - when text is dropped, it starts counting down time
+	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length) {
+		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+		sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+	}
+	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
+	if (sprite.velocity == null) {
+		if (sprite.dropTime != null) {
+			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
+			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;			
+		}
+		return;	// Must stop calculating for Text object from now on
 	}
 	
 	// X BOUNDARIES
@@ -42,14 +70,14 @@ export const updateGame = (sprite, spriteArr, distance, loader, startTime) => {
 	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
 		return;
 	}
-	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
-	for (let i = 0; i < spriteArr.length; i++) {
-		// don't calculate collisions for same or quarantined objects
+	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES - substract Text objects!
+	for (let i = 0; i < spriteArr.length - sprite.reactContext.state.availableQuarantines.length; i++) {
+		// don't calculate collisions for same or quarantined objects		
 		if (sprite.myID === spriteArr[i].myID || (spriteArr[i].velocity.x === 0 && spriteArr[i].velocity.y === 0)) {
 			continue;
 		}
 		// check if distance minus radia is less then 0 --> crash
-		if ((distance(sprite.x, sprite.y, spriteArr[i].x, spriteArr[i].y) - (sprite.radius + spriteArr[i].radius)) < 0) {
+		if (circleIntersect(sprite.x, sprite.y, sprite.radius, spriteArr[i].x, spriteArr[i].y, spriteArr[i].radius)) {
 			const otherSprite = spriteArr[i]
 			// don't calculate contagion for quarantine particles (which have id > particle quantity)
 			if (otherSprite.myID < sprite.reactContext.state.gameSettings.quantity && sprite.myID < sprite.reactContext.state.gameSettings.quantity) {	
@@ -85,7 +113,7 @@ export const updateGame = (sprite, spriteArr, distance, loader, startTime) => {
 					}
 				}
 			}
-			resolveCollision(sprite, otherSprite, distance);
+			resolveCollision(sprite, otherSprite, circleIntersect);
 		}
 	}
 	if (sprite.velocity.x === 0 && sprite.velocity.y === 0) {
@@ -105,8 +133,6 @@ function getContagion(sprite, loader) {
 	sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
 	sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.gameRestart();	// ON AUTORESTART=TRUE
 }
-
-
 
 /**
  * Rotates coordinate system for velocities
@@ -134,7 +160,7 @@ function rotate(velocity, angle) {
  * @return Null | Does not return a value
  */
 
-function resolveCollision(particle, otherParticle, distance) {
+function resolveCollision(particle, otherParticle, circleIntersect) {
 	const quantity = particle.reactContext.state.gameSettings.quantity;
 	let xVelocityDiff, yVelocityDiff, xDist, yDist;
 
@@ -146,8 +172,8 @@ function resolveCollision(particle, otherParticle, distance) {
 
 
 
-	// Prevent accidental overlap of images
-	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0) {
+	// Prevent accidental overlap of images - calculate only when objects are moving towards each other
+	if (xVelocityDiff * xDist + yVelocityDiff * yDist > 0 && particle.myID < quantity && otherParticle.myID < quantity) {
 		// Grab angle between the two colliding images
 		const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
 
@@ -179,24 +205,60 @@ function resolveCollision(particle, otherParticle, distance) {
 
 		otherParticle.velocity.x = otherParticlePreservedSpeed.x;
 		otherParticle.velocity.y = otherParticlePreservedSpeed.y;
-	} else if (particle.myID >= quantity) {		
-		if ((distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - (particle.radius + otherParticle.radius)) < -2) {
+	}	// QUARANTENE
+	else if (particle.myID >= quantity){
+		const particleDistance = distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius;
+		// make a border > -2 for outside particles
+		if (particleDistance > -2) {
+			otherParticle.velocity.x = -otherParticle.velocity.x;
+			otherParticle.velocity.y = -otherParticle.velocity.y;
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
-	
-			otherParticle.velocity.x = 0;
-			otherParticle.velocity.y = 0;
 		}
-	}
+		// border < -2 for inside particles (so inside / outside don+t touch!)
+		if (particleDistance > -5 && particleDistance < -2) {
+			otherParticle.velocity.x = -otherParticle.velocity.x;
+			otherParticle.velocity.y = -otherParticle.velocity.y;
+			particle.velocity.x = 0;
+			particle.velocity.y = 0;
+		}
+	} 
 }
 
 function preserveSpeed(particle, vFinal) {
 	// calculate hypothenuse of the new speed
-	const newSpeed = Math.sqrt(Math.pow(vFinal.x, 2) + Math.pow(vFinal.y, 2));
+	const newSpeed = Math.sqrt(vFinal.x * vFinal.x + vFinal.y * vFinal.y);
 	// and compare it to the old speed hypothenuse and shorten / prolong x & y with calculated ratio
 	return {
 		x: vFinal.x * particle.startSpeed / newSpeed,
 		y: vFinal.y * particle.startSpeed / newSpeed
 	}
+}
+function distance(x1, y1, x2, y2) {
+	const xDist = x2 - x1;
+	const yDist = y2 - y1;
+	return Math.sqrt(xDist * xDist + yDist * yDist);
+}
+function quarantineCollision(particle, otherParticle) {
+	const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x -particle.x);
+		
+	// Store mass in var for better readability in collision equation
+	// const m1 = particle.mass;
+	// const m2 = otherParticle.mass;
 
+	// Velocity before equation
+	const u2 = rotate(otherParticle.velocity, angle);
+
+	// Velocity after 1d collision equation
+	const v2 = { x: 0, y: u2.y };
+
+	// Final velocity after rotating axis back to original location
+	const vFinal2 = rotate(v2, -angle);
+
+	// PRESERVE SPEED - calculate startSpeed and newSpeed ratio and apply it to particle x and y velocities
+	const otherParticlePreservedSpeed = preserveSpeed(otherParticle, vFinal2);
+
+	// 
+	otherParticle.velocity.x = -otherParticlePreservedSpeed.x;
+	otherParticle.velocity.y = -otherParticlePreservedSpeed.y;
 }
