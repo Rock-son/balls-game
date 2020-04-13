@@ -134,7 +134,7 @@ function handleOnImageLoaded(gameSettings) {
 		timeTextArr.push(timeText);
 	}
 
-		
+	// PARTICLES
 	let contagion, sprite;
 	const spriteArr = [];
 	const nrImages = +quantity;
@@ -191,6 +191,7 @@ function handleOnImageLoaded(gameSettings) {
 		spriteArr.push(sprite);
 	}
 	
+	console.log("tffff", spriteArr);
 	quarantineArr.forEach(item => spriteArr.push(item));
 	timeTextArr.forEach(item => spriteArr.push(item));
 	
@@ -199,12 +200,12 @@ function handleOnImageLoaded(gameSettings) {
 	if (this.autostart) {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
 			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
-			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, circleIntersect, this.gameApp.loader, new Date().getTime()));
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, circleIntersect, this.gameApp.loader));
 		}
 	} else {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
 			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
-			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, circleIntersect, this.gameApp.loader, new Date().getTime()));
+			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, circleIntersect, this.gameApp.loader));
 		}
 	}
 }

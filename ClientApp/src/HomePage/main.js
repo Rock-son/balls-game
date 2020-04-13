@@ -182,6 +182,8 @@ export default class HomePage extends React.Component {
 					simulationSettings={this.state.simulationSettings}
 					gameSettings={this.state.gameSettings}
 					isSimulationActive={this.state.isSimulationActive}
+					isGameActive={this.state.isGameActive}
+					gamePaused={this.state.gamePaused}
 					contagious={this.state.contagious}
 					healthy={this.state.healthy}
 				/>

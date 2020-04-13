@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js-legacy";
 
-export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, loader, startTime) => {
+export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, loader) => {
 	// DELAY START TIME
-	if (new Date().getTime() - startTime < sprite.reactContext.state.gameSettings["delay"]) {
+	if (sprite.reactContext.state.clockTime.getSeconds() < 4) {
 		return;
 	}
 	// SET DROP TIME - check duration prop (only on quarantine & text), then check drop time null

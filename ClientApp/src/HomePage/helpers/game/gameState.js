@@ -1,4 +1,5 @@
 export const gameSettings = {
+	isGameActive: false,
 	gamePaused: true,
 	gameStopped: true,
 	// modals - popups
@@ -23,7 +24,7 @@ export const gameSettings = {
 		size: (window.innerWidth < 800 ? 2.5 : 5),
 		quantity: 100,
 		speed: 0.3,
-		delay: 3000
+		delayInSeconds: 3
 	}
 }
 
@@ -60,6 +61,7 @@ export function stopStartGame() {
 		const shuffledQuarantines = this.shuffle(this.state.availableQuarantines); 
 		this.setState(prevState => {
 			return {
+				isGameActive: true,
 				clockTime: new Date(0), 
 				gameStopped: false, 
 				gamePaused: false, 
@@ -99,7 +101,8 @@ export function setGameSettings(e) {
 		this.stop();
 		this.startGame(false, newGameSettings);
 		// reset settings as you would at game start
-		return ({ 
+		return ({
+			isGameActive: true,
 			clockTime: new Date(0), 
 			gameSettings: newGameSettings, 
 			healthy: newGameSettings["quantity"] - 1, 
