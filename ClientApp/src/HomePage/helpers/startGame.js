@@ -16,7 +16,8 @@ export function startGame(autostart, gameSettings = null) {
 	document.getElementById("canvas-container").appendChild(this.gameApp.view);
 	
 	if (this.gameApp.loader.resources.sheet == null) {
-		this.gameApp.loader.add("sheet", "balls.json")
+		this.gameApp.loader
+			.add("sheet", "balls.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
@@ -43,10 +44,25 @@ export function startGame(autostart, gameSettings = null) {
 function randomIntNumber(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-function distance(x1, y1, x2, y2) {
-	const xDist = x2 - x1;
-	const yDist = y2 - y1;
-	return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+
+/**
+ * Intersection calculation. Multiplication is much faster than getting the square root with Math.sqrt(), so distance is calculated without getting the root 
+ * and the sum of the radii is multiplied by itself. The outcome stays the same, but the performance is better.
+ * @param {Float} x1 
+ * @param {Float} y1 
+ * @param {Int}   r1 
+ * @param {Float} x2 
+ * @param {Float} y2 
+ * @param {Int}	  r2 
+ */
+function circleIntersect(x1, y1, r1, x2, y2, r2) {
+
+    // Calculate the distance between the two circles
+    var squareDistance = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2);
+
+    // When the distance is smaller or equal to the sum
+    // of the two radius, the circles touch or overlap
+    return squareDistance <= ((r1 + r2) * (r1 + r2))
 }
 
 function handleOnImageLoaded(gameSettings) {
@@ -60,26 +76,46 @@ function handleOnImageLoaded(gameSettings) {
 	
 	
 	const quarantineArr = [];
-	// QUARANTINES - create and hide them from the screen & use them randomly when needed
-	for (let index = 1; index < this.state.availableQuarantines.length+1; index++) {
-		const randomLength = randomIntNumber(index*50, index*70);
+	const timeTextArr = [];
+	const difficultyTime = { 0: [15, 25], 1: [10, 15], 2: [5, 10] };
+	// TEXT & QUARANTINES
+	for (let index = 0; index < this.state.availableQuarantines.length; index++) {
+		const randomLength = randomIntNumber(150, 350);
+		const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
 		const width = randomLength;
 		const height = randomLength;
 		const radius = randomLength / 2;
-
-		const gt = new PIXI.Graphics();
-		gt.beginFill();
-		gt.lineStyle(5,0x85e312,1);
-		gt.drawCircle(0,0,radius);
-		gt.endFill();
-		const texture = gt.generateCanvasTexture();	
-	
-		const particleID = this.state.gameSettings.quantity + index-1;
-		const quarantine = new PIXI.Sprite(texture);
+		// TEXT
+		const formattedTime = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
+		const timeText = new PIXI.Text(formattedTime, {
+			fill: 0x85e312, 
+			font: "18px",
+			fontFamily : "Arial"
+		});
+		timeText.text = formattedTime;
+		timeText.anchor.set(0.5, 0);
+		timeText.x = -500;
+		timeText.y = -500;
+		timeText.duration = randomTimeInSeconds * 1000; 
+		timeText.dropTime = null;
+		timeText.reactContext = this;
+		timeText.myID = quantity + this.state.availableQuarantines.length + index; // push index
+		// check if quarantine textures already exist
+		// QUARANTINES
+		const green = new PIXI.Graphics();
+		green.beginFill(0x85e312, 0.35);
+		green.lineStyle(5,0x85e312,1);
+		green.drawCircle(0,0,radius);
+		green.endFill();
+		const greenTexture = green.generateCanvasTexture();
+		
+		const particleID = quantity + index;
+		const quarantine = new PIXI.Sprite(greenTexture);
 		quarantine.x = -500;
 		quarantine.y = -500;
 		quarantine.alpha = .5;
-		quarantine.time = new Date().getTime();
+		quarantine.duration = randomTimeInSeconds * 1000; 
+		quarantine.dropTime = null;
 		quarantine.width = width;
 		quarantine.height = height;
 		quarantine.anchor.x = .5;
@@ -95,6 +131,7 @@ function handleOnImageLoaded(gameSettings) {
 		};
 		quarantine.startSpeed = 0;
 		quarantineArr.push(quarantine);
+		timeTextArr.push(timeText);
 	}
 
 		
@@ -109,15 +146,20 @@ function handleOnImageLoaded(gameSettings) {
 	for (let i = 0; i < nrImages; i++) {
 
 		contagion = i === 0 ? 1 : 0;
+		let tries = 0;
 		let x = randomIntNumber(radius * 2, maxWidth);
 		let y = randomIntNumber(radius * 2, maxHeight);
 		if (i !== 0) {
 			for (let j = 0; j < spriteArr.length; j++) {
-				if ((distance(x, y, spriteArr[j].x, spriteArr[j].y) - (radius + spriteArr[j].radius)) < 0) {
+				if (tries > 1000000) {
+					break; // if the screen is too small, it will go forever - so break and have none and notify user 
+				}
+				if (circleIntersect(x, y, radius, spriteArr[j].x, spriteArr[j].y, spriteArr[j].radius)) {
 					x = randomIntNumber(radius * 2, maxWidth);
 					y = randomIntNumber(radius * 2, maxHeight);
 					// set new x, y recursively
 					j = -1;
+					tries++;
 				}
 			}
 		}
@@ -138,30 +180,31 @@ function handleOnImageLoaded(gameSettings) {
 		sprite.contagion = contagion;
 		sprite.contagiousFrom = 0;
 		const randomX = Math.random() - .5;
-		const randomY = Math.random() - .5;
+		const randomY = Math.random() - .5;		
 		sprite.velocity = { 
 			x: randomX < 0  && randomX > -.3 ? (randomX*speed) - speed : (randomX > 0  && randomX < .3 ? (randomX) + speed : randomX * speed),
 			y: randomY < 0  && randomY > -.3 ? (randomY*speed) - speed : (randomY > 0  && randomY < .3 ? (randomY) + speed : randomY * speed),
 		};
 		
-		// calculate starting speed (hypothenuse from x, y)
-		sprite.startSpeed = Math.sqrt(Math.pow(sprite.velocity.x, 2) + Math.pow(sprite.velocity.y, 2));
+		// calculate starting speed (hypothenuse from x, y) - optimised (without Math.pow() func)
+		sprite.startSpeed = Math.sqrt(sprite.velocity.x * sprite.velocity.x + sprite.velocity.y * sprite.velocity.y);
 		spriteArr.push(sprite);
 	}
 	
 	quarantineArr.forEach(item => spriteArr.push(item));
+	timeTextArr.forEach(item => spriteArr.push(item));
 	
 	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {
-		for (let index = 0; index < len; index++) {
-			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader, new Date().getTime()));
+		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
+			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, circleIntersect, this.gameApp.loader, new Date().getTime()));
 		}
 	} else {
-		for (let index = 0; index < len; index++) {
-			this.gameApp.stage.addChild(spriteArr[index]);
-			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[index], spriteArr, distance, this.gameApp.loader));
+		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
+			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
+			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, circleIntersect, this.gameApp.loader, new Date().getTime()));
 		}
 	}
 }

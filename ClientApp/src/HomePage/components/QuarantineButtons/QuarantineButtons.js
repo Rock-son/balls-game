@@ -13,7 +13,7 @@ export class QuarantineButtons extends React.Component {
 	}
 
 	render() {
-		const { quarantineButtonsActive, quarantineAppearanceSettings, setQuarantineInMotion } = this.props;
+		const { quarantineButtonsActive, setQuarantineInMotion } = this.props;
 		
 		return (
 			<>
