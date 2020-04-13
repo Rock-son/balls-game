@@ -34,5 +34,5 @@ export function stop() {
 	}
 };
 
-export { startSimulation } from "./startSimulation";
-export { startGame } from "./startGame";
+export { startSimulation } from "./simulation/startSimulation";
+export { startGame } from "./game/startGame";
