@@ -191,7 +191,6 @@ function handleOnImageLoaded(gameSettings) {
 		spriteArr.push(sprite);
 	}
 	
-	console.log("tffff", spriteArr);
 	quarantineArr.forEach(item => spriteArr.push(item));
 	timeTextArr.forEach(item => spriteArr.push(item));
 	

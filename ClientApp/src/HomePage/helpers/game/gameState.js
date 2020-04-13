@@ -13,7 +13,7 @@ export const gameSettings = {
 	quarantineOverlapping: false,
 	activeQuarantines: [],
 	draggedQuarantine: {
-		id: 0,
+		id: -1,
 		x: 0,
 		y: 0,
 	},

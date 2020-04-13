@@ -20,7 +20,6 @@ export const NavBar = props => {
 		seconds = trueSeconds;
 		formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
 	}
-	console.log("wtf", minutes);
 	
 	// start countdown on game start
 	const gameStartCountdownTime = (trueSeconds < 4) && (trueSeconds > 0) ? (4 - trueSeconds) : "";

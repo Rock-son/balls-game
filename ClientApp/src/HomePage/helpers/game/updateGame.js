@@ -100,14 +100,15 @@ export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, lo
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}*/
+	
 	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
 	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
 		return;
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES - substract Text objects!
 	for (let i = 0; i < spriteArr.length - sprite.reactContext.state.availableQuarantines.length; i++) {
-		// don't calculate collisions for same or quarantined objects		
-		if (sprite.myID === spriteArr[i].myID || (spriteArr[i].velocity.x === 0 && spriteArr[i].velocity.y === 0)) {
+		// don't calculate collisions for same objects		
+		if (sprite.myID === spriteArr[i].myID) {
 			continue;
 		}
 		// check if distance minus radia is less then 0 --> crash
@@ -150,14 +151,8 @@ export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, lo
 			resolveCollision(sprite, otherSprite, circleIntersect);
 		}
 	}
-	if (sprite.velocity.x === 0 && sprite.velocity.y === 0) {
-		sprite.x = sprite.x;
-		sprite.y = sprite.y;
-	} else {
-		sprite.x += sprite.velocity.x;
-		sprite.y += sprite.velocity.y;
-	}
-
+	sprite.x += sprite.velocity.x;
+	sprite.y += sprite.velocity.y;
 }
 
 function getContagion(sprite, loader) {
