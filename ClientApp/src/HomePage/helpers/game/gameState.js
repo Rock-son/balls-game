@@ -9,6 +9,7 @@ export const gameSettings = {
 	quarantineDropped: false,
 	availableQuarantines: Array.apply(0, {length: 7}).map((x,i) => i),
 	quarantineBeingDragged: false,
+	quarantineOverlapping: false,
 	activeQuarantines: [],
 	draggedQuarantine: {
 		id: 0,
@@ -97,15 +98,27 @@ export function setGameSettings(e) {
 		// only reset game for size and quantity - for preview
 		this.stop();
 		this.startGame(false, newGameSettings);
-		return ({ clockTime: new Date(0), gameSettings: newGameSettings, healthy: newGameSettings["quantity"] - 1, 
-				contagious: 1, gameStopped: true, gamePaused: true, startButtonText: "START GAME" });
+		// reset settings as you would at game start
+		return ({ 
+			clockTime: new Date(0), 
+			gameSettings: newGameSettings, 
+			healthy: newGameSettings["quantity"] - 1, 
+			contagious: 1, 
+			gameStopped: true, 
+			gamePaused: true, 
+			startButtonText: "START GAME", 
+			quarantineOverlappin: false, 
+			quarantineBeingDragged: false,
+			quarantineButtonsActive: false, 
+			quarantineDropped: false
+		});
 	}); 
 }
 export function setQuarantineInMotion(e) {
 	const pageX = e.pageX;
 	const pageY = e.pageY;
 	// loop through available quarantines
-	const targetID = this.state.gameSettings["quantity"] + this.state.availableQuarantines[this.state.activeQuarantines.length];
+	const targetID = this.state.gameSettings["quantity"] + this.state.availableQuarantines[this.state.activeQuarantines.length];	
 	this.setState(prevState => {
 		return {draggedQuarantine: {...prevState.draggedQuarantine, 
 									...{ id: targetID, x: pageX, y: pageY }
@@ -113,7 +126,7 @@ export function setQuarantineInMotion(e) {
 				quarantineBeingDragged: true,
 				quarantineButtonsActive: true,
 				quarantineDropped: false,
-				activeQuarantines: prevState.activeQuarantines.length === this.state.availableQuarantines.length ? [] : prevState.activeQuarantines.concat(targetID)
+				activeQuarantines: prevState.activeQuarantines.concat(targetID)
 		};
 	});
 

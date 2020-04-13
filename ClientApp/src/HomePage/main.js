@@ -126,11 +126,14 @@ export default class HomePage extends React.Component {
 			this.toggleSimulationDialog();
 		// on quarantineButtonsActive -> should trigger quarantineDrop - user should have quarantine attached to cursor
 		} else if (this.state.quarantineBeingDragged && !this.state.quarantineDropped) {
-			this.setState({
-				quarantineBeingDragged: false,
-				quarantineButtonsActive: false,
-				quarantineDropped: true
-			});
+			// overlap check - dont'l let the user lay quarantine down
+			if (!this.state.quarantineOverlapping) {
+				this.setState({
+					quarantineBeingDragged: false,
+					quarantineButtonsActive: true,
+					quarantineDropped: true
+				});
+			}
 		} else {
 			this.toggleGameDialog();
 		}

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js-legacy";
 
-export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime) => {
+export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, loader, startTime) => {
 	// DELAY START TIME
 	if (new Date().getTime() - startTime < sprite.reactContext.state.gameSettings["delay"]) {
 		return;
@@ -27,7 +27,41 @@ export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime
 	// DRAG QUARANTINE AROUND - when quarantine is not dropped, it is not calculated in the collisions
 	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
 		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-		sprite.y = sprite.reactContext.state.draggedQuarantine.y;		
+		sprite.y = sprite.reactContext.state.draggedQuarantine.y;
+		// loop through active quarantines and find any intersections
+		let overlap = false;
+		// only check active quarantines (they become active at the start of drag)
+		const quarantinesForCheck = quarantineArr.filter(quarantine => sprite.reactContext.state.activeQuarantines.indexOf(quarantine.myID) > -1);
+		for (let index = 0; index < quarantinesForCheck.length; index++) {
+			// don't check self
+			if (sprite.myID === quarantinesForCheck[index].myID) {
+				continue;
+			}
+			// calc intersection - break for loop if it intersects
+			if (circleIntersect(sprite.x, sprite.y, sprite.radius, quarantinesForCheck[index].x, quarantinesForCheck[index].y, quarantinesForCheck[index].radius)) {
+				overlap = true;
+				break;
+			}
+		}		
+		// if quarantine overlaps another and it was not overlapping previously - change texture
+		if (overlap && !sprite.reactContext.state.quarantineOverlapping) {
+			const red = new PIXI.Graphics();
+			red.beginFill();
+			red.lineStyle(5,0xFF0000,1);
+			red.drawCircle(0,0,sprite.radius);
+			red.endFill();
+			sprite.texture = red.generateCanvasTexture();
+			sprite.reactContext.setState({ quarantineOverlapping: true });			
+		}// if quarantine was previously overlapping and it doesn't now - change state
+		else if (!overlap && sprite.reactContext.state.quarantineOverlapping) {
+			const green = new PIXI.Graphics();
+			green.beginFill();
+			green.lineStyle(5,0x85e312,1);
+			green.drawCircle(0,0,sprite.radius);
+			green.endFill();
+			sprite.texture = green.generateCanvasTexture();
+			sprite.reactContext.setState({ quarantineOverlapping: false });
+		}
 	}
 	// DRAG TEXT AROUND - when text is dropped, it starts counting down time
 	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length) {
@@ -38,7 +72,7 @@ export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime
 	if (sprite.velocity == null) {
 		if (sprite.dropTime != null) {
 			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
-			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;			
+			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;
 		}
 		return;	// Must stop calculating for Text object from now on
 	}
