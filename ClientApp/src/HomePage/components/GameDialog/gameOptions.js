@@ -49,7 +49,7 @@ export const speedOptions = [
 ];
 
 export const speedDiffValues = {
-	0: .5,
-	1: 1,
-	2: 1.5
+	0: .3,
+	1: .6,
+	2: 1
 }

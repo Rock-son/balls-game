@@ -22,7 +22,7 @@ export default class HomePage extends React.Component {
 			error: null,
 			// time
 			currentTime: new Date().getTime(),
-			startTime: new Date(0),
+			clockTime: new Date(0),
 			// canvas state
 			simulationPaused: false,
 			gamePaused: true,
@@ -43,7 +43,8 @@ export default class HomePage extends React.Component {
 			// quarantine settings
 			quarantineButtonsActive: false,
 			quarantineDropped: false,
-			availableQuarantines: Array.apply(0, {length: 5}).map((x,i) => i),
+			availableQuarantines: Array.apply(0, {length: 7}).map((x,i) => i),
+			quarantineBeingDragged: false,
 			activeQuarantines: [],
 			draggedQuarantine: {
 				id: 0,
@@ -56,7 +57,8 @@ export default class HomePage extends React.Component {
 				difficulty: 0,
 				size: (window.innerWidth < 800 ? 2.5 : 5),
 				quantity: 100,
-				speed: 0
+				speed: 0.3,
+				delay: 3000
 			},
 			// SETTINGS
 			simulationSettings: {
@@ -78,7 +80,7 @@ export default class HomePage extends React.Component {
 		this.startGame = startGame.bind(this);
 		this.pause = pause.bind(this);
 		this.unpause = unPause.bind(this);
-		
+
 		this.shuffle = this.shuffle.bind(this);
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
@@ -133,7 +135,7 @@ export default class HomePage extends React.Component {
 				return ({ currentTime: prevState.currentTime })
 			}
 			// if simulation / game is not paused, calculate start time a new
-			return ({ currentTime: new Date().getTime(), startTime: new Date(prevState.startTime.getTime() + 1000) })
+			return ({ currentTime: new Date().getTime(), clockTime: new Date(prevState.clockTime.getTime() + 1000) })
 		});
 	}
 	handleBlur() {
@@ -181,7 +183,7 @@ export default class HomePage extends React.Component {
 			this.stop();						// START
 			this.startSimulation(true);
 			this.setState(prevState => ({ 
-				startTime: new Date(0), 
+				clockTime: new Date(0), 
 				simulationStopped: false, 
 				simulationPaused: false, 
 				startButtonText: "CONTINUE SIMULATION", 
@@ -196,7 +198,7 @@ export default class HomePage extends React.Component {
 	simulationRestart() {
 		this.stop();
 		this.startSimulation(true);
-		this.setState(prevState => ({ startTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
+		this.setState(prevState => ({ clockTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
 					healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setSimulationSettings(e) {
@@ -215,7 +217,7 @@ export default class HomePage extends React.Component {
 			if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
 				this.stop();
 				this.startSimulation(false, newSimulationSettings);
-				return ({ simulationSettings: newSimulationSettings, startTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1, 
+				return ({ simulationSettings: newSimulationSettings, clockTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1, 
 						contagious: 1, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
 			}
 			return ({ simulationSettings: newSimulationSettings });
@@ -230,15 +232,16 @@ export default class HomePage extends React.Component {
 			const shuffledQuarantines = this.shuffle(this.state.availableQuarantines); 
 			this.setState(prevState => {
 				return {
-					startTime: new Date(0), 
+					clockTime: new Date(0), 
 					gameStopped: false, 
 					gamePaused: false, 
 					startButtonText: "CONTINUE GAME",
 					gameSettingsOpen: false, 
 					healthy: prevState.gameSettings["quantity"] - 1, 
 					contagious: 1,
+					quarantineBeingDragged: false,
 					quarantineButtonsActive: true,
-					quarantineDropped: true,
+					quarantineDropped: false,
 					availableQuarantines: shuffledQuarantines
 				}
 			});
@@ -249,7 +252,7 @@ export default class HomePage extends React.Component {
 	gameRestart() {
 		this.stop();
 		this.startGame(true);
-		this.setState(prevState => ({ startTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE SIMULATION", gameSettingsOpen: false,
+		this.setState(prevState => ({ clockTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE SIMULATION", gameSettingsOpen: false,
 					healthy: prevState.gameSettings["quantity"] - 1, contagious: 1 }));
 	}
 	setGameSettings(e) {
@@ -267,7 +270,7 @@ export default class HomePage extends React.Component {
 			// only reset game for size and quantity - for preview
 			this.stop();
 			this.startGame(false, newGameSettings);
-			return ({ gameSettings: newGameSettings, healthy: newGameSettings["quantity"] - 1, 
+			return ({ clockTime: new Date(0), gameSettings: newGameSettings, healthy: newGameSettings["quantity"] - 1, 
 					contagious: 1, gameStopped: true, gamePaused: true, startButtonText: "START GAME" });
 		}); 
 	}
@@ -280,6 +283,7 @@ export default class HomePage extends React.Component {
 			return {draggedQuarantine: {...prevState.draggedQuarantine, 
 										...{ id: targetID, x: pageX, y: pageY }
 									},
+					quarantineBeingDragged: true,
 					quarantineButtonsActive: true,
 					quarantineDropped: false,
 					activeQuarantines: prevState.activeQuarantines.length === this.state.availableQuarantines.length ? [] : prevState.activeQuarantines.concat(targetID)
@@ -299,8 +303,9 @@ export default class HomePage extends React.Component {
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationDialog();
 		// on quarantineButtonsActive -> should trigger quarantineDrop - user should have quarantine attached to cursor
-		} else if (this.state.quarantineButtonsActive && !this.state.quarantineDropped) {
+		} else if (this.state.quarantineBeingDragged && !this.state.quarantineDropped) {
 			this.setState({
+				quarantineBeingDragged: false,
 				quarantineButtonsActive: false,
 				quarantineDropped: true
 			});
@@ -323,7 +328,7 @@ export default class HomePage extends React.Component {
 	toggleSimulationDialog() {
 		if (this.state.isGameActive) {
 			this.stop();
-			// only when clicking on navbar link -> stop game and show dialog
+			// only when clicking on navbar link -> stop game and show simulation dialog
 			this.setState(prevState => {
 				return ({ 
 					simulationSettingsOpen: true, 
@@ -354,7 +359,7 @@ export default class HomePage extends React.Component {
 	toggleGameDialog() {
 		if (this.state.isSimulationActive) {
 			this.stop();
-			// only when clicking on navbar link -> stop simulation and show dialog
+			// only when clicking on navbar link -> stop simulation and show game dialog
 			this.setState(prevState => {
 				return ({ 
 					gameSettingsOpen: true, 
@@ -402,7 +407,7 @@ export default class HomePage extends React.Component {
 			<section className="main">
 				<NavBar 
 					currentTime={this.state.currentTime}
-					startTime={this.state.startTime}
+					clockTime={this.state.clockTime}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}

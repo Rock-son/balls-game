@@ -1,18 +1,46 @@
-export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime) => {
+import * as PIXI from "pixi.js-legacy";
 
-	if (new Date().getTime() - startTime < 3000) {
+export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime) => {
+	// DELAY START TIME
+	if (new Date().getTime() - startTime < sprite.reactContext.state.gameSettings["delay"]) {
 		return;
 	}
-
-	if (sprite.time && (new Date().getTime() - sprite.time) > 20000) {
+	// SET DROP TIME - check duration prop (only on quarantine & text), then check drop time null
+	if (sprite.duration && (sprite.myID === sprite.reactContext.state.draggedQuarantine.id || sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)
+		&& sprite.dropTime == null && sprite.reactContext.state.quarantineDropped ) {
+			sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
+			if (sprite.velocity) {
+				const empty = new PIXI.Graphics();
+				empty.beginFill();
+				empty.lineStyle(5,0x85e312,1);
+				empty.drawCircle(0,0,sprite.radius);
+				empty.endFill();
+				sprite.texture = empty.generateCanvasTexture();
+			}		
+	}
+	// HIDE QUARANTINE AND TEXT - when clock goes beyond duration (duration + dropTime)
+	if (sprite.duration && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
 		sprite.x = -500;
 		sprite.y = -500;
-		sprite.time = null;
+		sprite.dropTime = null;
 	}
-	// DRAG QUARANTINE AROUND - when quarantineDropped === false
-	if (sprite.time && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {		
+	// DRAG QUARANTINE AROUND - when quarantine is not dropped, it is not calculated in the collisions
+	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
 		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 		sprite.y = sprite.reactContext.state.draggedQuarantine.y;		
+	}
+	// DRAG TEXT AROUND - when text is dropped, it starts counting down time
+	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length) {
+		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+		sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+	}
+	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
+	if (sprite.velocity == null) {
+		if (sprite.dropTime != null) {
+			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
+			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;			
+		}
+		return;	// Must stop calculating for Text object from now on
 	}
 	
 	// X BOUNDARIES
@@ -42,9 +70,9 @@ export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime
 	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
 		return;
 	}
-	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
-	for (let i = 0; i < spriteArr.length; i++) {
-		// don't calculate collisions for same or quarantined objects
+	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES - substract Text objects!
+	for (let i = 0; i < spriteArr.length - sprite.reactContext.state.availableQuarantines.length; i++) {
+		// don't calculate collisions for same or quarantined objects		
 		if (sprite.myID === spriteArr[i].myID || (spriteArr[i].velocity.x === 0 && spriteArr[i].velocity.y === 0)) {
 			continue;
 		}

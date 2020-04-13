@@ -5,8 +5,8 @@ import { Button, Navbar, Nav, NavbarToggler,
 
 export const NavBar = props => {
 	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healthy,
-			toggleSimulationDialog, toggleShareDialog, toggleGameDialog, startTime, simulationSettings: { showTime, showStats } } = props;
-	const seconds = startTime.getSeconds();
+			toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime, simulationSettings: { showTime, showStats } } = props;
+	const seconds = clockTime.getSeconds();
 	const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
 
 	return(
@@ -88,7 +88,7 @@ export const NavBar = props => {
 					</NavItem>
 					<NavItem className={`timer ${!isNavbarVisible && "drop"}`}>
 						{
-							showTime ? `${startTime.getMinutes()}:${formattedSeconds}` : ""
+							showTime ? `${clockTime.getMinutes()}:${formattedSeconds}` : ""
 						}
 					</NavItem>
 				</Nav>
