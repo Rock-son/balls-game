@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js-legacy";
 
-export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circleIntersect, loader) => {
+export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circleIntersect, loader, randomIntNumber) => {
 	// DELAY START TIME
 	if (sprite.reactContext.state.clockTime.getTime() <= sprite.reactContext.state.gameSettings["delayInSeconds"]*1000) {
 		return;
@@ -59,6 +59,13 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			green.endFill();
 			sprite.texture = green.generateCanvasTexture();
 			sprite.reactContext.setQuarantineNonactive(sprite.myID);
+		} else {
+			// this was done in a hurry (repeated in HomePage/helpers/game/startGame.js) - it is only called on quarantine termination
+			const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
+			const difficulty = sprite.reactContext.state.gameSettings["difficulty"];
+			const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
+			sprite.duration = randomTimeInSeconds * 1000;
+			sprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
 		}
 	}
 
