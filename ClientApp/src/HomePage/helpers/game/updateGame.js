@@ -2,30 +2,69 @@ import * as PIXI from "pixi.js-legacy";
 
 export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, loader) => {
 	// DELAY START TIME
-	if (sprite.reactContext.state.clockTime.getSeconds() < 4) {
+	if (sprite.reactContext.state.clockTime.getSeconds() <= sprite.reactContext.state.gameSettings["delayInSeconds"]) {
 		return;
+	}	
+
+	// DRAG AROUND & CHANGE SIZE - according to number of infections
+	if (( sprite.isTextSprite || sprite.isQuarantineSprite ) && !sprite.reactContext.state.quarantineDropped && 
+		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id || 
+		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)) {
+			const size = 2000 / Math.round(sprite.reactContext.state.gameSettings.quantity / sprite.reactContext.state.contagious);
+
+			if (sprite.isQuarantineSprite) {
+				sprite.width = size < 150 ? 150: size > 360 ? 360 : size;
+				sprite.height = size < 150 ? 150: size > 360 ? 360 : size;
+				sprite.radius = size < 150 ? 75: size > 350 ? 180 : size/2;
+			} else {
+				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			}
+			console.log("draggedID", sprite.myID);
+			
 	}
-	// SET DROP TIME - check duration prop (only on quarantine & text), then check drop time null
-	if (sprite.duration && (sprite.myID === sprite.reactContext.state.draggedQuarantine.id || sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)
-		&& sprite.dropTime == null && sprite.reactContext.state.quarantineDropped ) {
-			sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
-			if (sprite.velocity) {
-				const empty = new PIXI.Graphics();
-				empty.beginFill();
-				empty.lineStyle(5,0x85e312,1);
-				empty.drawCircle(0,0,sprite.radius);
-				empty.endFill();
-				sprite.texture = empty.generateCanvasTexture();
-			}		
+	// SET DROP TIME - on the exact moment quarantine is dropped
+	if ( sprite.dropTime == null && sprite.reactContext.state.quarantineDropped &&
+		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id || 
+		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)) {
+
+		sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
+		if (sprite.isQuarantineSprite ) {
+			const empty = new PIXI.Graphics();
+			empty.beginFill();
+			empty.lineStyle(sprite.radius > 300 ? 2.5 : 5,0x85e312,1);
+			empty.drawCircle(0,0,sprite.radius);
+			empty.endFill();
+			sprite.texture = empty.generateCanvasTexture();					
+		} else if (sprite.reactContext.state.draggedQuarantine.id > -1){
+			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			// text resets dragedQuarantineId because it calculates later than qurantine
+			sprite.reactContext.resetDraggedQuarantineId(sprite.reactContext.state.draggedQuarantine.id);
+		}
 	}
+
 	// HIDE QUARANTINE AND TEXT - when clock goes beyond duration (duration + dropTime)
-	if (sprite.duration && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
+	if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
 		sprite.x = -500;
 		sprite.y = -500;
-		sprite.dropTime = null;
+		sprite.dropTime = null;		
+
+		if (sprite.isQuarantineSprite) {
+			const empty = new PIXI.Graphics();
+			empty.beginFill();
+			empty.lineStyle();
+			empty.drawCircle(0,0,sprite.radius);
+			empty.endFill();
+			sprite.texture = empty.generateCanvasTexture();
+			console.log("hiding qID: ", sprite.myID);
+			
+			console.log("dragged qID: ", sprite.reactContext.state.draggedQuarantine.id);
+			sprite.reactContext.setQuarantineNonactive(sprite.myID);
+		}
 	}
-	// DRAG QUARANTINE AROUND - when quarantine is not dropped, it is not calculated in the collisions
-	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
+	// QUARANTINE OVERLAPPING- when quarantine is not dropped, it is not yet being calculated in the collisions
+	if (!sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
 		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 		sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 		// loop through active quarantines and find any intersections
@@ -63,13 +102,8 @@ export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, lo
 			sprite.reactContext.setState({ quarantineOverlapping: false });
 		}
 	}
-	// DRAG TEXT AROUND - when text is dropped, it starts counting down time
-	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length) {
-		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-		sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
-	}
 	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
-	if (sprite.velocity == null) {
+	if (sprite.isTextSprite) {		
 		if (sprite.dropTime != null) {
 			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
 			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;

@@ -11,6 +11,7 @@ export const NavBar = props => {
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
 	const trueSeconds = clockTime.getSeconds();
+	// this is the only place where seconds are mishandled
 	if (isGameActive) {
 		minutes = trueSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
 		seconds = trueSeconds - delayInSeconds;

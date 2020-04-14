@@ -27,6 +27,21 @@ export const gameSettings = {
 		delayInSeconds: 3
 	}
 }
+const resetSettings = {
+	quarantineBeingDragged: false,
+	quarantineOverlapping: false,
+	quarantineButtonsActive: true, // change this setting
+	quarantineDropped: false,
+	activeQuarantines: [],
+	gameSettingsOpen: false,
+	gamePaused: false,
+	gameStopped: false,
+	draggedQuarantine: {
+		id: -1,
+		x: 0,
+		y: 0,
+	},
+}
 
 
 export function onMouseMove(e) {	
@@ -62,17 +77,12 @@ export function stopStartGame() {
 		this.setState(prevState => {
 			return {
 				isGameActive: true,
-				clockTime: new Date(0), 
-				gameStopped: false, 
-				gamePaused: false, 
+				clockTime: new Date(0),
 				startButtonText: "CONTINUE GAME",
-				gameSettingsOpen: false, 
 				healthy: prevState.gameSettings["quantity"] - 1, 
 				contagious: 1,
-				quarantineBeingDragged: false,
-				quarantineButtonsActive: true,
-				quarantineDropped: false,
-				availableQuarantines: shuffledQuarantines
+				availableQuarantines: shuffledQuarantines,
+				...resetSettings
 			}
 		});
 		this.startGame(true);
@@ -82,8 +92,13 @@ export function stopStartGame() {
 export function gameRestart() {
 	this.stop();
 	this.startGame(true);
-	this.setState(prevState => ({ clockTime: new Date(0), gameStopped: false, gamePaused: false, startButtonText: "CONTINUE SIMULATION", gameSettingsOpen: false,
-				healthy: prevState.gameSettings["quantity"] - 1, contagious: 1 }));
+	this.setState(prevState => ({ 
+		clockTime: new Date(0),
+		startButtonText: "CONTINUE SIMULATION",
+		healthy: prevState.gameSettings["quantity"] - 1, 
+		contagious: 1,
+		...resetSettings
+	}));
 }
 export function setGameSettings(e) {
 	let targetData, parsedData;
@@ -97,7 +112,6 @@ export function setGameSettings(e) {
 	}		
 	this.setState(prevState => {
 		const newGameSettings = {...prevState.gameSettings, ...parsedData};
-		// only reset game for size and quantity - for preview
 		this.stop();
 		this.startGame(false, newGameSettings);
 		// reset settings as you would at game start
@@ -106,14 +120,13 @@ export function setGameSettings(e) {
 			clockTime: new Date(0), 
 			gameSettings: newGameSettings, 
 			healthy: newGameSettings["quantity"] - 1, 
-			contagious: 1, 
+			contagious: 1,
+			startButtonText: "START GAME",
+			...resetSettings,
+			// override reset settings after this
+			gameSettingsOpen: true,
 			gameStopped: true, 
 			gamePaused: true, 
-			startButtonText: "START GAME", 
-			quarantineOverlappin: false, 
-			quarantineBeingDragged: false,
-			quarantineButtonsActive: false, 
-			quarantineDropped: false
 		});
 	}); 
 }
@@ -132,7 +145,29 @@ export function setQuarantineInMotion(e) {
 				activeQuarantines: prevState.activeQuarantines.concat(targetID)
 		};
 	});
+}
+export function resetDraggedQuarantineId(id) {
+	this.setState({
+		draggedQuarantine: {...resetSettings.draggedQuarantine}
+	});
+}
+export function setQuarantineNonactive(id) {
+	console.log("active", this.state.activeQuarantines);
+	
+	this.setState(prevState => {
+		const index = prevState.activeQuarantines.indexOf(id);
 
+		if (index === -1) {
+			return {
+				activeQuarantines: prevState.activeQuarantines
+			};
+		}
+		const test = prevState.activeQuarantines.slice(0, index).concat(prevState.activeQuarantines.slice(index + 1));
+		console.log("after set non active", test);
+		return {
+			activeQuarantines: prevState.activeQuarantines.slice(0, index).concat(prevState.activeQuarantines.slice(index + 1))
+		};
+	});
 }
 export function toggleGamePause() {
 	return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();

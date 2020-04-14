@@ -11,6 +11,7 @@ export class QuarantineButtons extends React.Component {
 		}
 		return false;
 	}
+	// TODO: all logic for button handling!
 
 	render() {
 		const { quarantineButtonsActive, setQuarantineInMotion } = this.props;

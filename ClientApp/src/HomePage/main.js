@@ -3,8 +3,10 @@ import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
-import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings, toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, shuffle, stopStartGame, gameRestart, setQuarantineInMotion, toggleGamePause, toggleGameDialog } from "./helpers/game/gameState";
+import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings, 
+	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
+import { gameSettings, setGameSettings, onMouseMove, shuffle, stopStartGame, gameRestart, 
+	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId } from "./helpers/game/gameState";
 
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -63,6 +65,8 @@ export default class HomePage extends React.Component {
 		this.setGameSettings = setGameSettings.bind(this);
 		this.toggleGameDialog = toggleGameDialog.bind(this);
 		this.setQuarantineInMotion = setQuarantineInMotion.bind(this);
+		this.setQuarantineNonactive = setQuarantineNonactive.bind(this);
+		this.resetDraggedQuarantineId = resetDraggedQuarantineId.bind(this);
 		// SIMULATION
 		this.simulationRestart= simulationRestart.bind(this);
 		this.toggleShareDialog = this.toggleShareDialog.bind(this);
@@ -131,7 +135,7 @@ export default class HomePage extends React.Component {
 				this.setState({
 					quarantineBeingDragged: false,
 					quarantineButtonsActive: true,
-					quarantineDropped: true
+					quarantineDropped: true,
 				});
 			}
 		} else {
