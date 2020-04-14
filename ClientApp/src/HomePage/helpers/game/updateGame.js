@@ -1,44 +1,112 @@
 import * as PIXI from "pixi.js-legacy";
 
-export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime) => {
+export const updateGame = (sprite, spriteArr, quarantineArr, circleIntersect, loader) => {
 	// DELAY START TIME
-	if (new Date().getTime() - startTime < sprite.reactContext.state.gameSettings["delay"]) {
+	if (sprite.reactContext.state.clockTime.getSeconds() <= sprite.reactContext.state.gameSettings["delayInSeconds"]) {
 		return;
+	}	
+
+	// DRAG AROUND & CHANGE SIZE - according to number of infections
+	if (( sprite.isTextSprite || sprite.isQuarantineSprite ) && !sprite.reactContext.state.quarantineDropped && 
+		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id || 
+		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)) {
+			const size = 2000 / Math.round(sprite.reactContext.state.gameSettings.quantity / sprite.reactContext.state.contagious);
+
+			if (sprite.isQuarantineSprite) {
+				sprite.width = size < 150 ? 150: size > 360 ? 360 : size;
+				sprite.height = size < 150 ? 150: size > 360 ? 360 : size;
+				sprite.radius = size < 150 ? 75: size > 350 ? 180 : size/2;
+			} else {
+				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			}
+			console.log("draggedID", sprite.myID);
+			
 	}
-	// SET DROP TIME - check duration prop (only on quarantine & text), then check drop time null
-	if (sprite.duration && (sprite.myID === sprite.reactContext.state.draggedQuarantine.id || sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)
-		&& sprite.dropTime == null && sprite.reactContext.state.quarantineDropped ) {
-			sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
-			if (sprite.velocity) {
-				const empty = new PIXI.Graphics();
-				empty.beginFill();
-				empty.lineStyle(5,0x85e312,1);
-				empty.drawCircle(0,0,sprite.radius);
-				empty.endFill();
-				sprite.texture = empty.generateCanvasTexture();
-			}		
+	// SET DROP TIME - on the exact moment quarantine is dropped
+	if ( sprite.dropTime == null && sprite.reactContext.state.quarantineDropped &&
+		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id || 
+		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length)) {
+
+		sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
+		if (sprite.isQuarantineSprite ) {
+			const empty = new PIXI.Graphics();
+			empty.beginFill();
+			empty.lineStyle(sprite.radius > 300 ? 2.5 : 5,0x85e312,1);
+			empty.drawCircle(0,0,sprite.radius);
+			empty.endFill();
+			sprite.texture = empty.generateCanvasTexture();					
+		} else if (sprite.reactContext.state.draggedQuarantine.id > -1){
+			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			// text resets dragedQuarantineId because it calculates later than qurantine
+			sprite.reactContext.resetDraggedQuarantineId(sprite.reactContext.state.draggedQuarantine.id);
+		}
 	}
+
 	// HIDE QUARANTINE AND TEXT - when clock goes beyond duration (duration + dropTime)
-	if (sprite.duration && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
+	if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
 		sprite.x = -500;
 		sprite.y = -500;
-		sprite.dropTime = null;
+		sprite.dropTime = null;		
+
+		if (sprite.isQuarantineSprite) {
+			const empty = new PIXI.Graphics();
+			empty.beginFill();
+			empty.lineStyle();
+			empty.drawCircle(0,0,sprite.radius);
+			empty.endFill();
+			sprite.texture = empty.generateCanvasTexture();
+			console.log("hiding qID: ", sprite.myID);
+			
+			console.log("dragged qID: ", sprite.reactContext.state.draggedQuarantine.id);
+			sprite.reactContext.setQuarantineNonactive(sprite.myID);
+		}
 	}
-	// DRAG QUARANTINE AROUND - when quarantine is not dropped, it is not calculated in the collisions
-	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
+	// QUARANTINE OVERLAPPING- when quarantine is not dropped, it is not yet being calculated in the collisions
+	if (!sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
 		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-		sprite.y = sprite.reactContext.state.draggedQuarantine.y;		
-	}
-	// DRAG TEXT AROUND - when text is dropped, it starts counting down time
-	if (sprite.duration && !sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id + sprite.reactContext.state.availableQuarantines.length) {
-		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-		sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+		sprite.y = sprite.reactContext.state.draggedQuarantine.y;
+		// loop through active quarantines and find any intersections
+		let overlap = false;
+		// only check active quarantines (they become active at the start of drag)
+		const quarantinesForCheck = quarantineArr.filter(quarantine => sprite.reactContext.state.activeQuarantines.indexOf(quarantine.myID) > -1);
+		for (let index = 0; index < quarantinesForCheck.length; index++) {
+			// don't check self
+			if (sprite.myID === quarantinesForCheck[index].myID) {
+				continue;
+			}
+			// calc intersection - break for loop if it intersects
+			if (circleIntersect(sprite.x, sprite.y, sprite.radius, quarantinesForCheck[index].x, quarantinesForCheck[index].y, quarantinesForCheck[index].radius)) {
+				overlap = true;
+				break;
+			}
+		}		
+		// if quarantine overlaps another and it was not overlapping previously - change texture
+		if (overlap && !sprite.reactContext.state.quarantineOverlapping) {
+			const red = new PIXI.Graphics();
+			red.beginFill();
+			red.lineStyle(5,0xFF0000,1);
+			red.drawCircle(0,0,sprite.radius);
+			red.endFill();
+			sprite.texture = red.generateCanvasTexture();
+			sprite.reactContext.setState({ quarantineOverlapping: true });			
+		}// if quarantine was previously overlapping and it doesn't now - change state
+		else if (!overlap && sprite.reactContext.state.quarantineOverlapping) {
+			const green = new PIXI.Graphics();
+			green.beginFill();
+			green.lineStyle(5,0x85e312,1);
+			green.drawCircle(0,0,sprite.radius);
+			green.endFill();
+			sprite.texture = green.generateCanvasTexture();
+			sprite.reactContext.setState({ quarantineOverlapping: false });
+		}
 	}
 	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
-	if (sprite.velocity == null) {
+	if (sprite.isTextSprite) {		
 		if (sprite.dropTime != null) {
 			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
-			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;			
+			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;
 		}
 		return;	// Must stop calculating for Text object from now on
 	}
@@ -66,14 +134,15 @@ export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}*/
+	
 	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
 	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
 		return;
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES - substract Text objects!
 	for (let i = 0; i < spriteArr.length - sprite.reactContext.state.availableQuarantines.length; i++) {
-		// don't calculate collisions for same or quarantined objects		
-		if (sprite.myID === spriteArr[i].myID || (spriteArr[i].velocity.x === 0 && spriteArr[i].velocity.y === 0)) {
+		// don't calculate collisions for same objects		
+		if (sprite.myID === spriteArr[i].myID) {
 			continue;
 		}
 		// check if distance minus radia is less then 0 --> crash
@@ -116,14 +185,8 @@ export const updateGame = (sprite, spriteArr, circleIntersect, loader, startTime
 			resolveCollision(sprite, otherSprite, circleIntersect);
 		}
 	}
-	if (sprite.velocity.x === 0 && sprite.velocity.y === 0) {
-		sprite.x = sprite.x;
-		sprite.y = sprite.y;
-	} else {
-		sprite.x += sprite.velocity.x;
-		sprite.y += sprite.velocity.y;
-	}
-
+	sprite.x += sprite.velocity.x;
+	sprite.y += sprite.velocity.y;
 }
 
 function getContagion(sprite, loader) {
