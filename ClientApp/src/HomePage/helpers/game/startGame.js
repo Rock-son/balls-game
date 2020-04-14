@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js-legacy";
 export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
-
+	
 	this.gameApp = new PIXI.Application({
 		backgroundColor: 0x000,
 		width: this.canvasWidth,
@@ -71,7 +71,7 @@ function handleOnImageLoaded(gameSettings) {
 		speed,
 		quantity,
 		difficulty,
-		availableQuarantines
+		nrOfQuarantines
 	} = gameSettings == null ? this.state.gameSettings : gameSettings;
 	
 	
@@ -79,7 +79,7 @@ function handleOnImageLoaded(gameSettings) {
 	const timeTextArr = [];
 	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
 	// TEXT & QUARANTINES
-	for (let index = 0; index < this.state.availableQuarantines.length; index++) {
+	for (let index = 0; index < nrOfQuarantines; index++) {
 		const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
 
 
@@ -98,7 +98,8 @@ function handleOnImageLoaded(gameSettings) {
 		timeText.duration = randomTimeInSeconds * 1000; 
 		timeText.dropTime = null;
 		timeText.reactContext = this;
-		timeText.myID = quantity + this.state.availableQuarantines.length + index; // text index (calulate existing quarantines)
+		timeText.isActive = false;
+		timeText.myID = quantity + nrOfQuarantines + index; // text index (calulate existing quarantines)
 
 		// QUARANTINES
 		const randomLength = randomIntNumber(150, 300);
@@ -117,6 +118,7 @@ function handleOnImageLoaded(gameSettings) {
 		quarantine.x = -500;
 		quarantine.y = -500;
 		quarantine.isQuarantineSprite = true;
+		quarantine.isActive = false;
 		quarantine.alpha = .5;
 		quarantine.duration = randomTimeInSeconds * 1000; 
 		quarantine.dropTime = null;
@@ -198,18 +200,22 @@ function handleOnImageLoaded(gameSettings) {
 	
 	quarantineArr.forEach(item => spriteArr.push(item));
 	timeTextArr.forEach(item => spriteArr.push(item));
+
+	// construct quarantine and text object
+	const quarantineObj = quarantineArr.reduce((acc, obj) => Object.assign(acc, {[obj.myID]: obj}), {length: quarantineArr.length})
 	
+	this.setState({ availableQuarantines: quarantineArr.map(item => item.myID)});
 	const len = spriteArr.length;	
 	// draw and animate
 	if (this.autostart) {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
 			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
-			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, circleIntersect, this.gameApp.loader));
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, quarantineObj, circleIntersect, this.gameApp.loader));
 		}
 	} else {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
 			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
-			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, circleIntersect, this.gameApp.loader));
+			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, quarantineObj, circleIntersect, this.gameApp.loader));
 		}
 	}
 }

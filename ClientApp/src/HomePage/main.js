@@ -5,7 +5,7 @@ import { startSimulation, startGame, stop, pause, unPause } from "./helpers/acti
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings, 
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, shuffle, stopStartGame, gameRestart, 
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, 
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId } from "./helpers/game/gameState";
 
 
@@ -49,7 +49,6 @@ export default class HomePage extends React.Component {
 		this.pause = pause.bind(this);
 		this.unpause = unPause.bind(this);
 
-		this.shuffle = shuffle.bind(this);
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.onMouseMove = onMouseMove.bind(this);
 		this.toggleSimulationPause = toggleSimulationPause.bind(this);
@@ -125,7 +124,7 @@ export default class HomePage extends React.Component {
 
 	toggleDialog(e) {
 		const target = e && e.currentTarget || null;
-		// on simulation -> show dialog
+		// on simulation -> show dialog		
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationDialog();
 		// on quarantineButtonsActive -> should trigger quarantineDrop - user should have quarantine attached to cursor
