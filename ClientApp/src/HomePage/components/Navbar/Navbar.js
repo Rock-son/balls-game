@@ -8,23 +8,26 @@ export const NavBar = props => {
 	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, 
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime, 
 		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds } } = props;
+
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
-	const trueSeconds = clockTime.getSeconds();
+	const currentSeconds = clockTime.getSeconds();
+	const shouldCountdownBeVisible = clockTime.getTime() < 4000;
+	
 	// this is the only place where seconds are mishandled
+	const delayedSeconds = (clockTime.getTime() / 1000) - delayInSeconds;
 	if (isGameActive) {
-		minutes = trueSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
-		seconds = trueSeconds - delayInSeconds;
+		minutes = delayedSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
+		seconds = delayedSeconds % 60;
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
 	} else {
 		minutes = clockTime.getMinutes();
-		seconds = trueSeconds;
+		seconds = currentSeconds;
 		formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
 	}
 	
 	// start countdown on game start
-	const gameStartCountdownTime = (trueSeconds < 4) && (trueSeconds > 0) ? (4 - trueSeconds) : "";
-
+	const gameStartCountdownTime = (delayedSeconds < 0) ? (-delayedSeconds) : "";
 	return(
 		<Navbar dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Button 
@@ -109,7 +112,7 @@ export const NavBar = props => {
 					</NavItem>
 				</Nav>
 			</Navbar>
-			<div className={`game-start-countdown ${isGameActive && !gamePaused && (seconds < 4) ? "visible" : ""}`}>{gameStartCountdownTime}</div>
+			<div className={`game-start-countdown ${isGameActive && !gamePaused && shouldCountdownBeVisible ? "visible" : ""}`}>{gameStartCountdownTime}</div>
 		</Navbar>
 	);
 };

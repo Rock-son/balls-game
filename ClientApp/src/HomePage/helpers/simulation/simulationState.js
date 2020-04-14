@@ -75,7 +75,8 @@ export function toggleSimulationDialog() {
 			return ({ 
 				simulationSettingsOpen: true, 
 				simulationPaused: true, 
-				startButtonText: "START SIMULATION", 
+				startButtonText: "START SIMULATION",
+				quarantineButtonsActive: false,
 				isSimulationActive: true, 
 				isGameActive: false, 
 				gamePaused: true, 
