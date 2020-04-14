@@ -3,9 +3,9 @@ import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
-import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings, 
+import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, 
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId } from "./helpers/game/gameState";
 
 
@@ -22,7 +22,7 @@ export default class HomePage extends React.Component {
 		this.state = {
 			...simulationSettings,
 			...gameSettings,
-			hasError: false, 
+			hasError: false,
 			error: null,
 			// time
 			currentTime: new Date().getTime(),
@@ -42,7 +42,7 @@ export default class HomePage extends React.Component {
 		this.interval = null;
 		this.canvasWidth = window.innerWidth;
 		this.canvasHeight = window.innerHeight;
-		
+
 		this.stop = stop.bind(this);
 		this.startSimulation = startSimulation.bind(this);
 		this.startGame = startGame.bind(this);
@@ -78,8 +78,8 @@ export default class HomePage extends React.Component {
 	componentDidMount() {
 		this.startSimulation(true);
 		window.addEventListener('resize', this.handleResize);
-		window.addEventListener("blur", this.handleBlur);
-		window.addEventListener("focus", this.handleRefocus);
+		// window.addEventListener("blur", this.handleBlur);
+		// window.addEventListener("focus", this.handleRefocus);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
 	componentDidCatch(error, errorInfo) {
@@ -96,8 +96,8 @@ export default class HomePage extends React.Component {
 	}
 	intervalTime() {
 		this.setState(prevState => {
-			// in case of simulation /game either stopped or paused 
-			if ((this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped)) || 
+			// in case of simulation /game either stopped or paused
+			if ((this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped)) ||
 				(this.state.isGameActive && (this.state.gamePaused || this.state.gameStopped))
 			) {
 				// stop calculating currentTime because of deactivate time
@@ -124,7 +124,7 @@ export default class HomePage extends React.Component {
 
 	toggleDialog(e) {
 		const target = e && e.currentTarget || null;
-		// on simulation -> show dialog		
+		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationDialog();
 		// on quarantineButtonsActive -> should trigger quarantineDrop - user should have quarantine attached to cursor
@@ -159,7 +159,7 @@ export default class HomePage extends React.Component {
 	toggleNavbarVisibility() {
 		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
-	copyToClipboard() {		
+	copyToClipboard() {
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state === "granted" || result.state === "prompt") {
@@ -172,10 +172,10 @@ export default class HomePage extends React.Component {
 	render() {
 		return (
 			<section className="main">
-				<NavBar 
+				<NavBar
 					currentTime={this.state.currentTime}
 					clockTime={this.state.clockTime}
-					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand} 
+					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand}
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}
 					isNavbarVisible={this.state.isNavbarVisible}
@@ -193,7 +193,7 @@ export default class HomePage extends React.Component {
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
 					isSimulationActive={this.state.isSimulationActive}
-					isOpen={this.state.simulationSettingsOpen} 
+					isOpen={this.state.simulationSettingsOpen}
 					toggle={this.toggleSimulationDialog}
 					buttonText={this.state.startButtonText}
 					settings={this.state.simulationSettings}
@@ -201,25 +201,25 @@ export default class HomePage extends React.Component {
 				/>
 				<GameDialog
 					startGame={this.stopStartGame}
-					isOpen={this.state.gameSettingsOpen} 
+					isOpen={this.state.gameSettingsOpen}
 					isGameActive={this.state.isGameActive}
 					toggle={this.toggleGameDialog}
 					buttonText={this.state.startButtonText}
 					settings={this.state.gameSettings}
 					setGameSettings={this.setGameSettings}
 				/>
-				<ShareDialog 
+				<ShareDialog
 					isOpen={this.state.shareModalOpen}
 					toggle={this.toggleShareDialog}
 					copy={this.copyToClipboard}
-					isCopied={this.state.isCopied}				
+					isCopied={this.state.isCopied}
 				/>
-				<QuarantineButtons 
+				<QuarantineButtons
 					quarantineButtonsActive={this.state.quarantineButtonsActive}
 					setQuarantineInMotion={this.setQuarantineInMotion}
 				/>
-				<article 
-					id="canvas-container" 
+				<article
+					id="canvas-container"
 					onClick={this.toggleDialog}
 					onMouseMove={this.onMouseMove}
 					>
