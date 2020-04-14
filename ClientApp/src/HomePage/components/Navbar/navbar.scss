@@ -45,7 +45,7 @@
 		}
 		&__left {
 			position: relative;
-			font-size: .9rem;
+			font-size: 13px;
 			font-weight: 900;
 			line-height: 0;
 			& .nav-link.stick {
@@ -55,14 +55,14 @@
 		}
 		&__right {
 			position: relative;
-			font-size: 1rem;
+			font-size: 13px;
 			line-height: 1rem;
 		}
 	}
 	& .game-start-countdown {
 		display: none;
 		position: absolute;
-		font-size: 8rem;
+		font-size: 27px;
 		font-family: "Roboto Condensed", Arial, sans-serif;
 		margin-top: 25%;
 		margin-left: 50%;
@@ -89,16 +89,19 @@
 		}
 		&.caption {
 			color: $white;
-			font-size: 1.1rem;
-			transform: translate(-70%, 50%);
+			font-size: 13px;
+			transform: translate(-70%, 0%);
 		}
 		&.right {
-			font-size: .8rem;
+			font-size: 13px;
 			text-align: right;
+			& .countdown-link {
+				font-size: 11px;
+			}
 			& .stats {
 				position: absolute;
     			margin-top: 1.5rem;
-				font-size: .9rem;
+				font-size: 13px;
 				transition: margin-top .5s;
 				&.drop {
 					margin-top: 2.5rem;
@@ -114,7 +117,7 @@
 			& .timer {
 				position: absolute;
 				font-weight: 300;;
-				font-size: 3rem;    
+				font-size: 27px;
 				right: 10px;
 				margin-top: 2.5rem;
 				color: $white;
