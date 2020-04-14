@@ -210,12 +210,12 @@ function handleOnImageLoaded(gameSettings) {
 	if (this.autostart) {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
 			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
-			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, quarantineObj, circleIntersect, this.gameApp.loader));
+			this.gameApp.ticker.add(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, quarantineObj, circleIntersect, this.gameApp.loader, randomIntNumber));
 		}
 	} else {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {
 			this.gameApp.stage.addChild(spriteArr[spriteIndex]);
-			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, quarantineObj, circleIntersect, this.gameApp.loader));
+			this.gameApp.ticker.addOnce(updateGame.bind(null, spriteArr[spriteIndex], spriteArr, quarantineArr, quarantineObj, circleIntersect, this.gameApp.loader, randomIntNumber));
 		}
 	}
 }
