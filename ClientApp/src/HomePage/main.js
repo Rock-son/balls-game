@@ -226,7 +226,13 @@ export default class HomePage extends React.Component {
 					onMouseMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
 					onContextMenu={this.onContextMenuHideQuarantine}
-					>
+				>
+				</article>
+				<article 
+					className={`simulator-fadein ${this.state.simulationRestarting ? "visible" : ""}`}
+					tabIndex="-1"
+					role="presentation"
+				>
 				</article>
 			</section>
 		);

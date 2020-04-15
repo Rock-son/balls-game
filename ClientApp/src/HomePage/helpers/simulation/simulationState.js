@@ -1,6 +1,7 @@
 export const simulationSettings = {
 	isSimulationActive: true,
 	// canvas state
+	simulationRestarting: false,
 	simulationPaused: false,
 	simulationStopped: false,
 	// modals - popups
@@ -40,9 +41,22 @@ export function stopStartSimulation() {
 }
 export function simulationRestart() {
 	this.stop();
-	this.startSimulation(true);
-	this.setState(prevState => ({ clockTime: new Date(0), simulationStopped: false, simulationPaused: false, startButtonText: "CONTINUE SIMULATION", simulationSettingsOpen: false,
-				healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1 }));
+	// fade out-in effect
+	this.setState({ simulationRestarting: true });
+	setTimeout(() => this.setState({ simulationRestarting: false }), 2000);
+	setTimeout(() => { 
+		this.startSimulation(true);
+		this.setState(prevState => ({ 
+			clockTime: new Date(0),
+			simulationStopped: false, 
+			simulationPaused: false, 
+			startButtonText: "CONTINUE SIMULATION", 
+			simulationSettingsOpen: false,
+			healthy: prevState.simulationSettings["quantity"] - 1, 
+			contagious: 1
+		}));
+	}, 1750);
+
 }
 export function setSimulationSettings(e) {
 	let targetData, parsedData;

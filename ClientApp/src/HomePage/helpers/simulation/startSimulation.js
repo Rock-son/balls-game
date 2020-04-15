@@ -91,11 +91,18 @@ function handleOnImageLoaded(simulationSettings) {
 	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white-15.png"];
 	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red-15.png"];
 
+	let x, y;
 	for (let i = 0; i < nrImages; i++) {
-
-		contagion = i === 0 ? 1 : 0;
-		let x = randomIntNumber(radius * 2, maxWidth);
-		let y = randomIntNumber(radius * 2, maxHeight);
+		// red ball always starts in the middle - for more beautiful effec
+		if (i === 0) {
+			contagion = 1;
+			x = maxWidth / 2;
+			y = maxHeight / 2;
+		} else {
+			contagion = 0;
+			x = randomIntNumber(radius * 2, maxWidth);
+			y = randomIntNumber(radius * 2, maxHeight);
+		}
 		if (i !== 0) {
 			for (let j = 0; j < spriteArr.length; j++) {
 				if (circleIntersect(x, y, radius, spriteArr[j].x, spriteArr[j].y, spriteArr[j].radius)) {	
@@ -108,6 +115,7 @@ function handleOnImageLoaded(simulationSettings) {
 		}
 		if (contagion) {				
 			sprite = new PIXI.Sprite(redBall);
+		sprite.y = y;
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
 		}
