@@ -49,7 +49,7 @@
 		}
 		&__left {
 			position: relative;
-			font-size: 15px;
+			font-size: 17px;
 			font-weight: 900;
 			line-height: 0;
 			transform: translateY(-60%);
@@ -60,7 +60,7 @@
 		}
 		&__right {
 			position: relative;
-			font-size: 15px;
+			font-size: 17px;
 			line-height: 1rem;
 		}
 	}
@@ -89,7 +89,7 @@
 			}
 			&.caption {
 				position: absolute;
-				font-size: 15px;
+				font-size: 19px;
     			right: 0;
 				color: $white;
 				transform: translateX(50%);
@@ -102,14 +102,14 @@
 			padding: 10px;
 		}
 		&.right {
-			font-size: 15px;
+			font-size: 17px;
 			text-align: right;
 			& .countdown-link {
-				font-size: 13px;
+				font-size: 15px;
 				padding-right: 2px;
 			}
 			& .stats {
-				font-size: 15px;
+				font-size: 17px;
 				line-height: 15px;
 				transition: margin-top .5s;
 				&.drop {
