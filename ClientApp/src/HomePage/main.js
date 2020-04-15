@@ -40,8 +40,8 @@ export default class HomePage extends React.Component {
 		}
 
 		this.interval = null;
-		this.canvasWidth = window.innerWidth;
-		this.canvasHeight = window.innerHeight;
+		this.canvasWidth = window.innerWidth < 800 ? 800 : window.innerWidth;
+		this.canvasHeight = window.innerHeight < 600 ? 600 : window.innerHeight;
 
 		this.stop = stop.bind(this);
 		this.startSimulation = startSimulation.bind(this);
