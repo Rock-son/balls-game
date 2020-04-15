@@ -85,7 +85,7 @@ function handleOnImageLoaded(gameSettings) {
 		const formattedTime = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
 		const timeText = new PIXI.Text(formattedTime, {
 			fill: 0x69b11c,
-			font: "13px",
+			fontSize: "19px",
 			fontFamily : "Roboto Condensed"
 		});
 		timeText.alpha = 1;
