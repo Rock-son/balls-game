@@ -93,7 +93,7 @@ export const NavBar = props => {
 							CountdownKings.com
 						</NavLink>
 					</NavItem>
-					<NavItem className={`stats ${!isNavbarVisible && "drop"}`}>
+					<NavItem className={`stats ${!isNavbarVisible ? "drop" : ""}`}>
 						<NavbarText className="stats__infected">{showStats ? `Infected: ${contagious}` : ""}</NavbarText>
 						<NavbarText className="stats__healthy">{showStats ? `Healthy: ${healthy}` : ""}</NavbarText>
 						<NavbarText className="stats__timer">{showTime ? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
