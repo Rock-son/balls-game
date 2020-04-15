@@ -21,13 +21,13 @@ export const NavBar = props => {
 		seconds = delayedSeconds % 60;
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
 	} else if (isGameActive && mode === 1) {
-		const checkedSeconds = delayedSeconds < 0 ? 0 : delayedSeconds; 
+		const checkedSeconds = delayedSeconds < 0 ? 0 : delayedSeconds;
 		const coundownTime = new Date((difficulty*60 + 180 - checkedSeconds) * 1000);
 		minutes = coundownTime.getMinutes();
 		seconds = coundownTime.getSeconds();
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
 		//console.log("fuck this shit", coundownTime, minutes, seconds);
-			
+
 	} else {
 		minutes = clockTime.getMinutes();
 		seconds = currentSeconds;
@@ -82,8 +82,9 @@ export const NavBar = props => {
 					<NavItem>
 						<NavLink className="navbar__nav__link" onClick={toggleNavbarVisibility}>Hide</NavLink>
 					</NavItem>
-					<NavItem className="navbar__nav__link caption"><strong>ViralBalls</strong>
-						<span className="ordinary">{isGameActive ? "Game" : "Simulator"}</span>
+					<NavItem className="navbar__nav__link caption">
+						<div className="bold">ViralBalls</div>
+						<div className="ordinary">{isGameActive ? "Game" : "Simulator"}</div>
 					</NavItem>
 				</Nav>
 				</Collapse>

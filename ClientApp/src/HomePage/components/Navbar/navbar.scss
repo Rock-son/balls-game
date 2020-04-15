@@ -92,9 +92,18 @@
 				font-size: 19px;
     			right: 0;
 				color: $white;
-				transform: translateX(50%);
+				transform: translate(50%, -33%);
+				& .bold {
+					font-weight: 700;
+					display: inline-block;
+					line-height: 1px;
+					vertical-align: text-bottom;
+				}
 				& .ordinary {
 					font-weight: 300;
+					display: inline-block;
+					vertical-align: text-bottom;
+					line-height: 0px;
 				}
 			}
 		}
@@ -120,7 +129,7 @@
 					color: $red;
 					float: left;
 					padding-top: 0;
-					width: 90px;
+					width: 100px;
 					text-align: left;
 				}
 				&__healthy {
@@ -133,7 +142,7 @@
 					float: right;
 					padding-top: 0;
 					font-weight: 300;
-					font-size: 37px;
+					font-size: 46px;
 					line-height: 30px;
 					color: $white;
 				}
