@@ -81,15 +81,14 @@ function handleOnImageLoaded(gameSettings) {
 	// TEXT & QUARANTINES
 	for (let index = 0; index < nrOfQuarantines; index++) {
 		const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
-
-
 		// TEXT
 		const formattedTime = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
 		const timeText = new PIXI.Text(formattedTime, {
-			fill: 0x85e312,
-			font: "18px",
-			fontFamily : "Arial"
+			fill: 0x69b11c,
+			fontSize: "19px",
+			fontFamily : "Roboto Condensed"
 		});
+		timeText.alpha = 1;
 		timeText.text = formattedTime;
 		timeText.isTextSprite = true;
 		timeText.anchor.set(0.5, 0);
@@ -102,19 +101,19 @@ function handleOnImageLoaded(gameSettings) {
 		timeText.myID = quantity + nrOfQuarantines + index; // text index (calulate existing quarantines)
 
 		// QUARANTINES
-		const randomLength = randomIntNumber(150, 300);
-		const width = randomLength;
-		const height = randomLength;
-		const radius = randomLength / 2;
+		const width = this.state.draggedQuarantine["size"];
+		const height = width;
+		const radius = width / 2;
 
 		const green = new PIXI.Graphics();
-		green.beginFill(0x85e312, 0.35);
-		green.drawCircle(0,0,300);
+		green.beginFill(0x69b11c, 0.7);
+		green.drawCircle(0,0,radius);
 		green.endFill();
 		const greenTexture = green.generateCanvasTexture();
 
 		const particleID = quantity + index;
 		const quarantine = new PIXI.Sprite(greenTexture);
+		quarantine.alpha = 1;
 		quarantine.x = -500;
 		quarantine.y = -500;
 		quarantine.isQuarantineSprite = true;
@@ -136,6 +135,7 @@ function handleOnImageLoaded(gameSettings) {
 			y: 0
 		};
 		quarantine.startSpeed = 0;
+		// push each object to its own array
 		quarantineArr.push(quarantine);
 		timeTextArr.push(timeText);
 	}

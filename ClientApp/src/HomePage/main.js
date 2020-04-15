@@ -5,7 +5,7 @@ import { startSimulation, startGame, stop, pause, unPause } from "./helpers/acti
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart,
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId } from "./helpers/game/gameState";
 
 
@@ -40,8 +40,8 @@ export default class HomePage extends React.Component {
 		}
 
 		this.interval = null;
-		this.canvasWidth = window.innerWidth;
-		this.canvasHeight = window.innerHeight;
+		this.canvasWidth = window.innerWidth < 800 ? 800 : window.innerWidth;
+		this.canvasHeight = window.innerHeight < 600 ? 600 : window.innerHeight;
 
 		this.stop = stop.bind(this);
 		this.startSimulation = startSimulation.bind(this);
@@ -61,11 +61,13 @@ export default class HomePage extends React.Component {
 		// GAME
 		this.gameRestart = gameRestart.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
+		this.onWheelScroll = onWheelScroll.bind(this);
 		this.setGameSettings = setGameSettings.bind(this);
 		this.toggleGameDialog = toggleGameDialog.bind(this);
 		this.setQuarantineInMotion = setQuarantineInMotion.bind(this);
 		this.setQuarantineNonactive = setQuarantineNonactive.bind(this);
 		this.resetDraggedQuarantineId = resetDraggedQuarantineId.bind(this);
+		this.onContextMenuHideQuarantine = onContextMenuHideQuarantine.bind(this);
 		// SIMULATION
 		this.simulationRestart= simulationRestart.bind(this);
 		this.toggleShareDialog = this.toggleShareDialog.bind(this);
@@ -222,7 +224,15 @@ export default class HomePage extends React.Component {
 					id="canvas-container"
 					onClick={this.toggleDialog}
 					onMouseMove={this.onMouseMove}
-					>
+					onWheel={this.onWheelScroll}
+					onContextMenu={this.onContextMenuHideQuarantine}
+				>
+				</article>
+				<article 
+					className={`simulator-fadein ${this.state.simulationRestarting ? "visible" : ""}`}
+					tabIndex="-1"
+					role="presentation"
+				>
 				</article>
 			</section>
 		);
