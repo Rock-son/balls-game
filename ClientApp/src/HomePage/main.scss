@@ -14,9 +14,30 @@ canvas {
 	-ms-interpolation-mode: bicubic;   			// IE                            
 }
 #canvas-container {
-	background-color: #000;
+	background-color: black;
 	width: 100vw;
 	height: 100vh;
 }
+.simulator-fadein {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	opacity: 1;
+	background-color: black;
+	&.visible {
+		z-index: 1;
+		animation: fade-in-out 2s ease-in-out;
+		animation-iteration-count: 1;
+	}
+}
+@keyframes fade-in-out {
+	0%   { background-color: black;}
+	50%  { background-color: $light-grey;}
+	100% { background-color: black;}
+  }
+
 @import "./components/Navbar/navbar.scss";
 

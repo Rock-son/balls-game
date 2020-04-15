@@ -9,7 +9,7 @@
 	text-shadow: 1px 1px 2px black;
 	&__navbar {
 		position: absolute;
-		font-family: "Roboto", Arial, sans-serif;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		z-index: 5;
 		top: 0;
 		right: 0;
@@ -18,7 +18,7 @@
 		padding: 0;
 		transition: transform .5s;
 		&.hidden {
-			transform: translateY(-90%);
+			transform: translateY(-50%);
 		}
 		&__toggler {
 			position: absolute;
@@ -31,9 +31,13 @@
 			background-color: $black;
 			border-bottom-left-radius: 200px;
 			border-bottom-right-radius: 200px;
-			transform: translate(-70%, 45%);
+			transform: translate(-70%, -10%);
 			transition: opacity .3s, background-color .3s;
 			padding: 20px 12px 0 12px;
+			& img {
+				width: 20px;
+				height: 10px;
+			}
 			&:active, &:focus, &:hover {
 				background-color: $grey;
 				box-shadow: none;
@@ -48,6 +52,7 @@
 			font-size: 15px;
 			font-weight: 900;
 			line-height: 0;
+			transform: translateY(-60%);
 			& .nav-link.stick {
 				padding-left: 2px;
 				padding-right: 2px;
@@ -63,7 +68,7 @@
 		display: none;
 		position: absolute;
 		font-size: 96px;
-		font-family: "Roboto Condensed", Arial, sans-serif;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		margin-top: 25%;
 		margin-left: 50%;
 		pointer-events: none;
@@ -72,7 +77,6 @@
 			display: block;
 		}
 	}
-
 	& .navbar__nav {
 		color: $grey;
 		font-weight: 900;
@@ -83,47 +87,52 @@
 				color: $white !important;
 				cursor: pointer;
 			}
+			&.caption {
+				position: absolute;
+				font-size: 15px;
+    			right: 0;
+				color: $white;
+				transform: translateX(50%);
+				& .ordinary {
+					font-weight: 300;
+				}
+			}
 		}
 		&__separator {
 			padding: 10px;
-		}
-		&.caption {
-			color: $white;
-			font-size: 15px;
-			transform: translate(-70%, 0%);
 		}
 		&.right {
 			font-size: 15px;
 			text-align: right;
 			& .countdown-link {
 				font-size: 13px;
+				padding-right: 2px;
 			}
 			& .stats {
-				position: absolute;
-    			margin-top: 1.5rem;
 				font-size: 15px;
+				line-height: 15px;
 				transition: margin-top .5s;
 				&.drop {
 					margin-top: 2.5rem;
 				}
 				&__infected {
-					margin-right: 10px;
-					color: red;
+					color: $red;
+					float: left;
+					padding-top: 0;
 				}
 				&__healthy {
 					color: $white;
+					float: left;
+					padding-left: 10px;
+					padding-top: 0;
 				}
-			}
-			& .timer {
-				position: absolute;
-				font-weight: 300;;
-				font-size: 37px;
-				right: 10px;
-				margin-top: 2.5rem;
-				color: $white;
-				transition: margin-top .5s;
-				&.drop {
-					margin-top: 3.5rem;
+				&__timer {
+					float: right;
+					padding-top: 0;
+					font-weight: 300;
+					font-size: 37px;
+					line-height: 30px;
+					color: $white;
 				}
 			}
 		}

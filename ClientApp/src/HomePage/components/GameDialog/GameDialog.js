@@ -53,12 +53,12 @@ export class GameDialog extends React.Component {
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
 		
 		return (		
-			<Modal key="game" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
+			<Modal key="game" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
 				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
 				<ModalBody>
 					<Row>
 						<Container className="choice">
-							<div>Game Mode</div>
+							<div className="choice__header">Game Mode</div>
 							<Nav className="choice__options">
 								{modeOptions.map((modeOption, idx) => {
 									if (typeof modeOption != "object") {
@@ -78,7 +78,7 @@ export class GameDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Difficulty level (also affects Quarantine)</div>
+							<div className="choice__header">Difficulty level (also affects Quarantine)</div>
 							<Nav className="choice__options">
 								{difficultyOptions.map((difficultyOption, idx) => {
 									if (difficultyOption === "|") {
@@ -99,7 +99,7 @@ export class GameDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Size of balls</div>
+							<div className="choice__header">Size of balls</div>
 							<Nav className="choice__options">
 								{sizeOptions.map((sizeOption, idx) => {
 									if (typeof sizeOption != "object") {
@@ -119,7 +119,7 @@ export class GameDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Number of balls</div>
+							<div className="choice__header">Number of balls</div>
 							<Nav className="choice__options">
 								{quantityValues[size].map((quantityValue, idx) => {
 									if (quantityValue === "|") {
@@ -145,7 +145,7 @@ export class GameDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Speed of balls</div>
+							<div className="choice__header">Speed of balls</div>
 							<Nav className="choice__options">
 								{speedOptions.map((speedOption, idx) => {
 									if (typeof speedOption != "object") {
@@ -167,7 +167,7 @@ export class GameDialog extends React.Component {
 						</Container>
 					</Row>
 				</ModalBody>
-				<ModalFooter onClick={startGame} className="simulator-modal__footer">
+				<ModalFooter onClick={startGame} className="game-modal__footer">
 					&gt;&gt;&gt;&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;&lt;&lt;&lt;
 				</ModalFooter>
 		</Modal>

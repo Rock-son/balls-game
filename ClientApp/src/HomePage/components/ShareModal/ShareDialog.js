@@ -38,7 +38,7 @@ export const ShareDialog = props => {
 						className="footer__link"
 						target="_blank"
 						rel="noopener noreferrer"							
-						href="https://www.countdownkings.com">
+						href="https://www.viralballs.com">
 							CountdownKings.com
 					</NavLink>
 				</Container>

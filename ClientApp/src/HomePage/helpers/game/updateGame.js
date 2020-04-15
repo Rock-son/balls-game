@@ -12,14 +12,38 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
 
 		sprite.isActive = true;
-		const size = 2000 / Math.round(sprite.reactContext.state.gameSettings.quantity / sprite.reactContext.state.contagious);
-		if (sprite.isQuarantineSprite) {
-			sprite.width = size < 150 ? 150: size > 360 ? 360 : size;
-			sprite.height = size < 150 ? 150: size > 360 ? 360 : size;
-			sprite.radius = size < 150 ? 75: size > 350 ? 180 : size / 2;
+		// remove quarantine if right clicked
+		if (sprite.reactContext.state.quarantineCancelled) {			
+			sprite.x = -500;
+			sprite.y = -500;
+			sprite.dropTime = null;
+			sprite.isActive = false;
+			if (sprite.isQuarantineSprite) {				
+				const green = new PIXI.Graphics();
+				green.beginFill(0x69b11c, 0.35); // set future pick up color (green)
+				green.drawCircle(0,0,sprite.radius);
+				green.endFill();
+				sprite.texture = green.generateCanvasTexture();
+				sprite.alpha = 1;
+				sprite.reactContext.setQuarantineNonactive(sprite.myID);
+				return
+			} else {
+				sprite.reactContext.setState({ quarantineCancelled: false });
+				sprite.reactContext.resetDraggedQuarantineId();
+			}
 		} else {
-			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			// move quarantine and change size on wheel scroll
+			const size = sprite.reactContext.state.draggedQuarantine["size"]
+			if (sprite.isQuarantineSprite) {			
+				sprite.width = size < 100 ? 100: size > 360 ? 360 : size;
+				sprite.height = size < 100 ? 100: size > 360 ? 360 : size;
+				sprite.radius = size < 100 ? 50: size > 360 ? 180 : size / 2;
+				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
+			} else {
+				sprite.x = size < 100 ? sprite.reactContext.state.draggedQuarantine.x : size > 300 ? sprite.reactContext.state.draggedQuarantine.x - 5 : sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			}
 		}
 	}
 
@@ -27,12 +51,12 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if ( sprite.dropTime == null && sprite.reactContext.state.quarantineDropped &&
 		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id ||
 		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
-
+			
 		sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
 		if (sprite.isQuarantineSprite ) {
 			const empty = new PIXI.Graphics();
 			empty.beginFill(0x000, 0);
-			empty.lineStyle(sprite.radius > 300 ? 2.5 : 5,0x85e312,1);
+			empty.lineStyle(5,0x69b11c,1); // green border
 			empty.drawCircle(0,0,sprite.radius);
 			empty.endFill();
 			sprite.texture = empty.generateCanvasTexture();
@@ -41,7 +65,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
 			// text resets dragedQuarantineId because it calculates later than qurantine
-			sprite.reactContext.resetDraggedQuarantineId(sprite.reactContext.state.draggedQuarantine.id);
+			sprite.reactContext.resetDraggedQuarantineId();
 		}
 	}
 
@@ -51,11 +75,10 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		sprite.y = -500;
 		sprite.dropTime = null;
 		sprite.isActive = false;
-
+		// prepare values for next appearance
 		if (sprite.isQuarantineSprite) {
 			const green = new PIXI.Graphics();
-			green.beginFill();
-			green.lineStyle(5,0x85e312,1);
+			green.beginFill(0x69b11c, 0.35); // set future pick up color (green)
 			green.drawCircle(0,0,sprite.radius);
 			green.endFill();
 			sprite.texture = green.generateCanvasTexture();
@@ -73,8 +96,6 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 	// QUARANTINE OVERLAPPING- when quarantine is not dropped, it is not yet being calculated in the collisions
 	if (!sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
-		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-		sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 		// loop through active quarantines and find any intersections
 		let overlap = false;
 		// only check active quarantines (they become active at the start of drag)
@@ -93,22 +114,22 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		// if quarantine overlaps another and it was not overlapping previously - change texture
 		if (overlap && !sprite.reactContext.state.quarantineOverlapping) {
 			const red = new PIXI.Graphics();
-			red.beginFill(0xFF0000, 0.35);
+			red.beginFill(0xed1813, 0.35);
 			red.drawCircle(0,0,sprite.radius);
 			red.endFill();
 			sprite.texture = red.generateCanvasTexture();
 			sprite.alpha = 1;
-			spriteArr[sprite.myID + quarantineObj.length].style.fill = 0xFF0000; // set text
+			spriteArr[sprite.myID + quarantineObj.length].style.fill = 0xed1813; // set text
 			sprite.reactContext.setState({ quarantineOverlapping: true });
 		}// if quarantine was previously overlapping and it doesn't now - change state
 		else if (!overlap && sprite.reactContext.state.quarantineOverlapping) {
 			const green = new PIXI.Graphics();
-			green.beginFill(0x85e312, 0.35);
+			green.beginFill(0x69b11c, 0.35);
 			green.drawCircle(0,0,sprite.radius);
 			green.endFill();
 			sprite.texture = green.generateCanvasTexture();
 			sprite.alpha = 1;
-			spriteArr[sprite.myID + quarantineObj.length].style.fill = 0x85e312; // set text
+			spriteArr[sprite.myID + quarantineObj.length].style.fill = 0x69b11c; // set text
 			sprite.reactContext.setState({ quarantineOverlapping: false });
 		}
 	}
