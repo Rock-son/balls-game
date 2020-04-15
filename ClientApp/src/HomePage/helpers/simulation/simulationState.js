@@ -7,9 +7,9 @@ export const simulationSettings = {
 	simulationSettingsOpen: false,
 	// SETTINGS
 	simulationSettings: {
-		size: (window.innerWidth < 800 ? 2.5 : 5),
-		speed: 1,
-		quantity: 200,
+		size: 5,
+		speed: .6,
+		quantity: 300,
 		deactivateAfter: 0,
 		showTime: true,
 		showStats: true,
