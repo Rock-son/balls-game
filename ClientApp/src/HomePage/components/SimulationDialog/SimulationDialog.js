@@ -55,7 +55,7 @@ export class SimulationDialog extends React.Component {
 				<ModalBody>
 					<Row>
 						<Container className="choice">
-							<div>Size of balls</div>
+							<div className="choice__header">Size of balls</div>
 							<Nav className="choice__options">
 								{sizeOptions.map((sizeOption, idx) => {
 									if (typeof sizeOption != "object") {
@@ -75,7 +75,7 @@ export class SimulationDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Number of balls</div>
+							<div className="choice__header">Number of balls</div>
 							<Nav className="choice__options">
 								{quantityValues[size].map((quantityValue, idx) => {
 									if (quantityValue === "|") {
@@ -95,7 +95,7 @@ export class SimulationDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Speed of balls</div>
+							<div className="choice__header">Speed of balls</div>
 							<Nav className="choice__options">
 								{speedOptions.map((speedOption, idx) => {
 									if (typeof speedOption != "object") {
@@ -115,7 +115,7 @@ export class SimulationDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div>Deactivate ball after</div>
+							<div className="choice__header">Deactivate ball after</div>
 							<Nav className="choice__options">
 								{deactivateOptions.map((deactivateOption, idx) => {
 									if (deactivateOption === "|") {
@@ -133,9 +133,9 @@ export class SimulationDialog extends React.Component {
 							</Nav>				
 						</Container>
 					</Row>				
-					<Row className="col-12">
+					<Row className="flexContainer d-flex justify-content-center">
 						<Container className="col-4 choice">
-							<div>Show time</div>
+							<div className="choice__header">Show time</div>
 							<Nav className="choice__options">
 								{booleanOptions.map((timeOption, idx) => {
 									if (typeof timeOption !== "object") {
@@ -153,7 +153,7 @@ export class SimulationDialog extends React.Component {
 							</Nav>
 						</Container>
 						<Container className="col-4 choice">
-							<div>Show stats</div>
+							<div className="choice__header">Show stats</div>
 							<Nav className="choice__options">
 								{booleanOptions.map((statOption, idx) => {
 									if (typeof statOption !== "object") {
@@ -171,7 +171,7 @@ export class SimulationDialog extends React.Component {
 							</Nav>
 						</Container>
 						<Container className="col-4 choice">
-							<div>Autorestart</div>
+							<div className="choice__header">Autorestart</div>
 							<Nav className="choice__options">
 								{booleanOptions.map((restartOption, idx) => {
 									if (typeof restartOption !== "object") {
