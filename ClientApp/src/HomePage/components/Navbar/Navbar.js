@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime,
-		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds } } = props;
+		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty } } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -16,10 +16,18 @@ export const NavBar = props => {
 
 	// this is the only place where seconds are mishandled
 	const delayedSeconds = (clockTime.getTime() / 1000) - delayInSeconds;
-	if (isGameActive) {
+	if (isGameActive && mode === 0) {
 		minutes = delayedSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
 		seconds = delayedSeconds % 60;
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
+	} else if (isGameActive && mode === 1) {
+		const checkedSeconds = delayedSeconds < 0 ? 0 : delayedSeconds; 
+		const coundownTime = new Date((difficulty*60 + 180 - checkedSeconds) * 1000);
+		minutes = coundownTime.getMinutes();
+		seconds = coundownTime.getSeconds();
+		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
+		//console.log("fuck this shit", coundownTime, minutes, seconds);
+			
 	} else {
 		minutes = clockTime.getMinutes();
 		seconds = currentSeconds;
