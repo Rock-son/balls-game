@@ -10,16 +10,41 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if (( sprite.isTextSprite || sprite.isQuarantineSprite ) && !sprite.reactContext.state.quarantineDropped &&
 		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id ||
 		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
-
 		sprite.isActive = true;
-		if (sprite.isQuarantineSprite) {
-			const size = sprite.reactContext.state.draggedQuarantine["size"]			
-			sprite.width = size < 100 ? 100: size > 360 ? 360 : size;
-			sprite.height = size < 100 ? 100: size > 360 ? 360 : size;
-			sprite.radius = size < 100 ? 50: size > 360 ? 180 : size / 2;
+		
+		// remove quarantine if right clicked
+		if (sprite.reactContext.state.quarantineCancelled) {			
+			sprite.x = -500;
+			sprite.y = -500;
+			sprite.dropTime = null;
+			sprite.isActive = false;
+			if (sprite.isQuarantineSprite) {				
+				const green = new PIXI.Graphics();
+				green.beginFill();
+				green.lineStyle(5,0x85e312,1);
+				green.drawCircle(0,0,sprite.radius);
+				green.endFill();
+				sprite.texture = green.generateCanvasTexture();
+				sprite.alpha = 1;
+				sprite.reactContext.setQuarantineNonactive(sprite.myID);
+				return
+			} else {
+				sprite.reactContext.setState({ quarantineCancelled: false });
+				sprite.reactContext.resetDraggedQuarantineId();
+			}
 		} else {
-			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			// move quarantine and change size on wheel scroll
+			if (sprite.isQuarantineSprite) {
+				const size = sprite.reactContext.state.draggedQuarantine["size"]			
+				sprite.width = size < 100 ? 100: size > 360 ? 360 : size;
+				sprite.height = size < 100 ? 100: size > 360 ? 360 : size;
+				sprite.radius = size < 100 ? 50: size > 360 ? 180 : size / 2;
+				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
+			} else {
+				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+			}
 		}
 	}
 
@@ -27,7 +52,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if ( sprite.dropTime == null && sprite.reactContext.state.quarantineDropped &&
 		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id ||
 		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
-
+			
 		sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
 		if (sprite.isQuarantineSprite ) {
 			const empty = new PIXI.Graphics();
@@ -41,7 +66,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
 			// text resets dragedQuarantineId because it calculates later than qurantine
-			sprite.reactContext.resetDraggedQuarantineId(sprite.reactContext.state.draggedQuarantine.id);
+			sprite.reactContext.resetDraggedQuarantineId();
 		}
 	}
 
@@ -73,8 +98,6 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 	// QUARANTINE OVERLAPPING- when quarantine is not dropped, it is not yet being calculated in the collisions
 	if (!sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
-		sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-		sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 		// loop through active quarantines and find any intersections
 		let overlap = false;
 		// only check active quarantines (they become active at the start of drag)
@@ -86,8 +109,6 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			}
 			// calc intersection - break for loop if it intersects
 			if (circleIntersect(sprite.x, sprite.y, sprite.radius, quarantinesForCheck[index].x, quarantinesForCheck[index].y, quarantinesForCheck[index].radius)) {
-				console.log("this is overlap", quarantinesForCheck[index].myID, quarantinesForCheck[index].radius);
-				
 				overlap = true;
 				break;
 			}

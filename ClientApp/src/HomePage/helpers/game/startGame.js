@@ -135,6 +135,7 @@ function handleOnImageLoaded(gameSettings) {
 			y: 0
 		};
 		quarantine.startSpeed = 0;
+		// push each object to its own array
 		quarantineArr.push(quarantine);
 		timeTextArr.push(timeText);
 	}

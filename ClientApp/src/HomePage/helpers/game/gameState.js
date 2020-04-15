@@ -11,6 +11,7 @@ export const gameSettings = {
 	availableQuarantines: [],
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
+	quarantineCancelled: false,
 	draggedQuarantine: {
 		id: -1,
 		x: 0,
@@ -36,12 +37,24 @@ const resetSettings = {
 	gameSettingsOpen: false,
 	gamePaused: false,
 	gameStopped: false,
+	quarantineCancelled: false,
 	draggedQuarantine: {
 		id: -1,
 		x: 0,
 		y: 0,
 		size: 250
 	},
+}
+export function onContextMenuHideQuarantine(e) {
+	e.preventDefault();	
+	if (this.state.quarantineBeingDragged) {
+		this.setState(prevState => {
+			return {
+				quarantineCancelled: true,
+				quarantineBeingDragged: false
+			}
+		});
+	}
 }
 
 export function onWheelScroll(e) {
@@ -85,7 +98,8 @@ export function stopStartGame() {
 		this.stop();
 		this.startGame(true);
 		this.setState(prevState => {
-			return {
+			console.log("stopStartGame");
+			return {				
 				isGameActive: true,
 				clockTime: new Date(0),
 				startButtonText: "CONTINUE GAME",
@@ -100,6 +114,7 @@ export function stopStartGame() {
 export function gameRestart() {
 	this.stop();
 	this.startGame(true);
+	console.log("gameRestart");
 	this.setState(prevState => ({ 
 		clockTime: new Date(0),
 		startButtonText: "CONTINUE SIMULATION",
@@ -122,6 +137,7 @@ export function setGameSettings(e) {
 	this.setState(prevState => {
 		this.stop();
 		this.startGame(false, newGameSettings);
+		console.log("setGameSettings");
 		// reset settings as you would at game start
 		return ({
 			isGameActive: true,
@@ -157,7 +173,8 @@ export function setQuarantineInMotion(e) {
 		};
 	});
 }
-export function resetDraggedQuarantineId(id) {
+export function resetDraggedQuarantineId() {
+	console.log("resetDraggedQuarantineId");
 	this.setState({
 		draggedQuarantine: {...resetSettings.draggedQuarantine}
 	});
