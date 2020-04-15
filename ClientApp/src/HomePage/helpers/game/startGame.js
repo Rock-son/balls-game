@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js-legacy";
 export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
-	
+
 	this.gameApp = new PIXI.Application({
 		backgroundColor: 0x000,
 		width: this.canvasWidth,
@@ -14,7 +14,7 @@ export function startGame(autostart, gameSettings = null) {
 		sharedLoader: true
 	});
 	document.getElementById("canvas-container").appendChild(this.gameApp.view);
-	
+
 	if (this.gameApp.loader.resources.sheet == null) {
 		this.gameApp.loader
 			.add("sheet", "balls.json")
@@ -46,14 +46,14 @@ function randomIntNumber(min, max) {
 }
 
 /**
- * Intersection calculation. Multiplication is much faster than getting the square root with Math.sqrt(), so distance is calculated without getting the root 
+ * Intersection calculation. Multiplication is much faster than getting the square root with Math.sqrt(), so distance is calculated without getting the root
  * and the sum of the radii is multiplied by itself. The outcome stays the same, but the performance is better.
- * @param {Float} x1 
- * @param {Float} y1 
- * @param {Int}   r1 
- * @param {Float} x2 
- * @param {Float} y2 
- * @param {Int}	  r2 
+ * @param {Float} x1
+ * @param {Float} y1
+ * @param {Int}   r1
+ * @param {Float} x2
+ * @param {Float} y2
+ * @param {Int}	  r2
  */
 function circleIntersect(x1, y1, r1, x2, y2, r2) {
 
@@ -73,8 +73,8 @@ function handleOnImageLoaded(gameSettings) {
 		difficulty,
 		nrOfQuarantines
 	} = gameSettings == null ? this.state.gameSettings : gameSettings;
-	
-	
+
+
 	const quarantineArr = [];
 	const timeTextArr = [];
 	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
@@ -86,7 +86,7 @@ function handleOnImageLoaded(gameSettings) {
 		// TEXT
 		const formattedTime = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
 		const timeText = new PIXI.Text(formattedTime, {
-			fill: 0x85e312, 
+			fill: 0x85e312,
 			font: "18px",
 			fontFamily : "Arial"
 		});
@@ -95,7 +95,7 @@ function handleOnImageLoaded(gameSettings) {
 		timeText.anchor.set(0.5, 0);
 		timeText.x = -500;
 		timeText.y = -500;
-		timeText.duration = randomTimeInSeconds * 1000; 
+		timeText.duration = randomTimeInSeconds * 1000;
 		timeText.dropTime = null;
 		timeText.reactContext = this;
 		timeText.isActive = false;
@@ -106,13 +106,13 @@ function handleOnImageLoaded(gameSettings) {
 		const width = randomLength;
 		const height = randomLength;
 		const radius = randomLength / 2;
-		
+
 		const green = new PIXI.Graphics();
 		green.beginFill(0x85e312, 0.35);
 		green.drawCircle(0,0,300);
 		green.endFill();
 		const greenTexture = green.generateCanvasTexture();
-		
+
 		const particleID = quantity + index;
 		const quarantine = new PIXI.Sprite(greenTexture);
 		quarantine.x = -500;
@@ -120,7 +120,7 @@ function handleOnImageLoaded(gameSettings) {
 		quarantine.isQuarantineSprite = true;
 		quarantine.isActive = false;
 		quarantine.alpha = .5;
-		quarantine.duration = randomTimeInSeconds * 1000; 
+		quarantine.duration = randomTimeInSeconds * 1000;
 		quarantine.dropTime = null;
 		quarantine.width = width;
 		quarantine.height = height;
@@ -131,7 +131,7 @@ function handleOnImageLoaded(gameSettings) {
 		quarantine.reactContext = this;
 		quarantine.contagion = 0;
 		quarantine.contagiousFrom = null;
-		quarantine.velocity = { 
+		quarantine.velocity = {
 			x: 0,
 			y: 0
 		};
@@ -158,7 +158,7 @@ function handleOnImageLoaded(gameSettings) {
 		if (i !== 0) {
 			for (let j = 0; j < spriteArr.length; j++) {
 				if (tries > 1000000) {
-					break; // if the screen is too small, it will go forever - so break and have none and notify user 
+					break; // if the screen is too small, it will go forever - so break and have none and notify user
 				}
 				if (circleIntersect(x, y, radius, spriteArr[j].x, spriteArr[j].y, spriteArr[j].radius)) {
 					x = randomIntNumber(radius * 2, maxWidth);
@@ -169,7 +169,7 @@ function handleOnImageLoaded(gameSettings) {
 				}
 			}
 		}
-		if (contagion) {				
+		if (contagion) {
 			sprite = new PIXI.Sprite(redBall);
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
@@ -187,25 +187,25 @@ function handleOnImageLoaded(gameSettings) {
 		sprite.contagion = contagion;
 		sprite.contagiousFrom = 0;
 		const randomX = Math.random() - .5;
-		const randomY = Math.random() - .5;		
-		sprite.velocity = { 
+		const randomY = Math.random() - .5;
+		sprite.velocity = {
 			x: randomX < 0  && randomX > -.3 ? (randomX*speed) - speed : (randomX > 0  && randomX < .3 ? (randomX) + speed : randomX * speed),
 			y: randomY < 0  && randomY > -.3 ? (randomY*speed) - speed : (randomY > 0  && randomY < .3 ? (randomY) + speed : randomY * speed),
 		};
-		
+
 		// calculate starting speed (hypothenuse from x, y) - optimised (without Math.pow() func)
 		sprite.startSpeed = Math.sqrt(sprite.velocity.x * sprite.velocity.x + sprite.velocity.y * sprite.velocity.y);
 		spriteArr.push(sprite);
 	}
-	
+
 	quarantineArr.forEach(item => spriteArr.push(item));
 	timeTextArr.forEach(item => spriteArr.push(item));
 
 	// construct quarantine and text object
 	const quarantineObj = quarantineArr.reduce((acc, obj) => Object.assign(acc, {[obj.myID]: obj}), {length: quarantineArr.length})
-	
+
 	this.setState({ availableQuarantines: quarantineArr.map(item => item.myID)});
-	const len = spriteArr.length;	
+	const len = spriteArr.length;
 	// draw and animate
 	if (this.autostart) {
 		for (let spriteIndex = 0; spriteIndex < len; spriteIndex++) {

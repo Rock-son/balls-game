@@ -5,15 +5,15 @@ import { Button, Navbar, Nav, NavbarToggler,
 import "./navbar.scss";
 
 export const NavBar = props => {
-	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, 
-		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime, 
+	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
+		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime,
 		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds } } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
 	const currentSeconds = clockTime.getSeconds();
 	const shouldCountdownBeVisible = clockTime.getTime() < 4000;
-	
+
 	// this is the only place where seconds are mishandled
 	const delayedSeconds = (clockTime.getTime() / 1000) - delayInSeconds;
 	if (isGameActive) {
@@ -25,14 +25,14 @@ export const NavBar = props => {
 		seconds = currentSeconds;
 		formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
 	}
-	
+
 	// start countdown on game start
 	const gameStartCountdownTime = (delayedSeconds < 0) ? (-delayedSeconds) : "";
 	return(
 		<Navbar dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
-			<Button 
+			<Button
 				className={`main__navbar__toggler ${isNavbarVisible && "hidden"}`}
-				onClick={toggleNavbarVisibility} 
+				onClick={toggleNavbarVisibility}
 				disabled={isNavbarVisible}
 				>
 					<svg height="15" width="20">
@@ -85,21 +85,22 @@ export const NavBar = props => {
 				</Nav>
 				<Nav className="navbar__nav right" navbar>
 					<NavItem className=" d-inline-flex justify-content-between">
-						<NavbarText>Stay safe. For more visit&nbsp;</NavbarText>
-						<NavLink 
+						<NavbarText className="countdown-link">Stay safe. For more visit&nbsp;</NavbarText>
+						<NavLink
+							className="countdown-link"
 							href="https://www.countdownkings.com/"
 							target="_blank"
-							rel="nooperner noreferrer"	
+							rel="nooperner noreferrer"
 						>
 							CountdownKings.com
 						</NavLink>
 					</NavItem>
 					<NavItem className={`stats ${!isNavbarVisible && "drop"}`}>
 						{
-							showStats ? 
+							showStats ?
 							<>
 								<NavbarText className="stats__infected">Infected:&nbsp;{contagious}</NavbarText>
-								<NavbarText className="stats__healthy">Healthy:&nbsp;{healthy}</NavbarText>	
+								<NavbarText className="stats__healthy">Healthy:&nbsp;{healthy}</NavbarText>
 							</>
 							:
 							""
