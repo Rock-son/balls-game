@@ -35,9 +35,7 @@ export const NavBar = props => {
 				onClick={toggleNavbarVisibility}
 				disabled={isNavbarVisible}
 				>
-					<svg height="15" width="20">
-						<path d="M-2 2 l12 12 M10 15 l12 -13 Z" fill="none" strokeWidth="5" stroke="white"/>
-					</svg>
+					<img src="dropdown-arrow.svg" alt="hide/unhide navbar"></img>
 			</Button>
 			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm">
 				<NavbarToggler onClick={toggleNavbarItemsExpand} />

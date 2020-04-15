@@ -34,6 +34,10 @@
 			transform: translate(-70%, 45%);
 			transition: opacity .3s, background-color .3s;
 			padding: 20px 12px 0 12px;
+			& img {
+				width: 20px;
+				height: 10px;
+			}
 			&:active, &:focus, &:hover {
 				background-color: $grey;
 				box-shadow: none;
