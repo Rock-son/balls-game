@@ -91,6 +91,9 @@
 			color: $white;
 			font-size: 15px;
 			transform: translate(-70%, 0%);
+			& .ordinary {
+				font-weight: 300;
+			}
 		}
 		&.right {
 			font-size: 15px;

@@ -81,7 +81,7 @@ export const NavBar = props => {
 			</Navbar>
 			<Navbar dark className="col-6 main__navbar__right d-inline-flex justify-content-between" >
 				<Nav className="navbar__nav caption" navbar>
-					<NavItem>TheCovidSimulator</NavItem>
+					<NavItem><strong>ViralBalls</strong><span className="ordinary">{isGameActive ? "Game" : "Simulator"}</span></NavItem>
 				</Nav>
 				<Nav className="navbar__nav right" navbar>
 					<NavItem className=" d-inline-flex justify-content-between">
