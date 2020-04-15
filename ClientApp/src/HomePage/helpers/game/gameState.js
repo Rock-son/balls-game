@@ -15,14 +15,15 @@ export const gameSettings = {
 		id: -1,
 		x: 0,
 		y: 0,
+		size: 250
 	},
 	// game settings
 	gameSettings: {
 		mode: 0,
-		difficulty: 0,
-		size: (window.innerWidth < 800 ? 2.5 : 5),
-		quantity: 100,
-		speed: 0.3,
+		difficulty: 1,
+		size: 5,
+		quantity: 300,
+		speed: 0.6,
 		delayInSeconds: 3,
 		nrOfQuarantines: 5 // max 5
 	}
@@ -39,23 +40,45 @@ const resetSettings = {
 		id: -1,
 		x: 0,
 		y: 0,
+		size: 250
 	},
 }
 
-
+export function onWheelScroll(e) {
+	const deltaY = e.deltaY;
+	if (this.state.quarantineBeingDragged) {
+		if (deltaY > 0) {
+			this.setState(prevState => {
+				return {
+					draggedQuarantine: {
+						...prevState.draggedQuarantine,
+						size: prevState.draggedQuarantine["size"] + 30 
+					}
+				}
+			});
+		 } else {
+			this.setState(prevState => {
+				return {
+					draggedQuarantine: {
+						...prevState.draggedQuarantine,
+						size: prevState.draggedQuarantine["size"] -30 
+					}
+				}
+			});
+		}
+	}
+}
 export function onMouseMove(e) {	
 	if (this.state.quarantineButtonsActive) {			
 		const pageX = e.pageX;
 		const pageY = e.pageY;
 		this.setState(prevstate => { 
-			return { draggedQuarantine: {...prevstate.draggedQuarantine, ...{ x: pageX, y: pageY }} }
+			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
 		});
 	}	
 }
 // GAME
-export function stopStartGame() {
-	console.log("from stopstartgame");
-	
+export function stopStartGame() {	
 	if (this.state.gamePaused && !this.state.gameStopped) { // CONTINUE
 		this.toggleGameDialog();
 	} else {								// START
@@ -95,9 +118,7 @@ export function setGameSettings(e) {
 		// triggered directly from dialog
 		parsedData = e;
 	}
-	const newGameSettings = {...this.state.gameSettings, ...parsedData};
-	console.log("parsedData", newGameSettings);
-	
+	const newGameSettings = {...this.state.gameSettings, ...parsedData};	
 	this.setState(prevState => {
 		this.stop();
 		this.startGame(false, newGameSettings);
@@ -126,7 +147,8 @@ export function setQuarantineInMotion(e) {
 			draggedQuarantine: {
 				id: prevState.availableQuarantines.slice(0,1)[0] || -1,
 				x: pageX, 
-				y: pageY
+				y: pageY,
+				size: prevState.draggedQuarantine.size
 			},
 			quarantineBeingDragged: true,
 			quarantineButtonsActive: true,
@@ -160,9 +182,7 @@ export function toggleGamePause() {
 }
 export function toggleGameDialog() {
 	if (this.state.isSimulationActive) {
-		this.stop();
-		console.log("from game dialog");
-		
+		this.stop();		
 		// only when clicking on navbar link -> stop simulation and show game dialog
 		this.setState(prevState => {
 			return ({ 

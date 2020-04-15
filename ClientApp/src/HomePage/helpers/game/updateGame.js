@@ -12,11 +12,11 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
 
 		sprite.isActive = true;
-		const size = 2000 / Math.round(sprite.reactContext.state.gameSettings.quantity / sprite.reactContext.state.contagious);
 		if (sprite.isQuarantineSprite) {
-			sprite.width = size < 150 ? 150: size > 360 ? 360 : size;
-			sprite.height = size < 150 ? 150: size > 360 ? 360 : size;
-			sprite.radius = size < 150 ? 75: size > 350 ? 180 : size / 2;
+			const size = sprite.reactContext.state.draggedQuarantine["size"]			
+			sprite.width = size < 100 ? 100: size > 360 ? 360 : size;
+			sprite.height = size < 100 ? 100: size > 360 ? 360 : size;
+			sprite.radius = size < 100 ? 50: size > 360 ? 180 : size / 2;
 		} else {
 			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
@@ -51,7 +51,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		sprite.y = -500;
 		sprite.dropTime = null;
 		sprite.isActive = false;
-
+		// prepare values for next appearance
 		if (sprite.isQuarantineSprite) {
 			const green = new PIXI.Graphics();
 			green.beginFill();
@@ -86,6 +86,8 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			}
 			// calc intersection - break for loop if it intersects
 			if (circleIntersect(sprite.x, sprite.y, sprite.radius, quarantinesForCheck[index].x, quarantinesForCheck[index].y, quarantinesForCheck[index].radius)) {
+				console.log("this is overlap", quarantinesForCheck[index].myID, quarantinesForCheck[index].radius);
+				
 				overlap = true;
 				break;
 			}

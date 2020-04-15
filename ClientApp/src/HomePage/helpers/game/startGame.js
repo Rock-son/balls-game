@@ -102,10 +102,9 @@ function handleOnImageLoaded(gameSettings) {
 		timeText.myID = quantity + nrOfQuarantines + index; // text index (calulate existing quarantines)
 
 		// QUARANTINES
-		const randomLength = randomIntNumber(150, 300);
-		const width = randomLength;
-		const height = randomLength;
-		const radius = randomLength / 2;
+		const width = this.state.draggedQuarantine["size"];
+		const height = width;
+		const radius = width / 2;
 
 		const green = new PIXI.Graphics();
 		green.beginFill(0x85e312, 0.35);

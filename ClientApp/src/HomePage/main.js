@@ -5,7 +5,7 @@ import { startSimulation, startGame, stop, pause, unPause } from "./helpers/acti
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart,
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId } from "./helpers/game/gameState";
 
 
@@ -61,6 +61,7 @@ export default class HomePage extends React.Component {
 		// GAME
 		this.gameRestart = gameRestart.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
+		this.onWheelScroll = onWheelScroll.bind(this);
 		this.setGameSettings = setGameSettings.bind(this);
 		this.toggleGameDialog = toggleGameDialog.bind(this);
 		this.setQuarantineInMotion = setQuarantineInMotion.bind(this);
@@ -222,6 +223,7 @@ export default class HomePage extends React.Component {
 					id="canvas-container"
 					onClick={this.toggleDialog}
 					onMouseMove={this.onMouseMove}
+					onWheel={this.onWheelScroll}
 					>
 				</article>
 			</section>
