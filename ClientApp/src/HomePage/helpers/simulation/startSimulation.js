@@ -13,7 +13,19 @@ export function startSimulation(autostart, simulationSettings = null) {
 		autoDensity: true,
 		sharedLoader: true
 	});
+	const isWebGL = PIXI.utils.isWebGLSupported();	
+	if (!isWebGL) {
+		this.simulationApp.renderer.context.mozImageSmoothingEnabled = false
+		this.simulationApp.renderer.context.webkitImageSmoothingEnabled = false
+	}
+	/*
+	* Fix for iOS GPU issues
+	*/
+	this.simulationApp.renderer.view.style['transform'] = 'translatez(0)'
+
+
 	document.getElementById("canvas-container").appendChild(this.simulationApp.view);
+
 
 	if (this.simulationApp.loader.resources.sheet == null) {
 		this.simulationApp.loader.add("sheet", "balls.json")
@@ -24,7 +36,6 @@ export function startSimulation(autostart, simulationSettings = null) {
 	} else {
 		this.simulationApp.loader.load(handleOnImageLoaded.bind(this, simulationSettings));
 	}
-
 
 	// Resize function window
 	const resize = (e) => {
