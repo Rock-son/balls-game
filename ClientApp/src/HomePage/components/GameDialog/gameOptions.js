@@ -11,33 +11,33 @@ export const difficultyOptions = [
 	{ type: "Hard", value: 2 },
 ];
 export const sizeOptions = [
-	{ type: "Small", value: 2.5 },
+	{ type: "Small", value: 5 },
 	"|",
-	{ type: "Medium", value: 5 },
+	{ type: "Medium", value: 8 },
 	"|",
-	{ type: "Large", value: 7.5 },
+	{ type: "Large", value: 10 },
 ];
 // depend on size and difficulty: easy: 0, medium: 1, hard: 2
 export const quantityValues = {
-	"2.5": [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 700, "|", 800, "|", 1000 ],
-	5: [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 600, "|", 700, "|", 800 ],
-	"7.5": [  50, "|", 100,"|", 150, "|", 200, "|", 300, "|", 400, "|", 500, "|", 600 ]
+	"5": [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 700, "|", 800, "|", 1000 ],
+	8: [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 600, "|", 700, "|", 800 ],
+	"10": [  50, "|", 100,"|", 150, "|", 200, "|", 300, "|", 400, "|", 500, "|", 600 ]
 };
 export const quantityDiffVals = {
 	0: {
-		"2.5": { min: 100, max: 1000},
-		5: { min: 100, max: 800},
-		"7.5": { min: 50, max: 600},
+		"5": { min: 100, max: 1000},
+		8: { min: 100, max: 800},
+		"10": { min: 50, max: 600},
 	},
 	1: {
-		"2.5": { min: 300, max: 1000},
-		5: { min: 300, max: 800},
-		"7.5": { min: 150, max: 600},
+		"5": { min: 300, max: 1000},
+		8: { min: 300, max: 800},
+		"10": { min: 150, max: 600},
 	},
 	2: {
-		"2.5": { min: 700, max: 1000},
-		5: { min: 600, max: 800},
-		"7.5": { min: 300, max: 600},}
+		"5": { min: 700, max: 1000},
+		8: { min: 600, max: 800},
+		"10": { min: 300, max: 600},}
 }
 // depends on difficulty
 export const speedOptions = [
