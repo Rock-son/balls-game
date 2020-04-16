@@ -25,19 +25,24 @@ canvas {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	opacity: 1;
+	opacity: 0;
 	background-color: black;
 	&.visible {
+		opacity: 0;
 		z-index: 1;
-		animation: fade-in-out 2s ease-in-out;
+		animation: fade-in-out 1.2s ease-in-out;
 		animation-iteration-count: 1;
 	}
 }
 @keyframes fade-in-out {
-	0%   { background-color: black;}
-	50%  { background-color: $light-grey;}
-	100% { background-color: black;}
-  }
+	0%   { opacity: 0;}
+	50%  { opacity: 1;}
+	100% { opacity: 0;}
+}
+
+.audio {
+	display: none;
+}
 
 @import "./components/Navbar/navbar.scss";
 

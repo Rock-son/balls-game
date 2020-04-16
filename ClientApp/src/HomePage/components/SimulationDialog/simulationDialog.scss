@@ -16,11 +16,26 @@
 	& .modal-header {
 		border-bottom: none;
 		padding: 1rem 1rem 0 0;
-		& .close {
-			color: $grey;
-			margin: -1rem;
+		color: $grey;
+		padding-bottom: 3rem;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		& .modal-title {
+			position: absolute;
+			text-align: center;
+			width: 100%;
+			font-weight: 700;
 			font-size: 19px;
+			padding-top: 1rem;
+		}
+		& .close {
+			position: absolute;
+			text-align: right;
+			width: 100%;
+			color: $light-grey;
+			margin: -1rem;
+			font-size: 17px;
 			font-weight: 300;
+			text-shadow: none;
 		}
 	}
 	& .modal-body {
@@ -28,9 +43,6 @@
 		& .flexContainer {
 			padding-left: 20px;
 			padding-right: 20px;
-		}
-		& .row {
-			margin-bottom: 10px;
 		}
 	}
 	& .choice {
@@ -41,23 +53,25 @@
 		margin-bottom: 1rem;
 		&__header {
 			color: $grey;
-			font-size: 19px;
+			font-size: 17px;
+			font-weight: 700;
 		}
 		&__options {
 			font-family: inherit;
 			font-size: 17px;
+			font-weight: 300;
 			padding: 0;
 			color: $light-grey;
 			justify-content: center;
 			& .disabled {
-				color: $dark-grey;
+				color: $grey;
 			}
 			& .nav-link:nth-child(even) {
-				color: $black;
+				color: $dark-grey;
 				cursor: text;
 			}
 			& .nav-link {
-				padding: 0 2px;
+				padding: 0 3px;
 				&:hover, &.active {
 					color: $white;
 					cursor: pointer;
@@ -71,7 +85,7 @@
 		text-align: center;
 		justify-content: center;
 		color: $white;
-		font-size: 19px;
+		font-size: 17px;
 		background-color: $dark-grey;
 		font-weight: 700;
 		cursor: pointer;

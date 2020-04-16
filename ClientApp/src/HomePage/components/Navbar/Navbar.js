@@ -5,7 +5,7 @@ import { Button, Navbar, Nav, NavbarToggler,
 import "./navbar.scss";
 
 export const NavBar = props => {
-	const { toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
+	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime,
 		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty } } = props;
 
@@ -37,14 +37,8 @@ export const NavBar = props => {
 	// start countdown on game start
 	const gameStartCountdownTime = (delayedSeconds < 0) ? (-delayedSeconds) : "";
 	return(
-		<Navbar dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
-			<Button
-				className={`main__navbar__toggler ${isNavbarVisible && "hidden"}`}
-				onClick={toggleNavbarVisibility}
-				disabled={isNavbarVisible}
-				>
-					<img src="dropdown-arrow.svg" alt="hide/unhide navbar"></img>
-			</Button>
+		<>
+		<Navbar onMouseMove={onMouseMove} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm">
 				<NavbarToggler onClick={toggleNavbarItemsExpand} />
 				<Collapse isOpen={isNavbarExpanded} navbar>
@@ -111,5 +105,13 @@ export const NavBar = props => {
 			</Navbar>
 			<div className={`game-start-countdown ${isGameActive && !gamePaused && shouldCountdownBeVisible ? "visible" : ""}`}>{gameStartCountdownTime}</div>
 		</Navbar>
+		<Button
+				className={`main__navbar__toggler ${isNavbarVisible && "hidden"}`}
+				onClick={toggleNavbarVisibility}
+				disabled={isNavbarVisible}
+				>
+					<img src="dropdown-arrow.svg" alt="hide/unhide navbar"></img>
+		</Button>
+	</>
 	);
 };

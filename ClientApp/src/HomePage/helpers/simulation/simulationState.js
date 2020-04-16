@@ -1,3 +1,5 @@
+import { resetSettings as gameResetSettings } from "../game/gameState";
+
 export const simulationSettings = {
 	isSimulationActive: true,
 	// canvas state
@@ -34,17 +36,21 @@ export function stopStartSimulation() {
 			simulationSettingsOpen: false, 
 			healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
 			// reset game settings
-			quarantineButtonsActive: false,
-			quarantineDropped: false,
+			...gameResetSettings,
+			isGameActive: false, 
+			gamePaused: true, 
+			gameStopped: true,
+			quarantineButtonsActive: false, // only for testing purposes
+			availableQuarantines: []
 		}));
 	}
 }
 export function simulationRestart() {
-	this.stop();
 	// fade out-in effect
 	this.setState({ simulationRestarting: true });
-	setTimeout(() => this.setState({ simulationRestarting: false }), 2000);
+	setTimeout(() => this.setState({ simulationRestarting: false }), 1200);
 	setTimeout(() => { 
+		this.stop();
 		this.startSimulation(true);
 		this.setState(prevState => ({ 
 			clockTime: new Date(0),
@@ -55,7 +61,7 @@ export function simulationRestart() {
 			healthy: prevState.simulationSettings["quantity"] - 1, 
 			contagious: 1
 		}));
-	}, 1750);
+	}, 600);
 
 }
 export function setSimulationSettings(e) {
@@ -84,6 +90,7 @@ export function setSimulationSettings(e) {
 export function toggleSimulationDialog() {
 	if (this.state.isGameActive) {
 		this.stop();
+		this.startSimulation(false);
 		// only when clicking on navbar link -> stop game and show simulation dialog
 		this.setState(prevState => {
 			return ({ 

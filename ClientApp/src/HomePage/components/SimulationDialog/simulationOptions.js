@@ -1,9 +1,9 @@
 export const sizeOptions = [
-	{ type: "small", value: 2.5 },
+	{ type: "Small", value: 2.5 },
 	"|",
-	{ type: "medium", value: 5 },
+	{ type: "Medium", value: 5 },
 	"|",
-	{ type: "large", value: 7.5 },
+	{ type: "Large", value: 7.5 },
 ];
 export const quantityValues = {
 	"2.5": [ 100, "|", 200, "|", 300, "|", 400, "|", 500, "|", 700, "|", 800, "|", 1000 ],
@@ -11,11 +11,11 @@ export const quantityValues = {
 	"7.5": [  50, "|", 100,"|", 150, "|", 200, "|", 300, "|", 400, "|", 500 ]
 };
 export const speedOptions = [
-	{ type: "slow", value: .3 },
+	{ type: "Slow", value: .3 },
 	"|",
-	{ type: "medium", value: .6 },
+	{ type: "Medium", value: .6 },
 	"|",
-	{ type: "fast", value: 1 },
+	{ type: "Fast", value: 1 },
 ];
 export const deactivateOptions = [
 	0,
