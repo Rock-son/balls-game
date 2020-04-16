@@ -2,11 +2,11 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, GameEndDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine,
-	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId } from "./helpers/game/gameState";
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, didPlayerWin,
+	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -60,10 +60,12 @@ export default class HomePage extends React.Component {
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
 		this.gameRestart = gameRestart.bind(this);
+		this.didPlayerWin = didPlayerWin.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
 		this.onWheelScroll = onWheelScroll.bind(this);
 		this.setGameSettings = setGameSettings.bind(this);
 		this.toggleGameDialog = toggleGameDialog.bind(this);
+		this.closeGameEndDialog = closeGameEndDialog.bind(this);
 		this.setQuarantineInMotion = setQuarantineInMotion.bind(this);
 		this.setQuarantineNonactive = setQuarantineNonactive.bind(this);
 		this.resetDraggedQuarantineId = resetDraggedQuarantineId.bind(this);
@@ -210,6 +212,11 @@ export default class HomePage extends React.Component {
 					buttonText={this.state.startButtonText}
 					settings={this.state.gameSettings}
 					setGameSettings={this.setGameSettings}
+				/>
+				<GameEndDialog
+					gameEnded={this.state.gameEnded}
+					didPlayerWin={this.state.didPlayerWin}
+					closeGameEndDialog={this.closeGameEndDialog}
 				/>
 				<ShareDialog
 					isOpen={this.state.shareModalOpen}

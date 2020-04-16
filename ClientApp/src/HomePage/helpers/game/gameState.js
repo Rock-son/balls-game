@@ -8,8 +8,11 @@ export const gameSettings = {
 	isGameActive: false,
 	gamePaused: true,
 	gameStopped: true,
-	// modals - popups
+	// gamesettings - popups
 	gameSettingsOpen: false,
+	// PLAYER
+	gameEnded: false,
+	didPlayerWin: true,
 	// GAME
 	// quarantine settings
 	quarantineButtonsActive: false,
@@ -51,6 +54,15 @@ export const resetSettings = {
 		size: 250
 	},
 }
+// GAMEPLAY
+export function didPlayerWin() {
+	this.setState({ didPlayerWin: true });
+}
+export function closeGameEndDialog() {
+
+}
+
+
 export function onContextMenuHideQuarantine(e) {
 	e.preventDefault();
 	if (this.state.quarantineBeingDragged) {
