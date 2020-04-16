@@ -130,13 +130,13 @@ export default class HomePage extends React.Component {
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationDialog();
 		// on quarantineButtonsActive -> should trigger quarantineDrop - user should have quarantine attached to cursor
-		} else if (this.state.quarantineBeingDragged && !this.state.quarantineDropped) {
+		} else if (this.state.quarantineBeingDragged && !this.state.quarantinePlaced) {
 			// overlap check - dont'l let the user lay quarantine down
 			if (!this.state.quarantineOverlapping) {
 				this.setState({
 					quarantineBeingDragged: false,
 					quarantineButtonsActive: true,
-					quarantineDropped: true,
+					quarantinePlaced: true,
 				});
 			}
 		} else {
@@ -177,6 +177,7 @@ export default class HomePage extends React.Component {
 				<NavBar
 					currentTime={this.state.currentTime}
 					clockTime={this.state.clockTime}
+					onMouseMove={this.onMouseMove}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand}
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}

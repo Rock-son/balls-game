@@ -53,12 +53,12 @@ export class GameDialog extends React.Component {
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
 		
 		return (		
-			<Modal key="game" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
-				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
+			<Modal key="game" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
+				<ModalHeader charCode="X" toggle={toggle}>GAME SETTINGS</ModalHeader>
 				<ModalBody>
 					<Row>
 						<Container className="choice">
-							<div className="choice__header">Game Mode</div>
+							<div className="choice__header">Game mode</div>
 							<Nav className="choice__options">
 								{modeOptions.map((modeOption, idx) => {
 									if (typeof modeOption != "object") {
@@ -78,7 +78,8 @@ export class GameDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div className="choice__header">Difficulty level (also affects Quarantine)</div>
+							<div className="choice__header">Difficulty level</div>
+							<div className="choice__header__sub">Affects infection rate and quarantine.</div>
 							<Nav className="choice__options">
 								{difficultyOptions.map((difficultyOption, idx) => {
 									if (difficultyOption === "|") {

@@ -6,7 +6,6 @@ export function startGame(autostart, gameSettings = null) {
 	// UTILITIES
 
 	this.gameApp = new PIXI.Application({
-		backgroundColor: 0x000,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,
@@ -97,7 +96,6 @@ function handleOnImageLoaded(gameSettings) {
 		timeText.duration = randomTimeInSeconds * 1000;
 		timeText.dropTime = null;
 		timeText.reactContext = this;
-		timeText.isActive = false;
 		timeText.myID = quantity + nrOfQuarantines + index; // text index (calulate existing quarantines)
 
 		// QUARANTINES
@@ -116,16 +114,12 @@ function handleOnImageLoaded(gameSettings) {
 		quarantine.alpha = 1;
 		quarantine.x = -500;
 		quarantine.y = -500;
-		quarantine.isQuarantineSprite = true;
-		quarantine.isActive = false;
 		quarantine.alpha = .5;
 		quarantine.duration = randomTimeInSeconds * 1000;
-		quarantine.dropTime = null;
 		quarantine.width = width;
 		quarantine.height = height;
 		quarantine.anchor.x = .5;
 		quarantine.anchor.y = .5;
-		quarantine.myID = particleID;
 		quarantine.radius = radius;
 		quarantine.reactContext = this;
 		quarantine.contagion = 0;
@@ -135,6 +129,18 @@ function handleOnImageLoaded(gameSettings) {
 			y: 0
 		};
 		quarantine.startSpeed = 0;
+		// events
+		quarantine.myID = particleID;
+		quarantine.isQuarantineSprite = true;
+		quarantine.isActive = false;
+		quarantine.isDragged = false;
+		quarantine.isBeingDropped = false;
+		quarantine.dropTime = null;
+
+
+
+
+
 		// push each object to its own array
 		quarantineArr.push(quarantine);
 		timeTextArr.push(timeText);

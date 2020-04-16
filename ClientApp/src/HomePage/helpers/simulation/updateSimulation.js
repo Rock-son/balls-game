@@ -1,4 +1,4 @@
-export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => {	
+export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => {
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
@@ -41,13 +41,19 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 				sprite.contagion = 1;
 				sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
 				// ON AUTORESTART=TRUE
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.simulationRestart();	// ON AUTORESTART=TRUE
+				if (sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0) {
+					sprite.reactContext.toggleSimulationPause();
+					sprite.reactContext.simulationRestart();
+				}
 			} else if (sprite.contagion && !otherSprite.contagion) {
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				otherSprite.contagion = 1;
 				otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
 				// ON AUTORESTART=TRUE
-				sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0 && sprite.reactContext.simulationRestart(); // ON AUTORESTART=TRUE
+				if (sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0) {
+					sprite.reactContext.toggleSimulationPause();
+					sprite.reactContext.simulationRestart();
+				}
 			}
 			resolveCollision(sprite, otherSprite);
 		}
