@@ -49,7 +49,7 @@
 		}
 		&__left {
 			position: relative;
-			font-size: 15px;
+			font-size: 17px;
 			font-weight: 900;
 			line-height: 0;
 			transform: translateY(-60%);
@@ -60,7 +60,7 @@
 		}
 		&__right {
 			position: relative;
-			font-size: 15px;
+			font-size: 17px;
 			line-height: 1rem;
 		}
 	}
@@ -89,12 +89,21 @@
 			}
 			&.caption {
 				position: absolute;
-				font-size: 15px;
+				font-size: 19px;
     			right: 0;
 				color: $white;
-				transform: translateX(50%);
+				transform: translate(50%, -33%);
+				& .bold {
+					font-weight: 700;
+					display: inline-block;
+					line-height: 1px;
+					vertical-align: text-bottom;
+				}
 				& .ordinary {
 					font-weight: 300;
+					display: inline-block;
+					vertical-align: text-bottom;
+					line-height: 0px;
 				}
 			}
 		}
@@ -102,14 +111,14 @@
 			padding: 10px;
 		}
 		&.right {
-			font-size: 15px;
+			font-size: 17px;
 			text-align: right;
 			& .countdown-link {
-				font-size: 13px;
+				font-size: 15px;
 				padding-right: 2px;
 			}
 			& .stats {
-				font-size: 15px;
+				font-size: 17px;
 				line-height: 15px;
 				transition: margin-top .5s;
 				&.drop {
@@ -120,7 +129,7 @@
 					color: $red;
 					float: left;
 					padding-top: 0;
-					width: 90px;
+					width: 100px;
 					text-align: left;
 				}
 				&__healthy {
@@ -133,7 +142,7 @@
 					float: right;
 					padding-top: 0;
 					font-weight: 300;
-					font-size: 37px;
+					font-size: 46px;
 					line-height: 30px;
 					color: $white;
 				}

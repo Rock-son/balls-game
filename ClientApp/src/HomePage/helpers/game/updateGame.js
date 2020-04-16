@@ -13,12 +13,12 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 		sprite.isActive = true;
 		// remove quarantine if right clicked
-		if (sprite.reactContext.state.quarantineCancelled) {			
+		if (sprite.reactContext.state.quarantineCancelled) {
 			sprite.x = -500;
 			sprite.y = -500;
 			sprite.dropTime = null;
 			sprite.isActive = false;
-			if (sprite.isQuarantineSprite) {				
+			if (sprite.isQuarantineSprite) {
 				const green = new PIXI.Graphics();
 				green.beginFill(0x69b11c, 0.35); // set future pick up color (green)
 				green.drawCircle(0,0,sprite.radius);
@@ -34,10 +34,10 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		} else {
 			// move quarantine and change size on wheel scroll
 			const size = sprite.reactContext.state.draggedQuarantine["size"]
-			if (sprite.isQuarantineSprite) {			
-				sprite.width = size < 100 ? 100: size > 360 ? 360 : size;
-				sprite.height = size < 100 ? 100: size > 360 ? 360 : size;
-				sprite.radius = size < 100 ? 50: size > 360 ? 180 : size / 2;
+			if (sprite.isQuarantineSprite) {
+				sprite.width = size < 75 ? 75: size > 360 ? 360 : size;
+				sprite.height = size < 75 ? 75: size > 360 ? 360 : size;
+				sprite.radius = size < 75 ? 35: size > 360 ? 180 : size / 2;
 				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 			} else {
@@ -51,7 +51,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if ( sprite.dropTime == null && sprite.reactContext.state.quarantineDropped &&
 		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id ||
 		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
-			
+
 		sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
 		if (sprite.isQuarantineSprite ) {
 			const empty = new PIXI.Graphics();

@@ -22,7 +22,7 @@ export const gameSettings = {
 	gameSettings: {
 		mode: 0,
 		difficulty: 1,
-		size: 5,
+		size: 8,
 		quantity: 300,
 		speed: 0.6,
 		delayInSeconds: 3,
@@ -46,7 +46,7 @@ const resetSettings = {
 	},
 }
 export function onContextMenuHideQuarantine(e) {
-	e.preventDefault();	
+	e.preventDefault();
 	if (this.state.quarantineBeingDragged) {
 		this.setState(prevState => {
 			return {
@@ -65,7 +65,7 @@ export function onWheelScroll(e) {
 				return {
 					draggedQuarantine: {
 						...prevState.draggedQuarantine,
-						size: prevState.draggedQuarantine["size"] + 30 
+						size: prevState.draggedQuarantine["size"] + 30
 					}
 				}
 			});
@@ -74,24 +74,24 @@ export function onWheelScroll(e) {
 				return {
 					draggedQuarantine: {
 						...prevState.draggedQuarantine,
-						size: prevState.draggedQuarantine["size"] -30 
+						size: prevState.draggedQuarantine["size"] -30
 					}
 				}
 			});
 		}
 	}
 }
-export function onMouseMove(e) {	
-	if (this.state.quarantineButtonsActive) {			
+export function onMouseMove(e) {
+	if (this.state.quarantineButtonsActive) {
 		const pageX = e.pageX;
 		const pageY = e.pageY;
-		this.setState(prevstate => { 
+		this.setState(prevstate => {
 			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
 		});
-	}	
+	}
 }
 // GAME
-export function stopStartGame() {	
+export function stopStartGame() {
 	if (this.state.gamePaused && !this.state.gameStopped) { // CONTINUE
 		this.toggleGameDialog();
 	} else {								// START
@@ -99,11 +99,11 @@ export function stopStartGame() {
 		this.startGame(true);
 		this.setState(prevState => {
 			console.log("stopStartGame");
-			return {				
+			return {
 				isGameActive: true,
 				clockTime: new Date(0),
 				startButtonText: "CONTINUE GAME",
-				healthy: prevState.gameSettings["quantity"] - 1, 
+				healthy: prevState.gameSettings["quantity"] - 1,
 				contagious: 1,
 				...resetSettings
 			}
@@ -115,10 +115,10 @@ export function gameRestart() {
 	this.stop();
 	this.startGame(true);
 	console.log("gameRestart");
-	this.setState(prevState => ({ 
+	this.setState(prevState => ({
 		clockTime: new Date(0),
 		startButtonText: "CONTINUE SIMULATION",
-		healthy: prevState.gameSettings["quantity"] - 1, 
+		healthy: prevState.gameSettings["quantity"] - 1,
 		contagious: 1,
 		...resetSettings
 	}));
@@ -133,7 +133,7 @@ export function setGameSettings(e) {
 		// triggered directly from dialog
 		parsedData = e;
 	}
-	const newGameSettings = {...this.state.gameSettings, ...parsedData};	
+	const newGameSettings = {...this.state.gameSettings, ...parsedData};
 	this.setState(prevState => {
 		this.stop();
 		this.startGame(false, newGameSettings);
@@ -141,28 +141,28 @@ export function setGameSettings(e) {
 		// reset settings as you would at game start
 		return ({
 			isGameActive: true,
-			clockTime: new Date(0), 
-			gameSettings: newGameSettings, 
-			healthy: newGameSettings["quantity"] - 1, 
+			clockTime: new Date(0),
+			gameSettings: newGameSettings,
+			healthy: newGameSettings["quantity"] - 1,
 			contagious: 1,
 			startButtonText: "START GAME",
 			...resetSettings,
 			// override reset settings after this
 			gameSettingsOpen: true,
-			gameStopped: true, 
-			gamePaused: true, 
+			gameStopped: true,
+			gamePaused: true,
 		});
 	});
 }
 export function setQuarantineInMotion(e) {
 	const pageX = e.pageX;
 	const pageY = e.pageY;
-	// pop first value from available quarantines	
+	// pop first value from available quarantines
 	this.setState(prevState => {
 		return {
 			draggedQuarantine: {
 				id: prevState.availableQuarantines.slice(0,1)[0] || -1,
-				x: pageX, 
+				x: pageX,
 				y: pageY,
 				size: prevState.draggedQuarantine.size
 			},
@@ -199,30 +199,30 @@ export function toggleGamePause() {
 }
 export function toggleGameDialog() {
 	if (this.state.isSimulationActive) {
-		this.stop();		
+		this.stop();
 		// only when clicking on navbar link -> stop simulation and show game dialog
 		this.setState(prevState => {
-			return ({ 
-				gameSettingsOpen: true, 
-				gamePaused: true, 
-				startButtonText: "START GAME", 
+			return ({
+				gameSettingsOpen: true,
+				gamePaused: true,
+				startButtonText: "START GAME",
 				isSimulationActive: false,
-				isGameActive: true, 
-				simulationPaused: true, 
-				simulationStopped: true 
+				isGameActive: true,
+				simulationPaused: true,
+				simulationStopped: true
 			})
 		});
 	} else {
 		this.toggleGamePause();
 		this.setState(prevState => {
-			return ({ 
-				gameSettingsOpen: !prevState.gameSettingsOpen, 
-				gamePaused: !prevState.gamePaused, 
-				startButtonText: prevState.gameStopped ? "START GAME" : "CONTINUE GAME", 
-				isSimulationActive: false, 
-				isGameActive: true, 
-				simulationPaused: true, 
-				simulationStopped: true 
+			return ({
+				gameSettingsOpen: !prevState.gameSettingsOpen,
+				gamePaused: !prevState.gamePaused,
+				startButtonText: prevState.gameStopped ? "START GAME" : "CONTINUE GAME",
+				isSimulationActive: false,
+				isGameActive: true,
+				simulationPaused: true,
+				simulationStopped: true
 			})
 		});
 	}
