@@ -11,7 +11,7 @@ export class GameEndDialog extends React.Component {
 		if (!nextProps.isGameActive) {
 			return false;
 		}
-		if (nextProps.gameEnded && (nextProps.didPlayerWin !== this.props.didPlayerWin || nextProps.didPlayerWin !== this.props.didPlayerWin)) {
+		if (nextProps.gameEnded !== this.props.gameEnded) {
 			return true;
 		}
 		return false;

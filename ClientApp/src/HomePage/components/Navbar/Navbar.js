@@ -7,27 +7,35 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime,
-		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty } } = props;
+		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
 	const currentSeconds = clockTime.getSeconds();
 	const shouldCountdownBeVisible = clockTime.getTime() < 4000;
 
-	// this is the only place where seconds are mishandled
+	// OPEN TIME - countup mode
 	const delayedSeconds = (clockTime.getTime() / 1000) - delayInSeconds;
 	if (isGameActive && mode === 0) {
 		minutes = delayedSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
 		seconds = delayedSeconds % 60;
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
-	} else if (isGameActive && mode === 1) {
-		const checkedSeconds = delayedSeconds < 0 ? 0 : delayedSeconds;
-		const coundownTime = new Date((difficulty*60 + 180 - checkedSeconds) * 1000);
+		if (gameEnded) {
+			minutes = "0";
+			formattedSeconds = "00";
+		}
+	} 
+	// TIME CHALLENGE - countdown mode
+	else if (isGameActive && mode === 1) {
+		const positiveSeconds = delayedSeconds < 0 ? 0 : delayedSeconds;
+		const coundownTime = new Date((difficulty*60 + 18 - positiveSeconds) * 1000);
 		minutes = coundownTime.getMinutes();
 		seconds = coundownTime.getSeconds();
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
-		//console.log("fuck this shit", coundownTime, minutes, seconds);
-
+		if (gameEnded) {
+			minutes = "0";
+			formattedSeconds = "00";
+		}
 	} else {
 		minutes = clockTime.getMinutes();
 		seconds = currentSeconds;

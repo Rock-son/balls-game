@@ -1,8 +1,6 @@
 
 import sound from "../../assets/gameStart.mp3";
 
-
-
 export const gameSettings = {
 	audioStart: false,
 	isGameActive: false,
@@ -12,7 +10,7 @@ export const gameSettings = {
 	gameSettingsOpen: false,
 	// PLAYER
 	gameEnded: false,
-	didPlayerWin: true,
+	didPlayerWin: false,
 	// GAME
 	// quarantine settings
 	quarantineButtonsActive: false,
@@ -39,6 +37,8 @@ export const gameSettings = {
 	}
 }
 export const resetSettings = {
+	gameEnded: false,
+	didPlayerWin: false,
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
 	quarantineButtonsActive: true, // change this setting
@@ -55,11 +55,26 @@ export const resetSettings = {
 	},
 }
 // GAMEPLAY
-export function didPlayerWin() {
-	this.setState({ didPlayerWin: true });
+export function gameEnded({ playerWin }) {
+	this.setState({ 
+		gameEnded: true,
+		gamePaused: true,
+		gameStopped: true,
+		didPlayerWin: playerWin 
+	});	
 }
 export function closeGameEndDialog() {
-
+	const playerWin = this.state.didPlayerWin;
+	this.stop();
+	this.startGame(false);
+	this.setState({
+		...resetSettings,
+		startButtonText: "START GAME",
+		didPlayerWin: playerWin,
+		gameSettingsOpen: true,
+		gamePaused: true,
+		gameStopped: true
+	});
 }
 
 
@@ -143,10 +158,6 @@ export function gameRestart() {
 		contagious: 1,
 		...resetSettings
 	}));
-	setTimeout(() => {
-		const audio = new Audio(sound);
-		audio.play();
-	}, 3000);
 }
 export function setGameSettings(e) {
 	let targetData, parsedData;

@@ -5,7 +5,7 @@ import { startSimulation, startGame, stop, pause, unPause } from "./helpers/acti
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, GameEndDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, didPlayerWin,
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
 
@@ -59,8 +59,8 @@ export default class HomePage extends React.Component {
 		this.handleRefocus = this.handleRefocus.bind(this);
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
+		this.gameEnded = gameEnded.bind(this);
 		this.gameRestart = gameRestart.bind(this);
-		this.didPlayerWin = didPlayerWin.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
 		this.onWheelScroll = onWheelScroll.bind(this);
 		this.setGameSettings = setGameSettings.bind(this);
@@ -194,6 +194,7 @@ export default class HomePage extends React.Component {
 					gamePaused={this.state.gamePaused}
 					contagious={this.state.contagious}
 					healthy={this.state.healthy}
+					gameEnded={this.state.gameEnded}
 				/>
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
@@ -214,6 +215,7 @@ export default class HomePage extends React.Component {
 					setGameSettings={this.setGameSettings}
 				/>
 				<GameEndDialog
+					isGameActive={this.state.isGameActive}
 					gameEnded={this.state.gameEnded}
 					didPlayerWin={this.state.didPlayerWin}
 					closeGameEndDialog={this.closeGameEndDialog}
