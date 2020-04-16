@@ -50,8 +50,8 @@ export class SimulationDialog extends React.Component {
 					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = this.props;
 
 		return (		
-			<Modal key="simulator" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
-				<ModalHeader charCode="X" toggle={toggle}></ModalHeader>
+			<Modal key="simulator" zIndex={isOpen ? 1000: -1} backdrop="static" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
+				<ModalHeader charCode="X" toggle={toggle}>SIMULATION SETTINGS</ModalHeader>
 				<ModalBody>
 					<Row>
 						<Container className="choice">
