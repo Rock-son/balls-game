@@ -1,3 +1,5 @@
+import { resetSettings as gameResetSettings } from "../game/gameState";
+
 export const simulationSettings = {
 	isSimulationActive: true,
 	// canvas state
@@ -34,8 +36,12 @@ export function stopStartSimulation() {
 			simulationSettingsOpen: false, 
 			healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
 			// reset game settings
-			quarantineButtonsActive: false,
-			quarantineDropped: false,
+			...gameResetSettings,
+			isGameActive: false, 
+			gamePaused: true, 
+			gameStopped: true,
+			quarantineButtonsActive: false, // only for testing purposes
+			availableQuarantines: []
 		}));
 	}
 }
@@ -84,6 +90,7 @@ export function setSimulationSettings(e) {
 export function toggleSimulationDialog() {
 	if (this.state.isGameActive) {
 		this.stop();
+		this.startSimulation(false);
 		// only when clicking on navbar link -> stop game and show simulation dialog
 		this.setState(prevState => {
 			return ({ 

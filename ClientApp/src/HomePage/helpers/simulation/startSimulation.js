@@ -6,7 +6,6 @@ export function startSimulation(autostart, simulationSettings = null) {
 	// UTILITIES
 
 	this.simulationApp = new PIXI.Application({
-		backgroundColor: 0x000,
 		width: this.canvasWidth,
 		height: this.canvasHeight,
 		resolution: window.devicePixelRatio || 1,

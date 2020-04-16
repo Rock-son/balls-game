@@ -5,78 +5,130 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if (sprite.reactContext.state.clockTime.getTime() <= sprite.reactContext.state.gameSettings["delayInSeconds"]*1000) {
 		return;
 	}
+	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
+	if (sprite.isTextSprite) {
+		if (sprite.dropTime != null) {
+			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
+			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;
+		}
+		// must not calculate any further as text object has no need for it
+		return;	
+	}
 
-	// DRAG AROUND & CHANGE SIZE - according to number of infections
-	if (( sprite.isTextSprite || sprite.isQuarantineSprite ) && !sprite.reactContext.state.quarantineDropped &&
-		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id ||
-		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
+	// QUARANTINE (and text)
+	if (sprite.isQuarantineSprite) {
+		// 1. DRAG/DROP/CANCEL/MOVE-RESIZE - eval if it is the dragged quarantine and it hasn't been placed yet (dropTime == null)
+		if (sprite.myID === sprite.reactContext.state.draggedQuarantine["id"] && sprite.dropTime == null) {			
+			const textSprite = spriteArr[sprite.myID + quarantineObj.length] || {};
+			sprite.isDragged = true;
+			// CANCEL dragged quarantine if right clicked and stop calculating
+			if (sprite.reactContext.state.quarantineCancelled) {
+				sprite.x = -500;
+				sprite.y = -500;
+				textSprite.x = -500;
+				textSprite.y = -500;
+				sprite.isDragged = false;
 
-		sprite.isActive = true;
-		// remove quarantine if right clicked
-		if (sprite.reactContext.state.quarantineCancelled) {
-			sprite.x = -500;
-			sprite.y = -500;
-			sprite.dropTime = null;
-			sprite.isActive = false;
-			if (sprite.isQuarantineSprite) {
+				// set quarantine texture for future drag
 				const green = new PIXI.Graphics();
-				green.beginFill(0x69b11c, 0.35); // set future pick up color (green)
+				green.beginFill(0x69b11c, 0.35); 
 				green.drawCircle(0,0,sprite.radius);
 				green.endFill();
 				sprite.texture = green.generateCanvasTexture();
 				sprite.alpha = 1;
+				// sets quarantineCancelled => false
 				sprite.reactContext.setQuarantineNonactive(sprite.myID);
-				return
-			} else {
-				sprite.reactContext.setState({ quarantineCancelled: false });
 				sprite.reactContext.resetDraggedQuarantineId();
 			}
-		} else {
-			// move quarantine and change size on wheel scroll
-			const size = sprite.reactContext.state.draggedQuarantine["size"]
-			if (sprite.isQuarantineSprite) {
+
+
+			// SET DROP TIME - if quarantine is draged and placed, it cannot have dropTime null at the same time
+			else if (sprite.reactContext.state.quarantinePlaced) {
+				const dropTime = sprite.reactContext.state.clockTime.getTime();
+				sprite.dropTime = dropTime;
+				textSprite.dropTime = dropTime;
+
+				sprite.isDragged = false;
+				sprite.isActive = true;
+
+				// set quarantine TEXTURE for placement
+				const empty = new PIXI.Graphics();
+				empty.beginFill(0x000, 0);
+				empty.lineStyle(5,0x69b11c,1); // green border
+				empty.drawCircle(0,0,sprite.radius);
+				empty.endFill();
+				sprite.texture = empty.generateCanvasTexture();
+				sprite.alpha = 1;
+
+				// TEXT
+				textSprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				textSprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+				// reset dragged quarantine so it doesn't trigger on next loop calc
+				sprite.reactContext.resetDraggedQuarantineId();
+			}
+			// DRAG and RESIZE on wheelscroll 
+			else if (sprite.isDragged) {
+				const size = sprite.reactContext.state.draggedQuarantine["size"]
+
+				// resize and move (x, y)
 				sprite.width = size < 75 ? 75: size > 360 ? 360 : size;
 				sprite.height = size < 75 ? 75: size > 360 ? 360 : size;
 				sprite.radius = size < 75 ? 35: size > 360 ? 180 : size / 2;
 				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
-			} else {
-				sprite.x = size < 100 ? sprite.reactContext.state.draggedQuarantine.x : size > 300 ? sprite.reactContext.state.draggedQuarantine.x - 5 : sprite.reactContext.state.draggedQuarantine.x;
-				sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+				// TEXT
+				textSprite.x = size < 100 ? sprite.reactContext.state.draggedQuarantine.x : size > 300 ? sprite.reactContext.state.draggedQuarantine.x - 5 : sprite.reactContext.state.draggedQuarantine.x;
+				textSprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
+
+				// QUARANTINE OVERLAPPING- when quarantine is not dropped, it is not yet being calculated in the collisions
+				let overlap = false;
+				// only check active quarantines (they become active at the start of drag)
+				const quarantinesForCheck = quarantineArr.filter(quarantine => quarantine.isActive);
+				for (let index = 0; index < quarantinesForCheck.length; index++) {
+					// don't check self
+					if (sprite.myID === quarantinesForCheck[index].myID) {
+						continue;
+					}
+					// calc intersection - break for loop if it intersects
+					if (circleIntersect(sprite.x, sprite.y, sprite.radius, quarantinesForCheck[index].x, quarantinesForCheck[index].y, quarantinesForCheck[index].radius)) {
+						overlap = true;
+						break;
+					}
+				}
+				// if quarantine overlaps another and it was not overlapping previously - change texture
+				if (overlap && !sprite.reactContext.state.quarantineOverlapping) {
+					const red = new PIXI.Graphics();
+					red.beginFill(0xed1813, 0.35);
+					red.drawCircle(0,0,sprite.radius);
+					red.endFill();
+					sprite.texture = red.generateCanvasTexture();
+					sprite.alpha = 1;
+					textSprite.style.fill = 0xed1813; // set text
+					sprite.reactContext.setState({ quarantineOverlapping: true });
+				}// if quarantine was previously overlapping and it doesn't now - change state
+				else if (!overlap && sprite.reactContext.state.quarantineOverlapping) {
+					const green = new PIXI.Graphics();
+					green.beginFill(0x69b11c, 0.35);
+					green.drawCircle(0,0,sprite.radius);
+					green.endFill();
+					sprite.texture = green.generateCanvasTexture();
+					sprite.alpha = 1;
+					textSprite.style.fill = 0x69b11c; // set text
+					sprite.reactContext.setState({ quarantineOverlapping: false });
+				}
 			}
 		}
-	}
-
-	// SET DROP TIME - on the exact moment quarantine is dropped
-	if ( sprite.dropTime == null && sprite.reactContext.state.quarantineDropped &&
-		( sprite.myID === sprite.reactContext.state.draggedQuarantine.id ||
-		  sprite.myID === sprite.reactContext.state.draggedQuarantine.id + quarantineObj.length)) {
-
-		sprite.dropTime = sprite.reactContext.state.clockTime.getTime();
-		if (sprite.isQuarantineSprite ) {
-			const empty = new PIXI.Graphics();
-			empty.beginFill(0x000, 0);
-			empty.lineStyle(5,0x69b11c,1); // green border
-			empty.drawCircle(0,0,sprite.radius);
-			empty.endFill();
-			sprite.texture = empty.generateCanvasTexture();
-			sprite.alpha = 1;
-		} else if (sprite.reactContext.state.draggedQuarantine.id > -1){
-			sprite.x = sprite.reactContext.state.draggedQuarantine.x;
-			sprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
-			// text resets dragedQuarantineId because it calculates later than qurantine
-			sprite.reactContext.resetDraggedQuarantineId();
-		}
-	}
-
-	// HIDE QUARANTINE AND TEXT - when clock goes beyond duration (duration + dropTime)
-	if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
-		sprite.x = -500;
-		sprite.y = -500;
-		sprite.dropTime = null;
-		sprite.isActive = false;
-		// prepare values for next appearance
-		if (sprite.isQuarantineSprite) {
+		// HIDE quarantine - when clock goes beyond duration (duration + dropTime)
+		else if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
+			const textSprite = spriteArr[sprite.myID + quarantineObj.length] || {};
+			sprite.x = -500;
+			sprite.y = -500;
+			textSprite.x = -500;
+			textSprite.y = -500;
+			sprite.dropTime = null;
+			textSprite.dropTime = null;
+			
+			// prepare values for next appearance
 			const green = new PIXI.Graphics();
 			green.beginFill(0x69b11c, 0.35); // set future pick up color (green)
 			green.drawCircle(0,0,sprite.radius);
@@ -84,64 +136,18 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			sprite.texture = green.generateCanvasTexture();
 			sprite.alpha = 1;
 			sprite.reactContext.setQuarantineNonactive(sprite.myID);
-		} else {
+			// TEXT
 			// this was done in a hurry (repeated in HomePage/helpers/game/startGame.js) - it is only called on quarantine termination
 			const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
 			const difficulty = sprite.reactContext.state.gameSettings["difficulty"];
 			const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
+			textSprite.duration = randomTimeInSeconds * 1000;
 			sprite.duration = randomTimeInSeconds * 1000;
-			sprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
+			textSprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
 		}
 	}
 
-	// QUARANTINE OVERLAPPING- when quarantine is not dropped, it is not yet being calculated in the collisions
-	if (!sprite.reactContext.state.quarantineDropped && sprite.myID === sprite.reactContext.state.draggedQuarantine.id) {
-		// loop through active quarantines and find any intersections
-		let overlap = false;
-		// only check active quarantines (they become active at the start of drag)
-		const quarantinesForCheck = quarantineArr.filter(quarantine => quarantine.isActive);
-		for (let index = 0; index < quarantinesForCheck.length; index++) {
-			// don't check self
-			if (sprite.myID === quarantinesForCheck[index].myID) {
-				continue;
-			}
-			// calc intersection - break for loop if it intersects
-			if (circleIntersect(sprite.x, sprite.y, sprite.radius, quarantinesForCheck[index].x, quarantinesForCheck[index].y, quarantinesForCheck[index].radius)) {
-				overlap = true;
-				break;
-			}
-		}
-		// if quarantine overlaps another and it was not overlapping previously - change texture
-		if (overlap && !sprite.reactContext.state.quarantineOverlapping) {
-			const red = new PIXI.Graphics();
-			red.beginFill(0xed1813, 0.35);
-			red.drawCircle(0,0,sprite.radius);
-			red.endFill();
-			sprite.texture = red.generateCanvasTexture();
-			sprite.alpha = 1;
-			spriteArr[sprite.myID + quarantineObj.length].style.fill = 0xed1813; // set text
-			sprite.reactContext.setState({ quarantineOverlapping: true });
-		}// if quarantine was previously overlapping and it doesn't now - change state
-		else if (!overlap && sprite.reactContext.state.quarantineOverlapping) {
-			const green = new PIXI.Graphics();
-			green.beginFill(0x69b11c, 0.35);
-			green.drawCircle(0,0,sprite.radius);
-			green.endFill();
-			sprite.texture = green.generateCanvasTexture();
-			sprite.alpha = 1;
-			spriteArr[sprite.myID + quarantineObj.length].style.fill = 0x69b11c; // set text
-			sprite.reactContext.setState({ quarantineOverlapping: false });
-		}
-	}
 
-	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
-	if (sprite.isTextSprite) {
-		if (sprite.dropTime != null) {
-			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
-			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;
-		}
-		return;	// Must stop calculating for Text object from now on
-	}
 
 	// X BOUNDARIES
 	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
@@ -168,7 +174,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	}*/
 
 	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
-	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantineDropped) {
+	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantinePlaced) {
 		return;
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES - substract Text objects!

@@ -7,7 +7,7 @@ export const gameSettings = {
 	// GAME
 	// quarantine settings
 	quarantineButtonsActive: false,
-	quarantineDropped: false,
+	quarantinePlaced: false,
 	availableQuarantines: [],
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
@@ -29,11 +29,11 @@ export const gameSettings = {
 		nrOfQuarantines: 5 // max 5
 	}
 }
-const resetSettings = {
+export const resetSettings = {
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
 	quarantineButtonsActive: true, // change this setting
-	quarantineDropped: false,
+	quarantinePlaced: false,
 	gameSettingsOpen: false,
 	gamePaused: false,
 	gameStopped: false,
@@ -154,6 +154,11 @@ export function setGameSettings(e) {
 		});
 	});
 }
+export function resetDraggedQuarantineId() {
+	this.setState({
+		draggedQuarantine: {...resetSettings.draggedQuarantine}
+	});
+}
 export function setQuarantineInMotion(e) {
 	const pageX = e.pageX;
 	const pageY = e.pageY;
@@ -168,15 +173,9 @@ export function setQuarantineInMotion(e) {
 			},
 			quarantineBeingDragged: true,
 			quarantineButtonsActive: true,
-			quarantineDropped: false,
+			quarantinePlaced: false,
 			availableQuarantines: prevState.availableQuarantines.slice(1)
 		};
-	});
-}
-export function resetDraggedQuarantineId() {
-	console.log("resetDraggedQuarantineId");
-	this.setState({
-		draggedQuarantine: {...resetSettings.draggedQuarantine}
 	});
 }
 export function setQuarantineNonactive(id) {
@@ -185,11 +184,13 @@ export function setQuarantineNonactive(id) {
 		// index about to be inactive shouldn't be in available quarantines array - so leave it be if you find it
 		if (index > -1) {
 			return {
-				availableQuarantines: prevState.availableQuarantines
+				availableQuarantines: prevState.availableQuarantines,
+				quarantineCancelled: false,
 			};
 		} else {
 			return {
-				availableQuarantines: prevState.availableQuarantines.concat(id)
+				availableQuarantines: prevState.availableQuarantines.concat(id),
+				quarantineCancelled: false,
 			};
 		}
 	});
@@ -200,6 +201,7 @@ export function toggleGamePause() {
 export function toggleGameDialog() {
 	if (this.state.isSimulationActive) {
 		this.stop();
+		this.startGame(false);
 		// only when clicking on navbar link -> stop simulation and show game dialog
 		this.setState(prevState => {
 			return ({
