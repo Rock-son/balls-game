@@ -1,0 +1,45 @@
+@import "../../helpers/colors.scss";
+
+.modal-dialog {
+	&.game-end {
+		& .modal-content {
+			position: relative;
+			background-color: transparent;
+			margin: auto;
+			& .game-end-modal {
+				height: 300px;
+				width: 300px;
+				border-radius: 100%;
+				padding: 0;
+				&--won {
+					border: 5px solid $green;
+					color: $green;
+				}
+				&--lost {
+					border: 5px solid $red;
+					color: $red;
+				}
+				&__text__container {
+					position: absolute;
+					text-align: center;
+					width: 300px;
+					height: 100px;
+					transform: translate(0%, 75%);
+					&__notif {
+						display: block;
+						font-size: 96px;
+						font-weight: 900;
+						line-height: 144px;
+					}
+					&__btn {
+						color: $white;
+						display: block;
+						cursor: pointer;
+						font-size: 19px;
+						font-weight: 700;
+					}
+				}
+			}
+		}
+	}
+}

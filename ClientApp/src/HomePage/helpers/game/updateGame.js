@@ -1,10 +1,22 @@
 import * as PIXI from "pixi.js-legacy";
 
 export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circleIntersect, loader, randomIntNumber) => {
+	// there are no instantiated variables due to garbage collection (optimization purposes)
 	// DELAY START TIME
 	if (sprite.reactContext.state.clockTime.getTime() <= sprite.reactContext.state.gameSettings["delayInSeconds"]*1000) {
 		return;
 	}
+	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win //TODO: should put this into some state variable
+	if (sprite.reactContext.state.gameSettings["mode"] === 1 && sprite.reactContext.state.clockTime.getSeconds() > (sprite.reactContext.state.gameSettings["difficulty"] * 60 + 18 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
+		if (sprite.myID === 0) {
+			// it is imperative to call these functions only once
+			sprite.reactContext.toggleGamePause();
+			sprite.reactContext.gameEnded({ playerWin: true });
+		}
+		return;
+	}
+
+
 	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
 	if (sprite.isTextSprite) {
 		if (sprite.dropTime != null) {
@@ -232,9 +244,21 @@ function getContagion(sprite, loader) {
 	sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 	sprite.contagiousFrom = new Date().getTime();
 	sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+	const gameSettings = sprite.reactContext.state.gameSettings || {};
 
-	if (sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0) {
-		sprite.reactContext.gameRestart();
+	// GAME END
+	// Open time - show stats and share dialog
+	if (sprite.myID === 0 && gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
+		sprite.reactContext.toggleGamePause();
+	} 
+	// TIME CHALLENGE - if there is no more healthy balls and obviously time is not up (is beeing checked at the start of this function) - player looses
+	else if (gameSettings["mode"] === 1 && sprite.reactContext.state.healthy === 0) {
+		if (sprite.myID === 0) {
+			// it is imperative to call these functions only once
+			sprite.reactContext.toggleGamePause();
+			sprite.reactContext.gameEnded({ playerWin: false });
+		}
+		return;
 	}
 }
 
