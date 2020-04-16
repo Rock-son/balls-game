@@ -177,6 +177,7 @@ export default class HomePage extends React.Component {
 				<NavBar
 					currentTime={this.state.currentTime}
 					clockTime={this.state.clockTime}
+					onMouseMove={this.onMouseMove}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand}
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}
