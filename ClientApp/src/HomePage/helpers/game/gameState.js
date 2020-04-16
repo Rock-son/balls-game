@@ -1,4 +1,10 @@
+
+import sound from "../../assets/gameStart.mp3";
+
+
+
 export const gameSettings = {
+	audioStart: false,
 	isGameActive: false,
 	gamePaused: true,
 	gameStopped: true,
@@ -97,8 +103,7 @@ export function stopStartGame() {
 	} else {								// START
 		this.stop();
 		this.startGame(true);
-		this.setState(prevState => {
-			console.log("stopStartGame");
+		this.setState(prevState => {		
 			return {
 				isGameActive: true,
 				clockTime: new Date(0),
@@ -108,13 +113,17 @@ export function stopStartGame() {
 				...resetSettings
 			}
 		});
+		setTimeout(() => {
+			const audio = new Audio(sound);
+			audio.play();
+		}, 3000);
 	}
 }
+
 // TODO: not so simple
 export function gameRestart() {
 	this.stop();
 	this.startGame(true);
-	console.log("gameRestart");
 	this.setState(prevState => ({
 		clockTime: new Date(0),
 		startButtonText: "CONTINUE SIMULATION",
@@ -122,6 +131,10 @@ export function gameRestart() {
 		contagious: 1,
 		...resetSettings
 	}));
+	setTimeout(() => {
+		const audio = new Audio(sound);
+		audio.play();
+	}, 3000);
 }
 export function setGameSettings(e) {
 	let targetData, parsedData;
@@ -136,8 +149,7 @@ export function setGameSettings(e) {
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
 	this.setState(prevState => {
 		this.stop();
-		this.startGame(false, newGameSettings);
-		console.log("setGameSettings");
+		this.startGame(false, newGameSettings);	
 		// reset settings as you would at game start
 		return ({
 			isGameActive: true,
