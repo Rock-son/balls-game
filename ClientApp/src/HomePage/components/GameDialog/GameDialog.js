@@ -53,7 +53,7 @@ export class GameDialog extends React.Component {
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
 		
 		return (		
-			<Modal key="game" zIndex={isOpen ? 1000: -1} backdrop="static" isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
+			<Modal key="game" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
 				<ModalHeader charCode="X" toggle={toggle}>GAME SETTINGS</ModalHeader>
 				<ModalBody>
 					<Row>
