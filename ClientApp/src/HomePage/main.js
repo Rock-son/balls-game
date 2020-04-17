@@ -69,7 +69,6 @@ export default class HomePage extends React.Component {
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
 		this.gameEnded = gameEnded.bind(this);
-		this.gameRestart = gameRestart.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
 		this.onWheelScroll = onWheelScroll.bind(this);
 		this.setGameSettings = setGameSettings.bind(this);
@@ -315,7 +314,7 @@ export default class HomePage extends React.Component {
 				>
 				</article>
 				<article
-					className={`simulator-fadein ${this.state.simulationRestarting ? "visible" : ""}`}
+					className={`simulator-fadein ${this.state.simulationRestarting || this.state.gameRestarting ? "visible" : ""}`}
 					tabIndex="-1"
 					role="presentation"
 				>

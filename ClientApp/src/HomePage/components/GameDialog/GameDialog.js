@@ -3,9 +3,31 @@ import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
 import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDiffVals, speedOptions, speedDiffValues } from "./gameOptions";
+import { InstructionsPopover } from "./instructionsPopover";
 import "./gameDialog.scss";
 
 export class GameDialog extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			instructionsOpen: false,
+			mode: null,
+			modeType: null
+		};
+		this.onMouseEnterInstructions = this.onMouseEnterInstructions.bind(this);
+		this.onMouseLeaveInstructions = this.onMouseLeaveInstructions.bind(this);
+	}
+
+	onMouseEnterInstructions(e) {
+		const mode = JSON.parse(e.currentTarget.getAttribute("data-option"));
+		const modeType = e.currentTarget.getAttribute("data-type");
+		this.setState({ instructionsOpen: true, mode, modeType });
+	}
+	onMouseLeaveInstructions(e) {
+		const mode = JSON.parse(e.currentTarget.getAttribute("data-option"));
+		const modeType = e.currentTarget.getAttribute("data-type");
+		this.setState({ instructionsOpen: false, mode, modeType });
+	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		// starightforward - in case simulation is active, this component should not update
@@ -67,8 +89,11 @@ export class GameDialog extends React.Component {
 									return 	<NavLink
 												key={idx}
 												tabIndex="0"
+												data-type={modeOption.type}
 												data-option={`${JSON.stringify({ mode: modeOption.value })}`}
 												onClick={setGameSettings}
+												onMouseEnter={this.onMouseEnterInstructions}
+												onMouseLeave={this.onMouseLeaveInstructions}
 												active={modeOption.value === mode}>
 													{modeOption.type}
 											</NavLink>;
