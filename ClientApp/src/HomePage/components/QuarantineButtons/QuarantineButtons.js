@@ -19,22 +19,22 @@ export class QuarantineButtons extends React.Component {
 		return (
 			<>
 				<Button
-					onClick={setQuarantineInMotion}
+					onPointerDown={setQuarantineInMotion}
 					className={`btn quarantine__btn quarantine__btn--left-top ${!quarantineButtonsActive && "disabled"}`}>
 						Quarantine
 				</Button>
 				<Button
-					onClick={setQuarantineInMotion}
+					onPointerDown={setQuarantineInMotion}
 					className={`btn quarantine__btn quarantine__btn--left-bottom ${!quarantineButtonsActive && "disabled"}`}>
 						Quarantine
 				</Button>
 				<Button
-					onClick={setQuarantineInMotion}
+					onPointerDown={setQuarantineInMotion}
 					className={`btn quarantine__btn quarantine__btn--right-top ${!quarantineButtonsActive && "disabled"}`}>
 						Quarantine
 				</Button>
 				<Button
-					onClick={setQuarantineInMotion}
+					onPointerDown={setQuarantineInMotion}
 					className={`btn quarantine__btn quarantine__btn--right-bottom ${!quarantineButtonsActive && "disabled"}`}>
 						Quarantine
 				</Button>
