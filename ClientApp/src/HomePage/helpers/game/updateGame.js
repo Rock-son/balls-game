@@ -7,7 +7,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		return;
 	}
 	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win //TODO: should put this into some state variable
-	if (sprite.reactContext.state.gameSettings["mode"] === 1 && sprite.reactContext.state.clockTime.getSeconds() > (sprite.reactContext.state.gameSettings["difficulty"] * 60 + 18 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
+	if (sprite.reactContext.state.gameSettings["mode"] === 1 && sprite.reactContext.state.clockTime.getSeconds() > (300 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
 		if (sprite.myID === 0) {
 			// it is imperative to call these functions only once
 			sprite.reactContext.toggleGamePause();
@@ -247,17 +247,17 @@ function getContagion(sprite, loader) {
 	const gameSettings = sprite.reactContext.state.gameSettings || {};
 
 	// GAME END
-	// Open time - show stats and share dialog
-	if (sprite.myID === 0 && gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
+	// Open time - show stats and share dialog	
+	if (gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
 		sprite.reactContext.toggleGamePause();
+		sprite.reactContext.gameEnded({ playerWin: true });
+		return;
 	} 
 	// TIME CHALLENGE - if there is no more healthy balls and obviously time is not up (is beeing checked at the start of this function) - player looses
 	else if (gameSettings["mode"] === 1 && sprite.reactContext.state.healthy === 0) {
-		if (sprite.myID === 0) {
-			// it is imperative to call these functions only once
-			sprite.reactContext.toggleGamePause();
-			sprite.reactContext.gameEnded({ playerWin: false });
-		}
+		// it is imperative to call these functions only once
+		sprite.reactContext.toggleGamePause();
+		sprite.reactContext.gameEnded({ playerWin: false });
 		return;
 	}
 }

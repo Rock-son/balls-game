@@ -33,9 +33,10 @@ export const gameSettings = {
 		quantity: 300,
 		speed: 0.6,
 		delayInSeconds: 3,
-		nrOfQuarantines: 5 // max 5
+		nrOfQuarantines: 5, // max nr
 	}
 }
+
 export const resetSettings = {
 	gameEnded: false,
 	didPlayerWin: false,
@@ -44,6 +45,7 @@ export const resetSettings = {
 	quarantineButtonsActive: true, // change this setting
 	quarantinePlaced: false,
 	gameSettingsOpen: false,
+	howToPlayDialogOpen: false,
 	gamePaused: false,
 	gameStopped: false,
 	quarantineCancelled: false,
@@ -69,6 +71,7 @@ export function closeGameEndDialog() {
 	this.startGame(false);
 	this.setState({
 		...resetSettings,
+		clockTime: new Date(0),
 		startButtonText: "START GAME",
 		didPlayerWin: playerWin,
 		gameSettingsOpen: true,

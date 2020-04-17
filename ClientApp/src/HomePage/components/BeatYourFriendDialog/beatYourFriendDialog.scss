@@ -3,29 +3,33 @@
 // working over default component classes
 
 // setting the width of the modal dialog
+
 @media (min-width: 576px) {
-	.game-modal.modal-dialog {
+	.modal-dialog.beatyourfriend-dialog {
 		max-width: 400px;
 	}	
 }
-.game-modal {
+.beatyourfriend-dialog {
 	& .modal-content {
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-		line-height: 22px;
 		background-color: $black;
 	}
 	& .modal-header {
 		border-bottom: none;
 		padding-top: 1rem;
 		color: $grey;
-		padding-bottom: 0px;
+		padding-bottom: 10px;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		& .modal-title {
 			text-align: center;
 			font-weight: 700;
 			font-size: 17px;
-			padding-top: 15px;
+			padding-top: 2rem;
 			margin: auto;
+			& .bold {
+				color: $light-grey;
+				font-weight: 700;;
+			}
 		}
 		& .close {
 			position: absolute;
@@ -39,45 +43,24 @@
 		}
 	}
 	& .modal-body {
-		padding: 1rem 0;
-	}
-	& .choice {
-		color: $grey;
-		font-weight: 700;
-		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-		text-align: center;
-		margin-bottom: 1rem;
-		&__header {
-			color: $grey;
-			font-size: 17px;
-			&__sub {
-				font-size: 17px;
-				font-weight: 300;
-			}
-		}
-		&__options {
-			font-family: inherit;
-			font-size: 17px;
-			font-weight: 300;
-			padding: 0;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		& .beatyourfriend-dialog__container {
+			font-weight: 700;
 			color: $light-grey;
-			justify-content: center;
-			& .disabled {
-				color: $grey;
+			font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+			text-align: center;
+			margin-bottom: 1rem;
+			font-size: 17px;
+			& div {
+				line-height: 20px;
 			}
-			& .nav-link:nth-child(even) {
-				color: $dark-grey;
-				cursor: text;
-				outline: none;
+			& .white {
+				color: $white;
+				padding-bottom: 20px;;
 			}
-			& .nav-link {
-				padding: 0 4px;
-				outline: none;
-				&:hover, &.active {
-					color: $white;
-					cursor: pointer;
-					text-decoration: underline;
-				}
+			& .span {
+				padding: 0 2px;
 			}
 		}
 	}
@@ -92,7 +75,4 @@
 		cursor: pointer;
 		border-top: none;;
 	}
-}
-.last-row-inline {
-	justify-content: center;
 }

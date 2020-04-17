@@ -1,0 +1,70 @@
+@import "../../helpers/colors.scss";
+
+// working over default component classes
+
+// setting the width of the modal dialog
+
+@media (min-width: 576px) {
+	.modal-dialog.about-dialog {
+		max-width: 400px;
+	}	
+}
+.about-dialog {
+	& .modal-content {
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		background-color: $black;
+	}
+	& .modal-header {
+		border-bottom: none;
+		padding-top: 5px;
+		color: $grey;
+		padding-bottom: 0px;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		& .modal-title {
+			text-align: center;
+			font-weight: 900;
+			font-size: 17px;
+			padding-top: 19px;
+			margin: auto;
+		}
+		& .close {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			text-align: right;
+			color: $light-grey;
+			margin: -1rem;
+			font-size: 19px;
+			font-weight: 300;
+			text-shadow: none;
+		}
+	}
+	& .about-dialog__photo {
+		text-align: center;
+		padding-bottom: 15px;
+	}
+	& .about-dialog__text {
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		text-align: center;
+		line-height: 22px;
+		color: $light-grey;
+		font-weight: 700;
+		margin-bottom: 15px;
+		font-size: 17px;
+		padding: 0 30px;
+		& .nav-link {
+			color: $light-grey;
+			text-decoration: underline;
+			display: inline-block;
+			padding: 0 5px;
+			&:active, &:hover {
+				color: $white;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			&.countdown {
+				color: $white;
+			}
+		}
+	}
+}

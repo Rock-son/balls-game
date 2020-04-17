@@ -5,8 +5,8 @@ import { Button, Navbar, Nav, NavbarToggler,
 import "./navbar.scss";
 
 export const NavBar = props => {
-	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
-		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime,
+	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, toggleStaySafeDialog,
+		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, 
 		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded } = props;
 
 	// count in the in-game start delay
@@ -20,15 +20,11 @@ export const NavBar = props => {
 		minutes = delayedSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
 		seconds = delayedSeconds % 60;
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
-		if (gameEnded) {
-			minutes = "0";
-			formattedSeconds = "00";
-		}
 	} 
 	// TIME CHALLENGE - countdown mode
 	else if (isGameActive && mode === 1) {
 		const positiveSeconds = delayedSeconds < 0 ? 0 : delayedSeconds;
-		const coundownTime = new Date((difficulty*60 + 18 - positiveSeconds) * 1000);
+		const coundownTime = new Date((300 - positiveSeconds) * 1000);
 		minutes = coundownTime.getMinutes();
 		seconds = coundownTime.getSeconds();
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
@@ -64,7 +60,7 @@ export const NavBar = props => {
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link" >Stay Safe</NavLink>
+						<NavLink data="game" className="navbar__nav__link" onClick={toggleStaySafeDialog}>Stay Safe</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
@@ -76,7 +72,7 @@ export const NavBar = props => {
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="navbar__nav__link" >About</NavLink>
+						<NavLink className="navbar__nav__link" onClick={toggleAboutDialog}>About</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>

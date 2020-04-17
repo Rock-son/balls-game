@@ -3,20 +3,20 @@
 // working over default component classes
 
 // setting the width of the modal dialog
+
 @media (min-width: 576px) {
-	.game-modal.modal-dialog {
+	.modal-dialog.howtoplay-dialog {
 		max-width: 400px;
 	}	
 }
-.game-modal {
+.howtoplay-dialog {
 	& .modal-content {
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-		line-height: 22px;
 		background-color: $black;
 	}
 	& .modal-header {
 		border-bottom: none;
-		padding-top: 1rem;
+		padding-top: 15px;
 		color: $grey;
 		padding-bottom: 0px;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
@@ -24,8 +24,12 @@
 			text-align: center;
 			font-weight: 700;
 			font-size: 17px;
-			padding-top: 15px;
+			padding-top: 2rem;
 			margin: auto;
+			& .bold {
+				color: $light-grey;
+				font-weight: 700;;
+			}
 		}
 		& .close {
 			position: absolute;
@@ -39,44 +43,22 @@
 		}
 	}
 	& .modal-body {
-		padding: 1rem 0;
-	}
-	& .choice {
-		color: $grey;
-		font-weight: 700;
-		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-		text-align: center;
-		margin-bottom: 1rem;
-		&__header {
-			color: $grey;
-			font-size: 17px;
-			&__sub {
-				font-size: 17px;
-				font-weight: 300;
-			}
-		}
-		&__options {
-			font-family: inherit;
-			font-size: 17px;
-			font-weight: 300;
-			padding: 0;
+		padding-top: 10px;
+		padding-bottom: 0;
+		& .howtoplay-dialog__text {
+			font-weight: 700;
 			color: $light-grey;
-			justify-content: center;
-			& .disabled {
-				color: $grey;
-			}
-			& .nav-link:nth-child(even) {
-				color: $dark-grey;
-				cursor: text;
-				outline: none;
-			}
-			& .nav-link {
-				padding: 0 4px;
-				outline: none;
-				&:hover, &.active {
-					color: $white;
-					cursor: pointer;
-					text-decoration: underline;
+			font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+			text-align: center;
+			padding: 0;
+			margin-bottom: 1rem;
+			font-size: 17px;
+			& .list {
+				margin-block-start: 0px;
+    			padding-inline-start: 0px;
+				&__item {
+					padding: 8px 0px;
+					list-style-type:none;
 				}
 			}
 		}
@@ -92,7 +74,4 @@
 		cursor: pointer;
 		border-top: none;;
 	}
-}
-.last-row-inline {
-	justify-content: center;
 }
