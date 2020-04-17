@@ -2,7 +2,8 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, GameEndDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog,
+	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -24,6 +25,7 @@ export default class HomePage extends React.Component {
 			...gameSettings,
 			hasError: false,
 			error: null,
+			isCopied: false,
 			// time
 			currentTime: new Date().getTime(),
 			clockTime: new Date(0),
@@ -32,11 +34,14 @@ export default class HomePage extends React.Component {
 			healthy: 199,
 			// nav & buttons
 			startButtonText: "CONTINUE SIMULATION",
-			isCopied: false,
 			isNavbarExpanded: false,
 			isNavbarVisible: true,
 			// modals - popups
-			shareModalOpen: false
+			shareDialogOpen: false,
+			aboutDialogOpen: false,
+			staySafeDialogOpen: false,
+			howToPlayDialogOpen: false,
+			beatYourFriendDialogOpen: false
 		}
 
 		this.interval = null;
@@ -50,9 +55,13 @@ export default class HomePage extends React.Component {
 		this.unpause = unPause.bind(this);
 
 		this.toggleDialog = this.toggleDialog.bind(this);
-		this.onMouseMove = onMouseMove.bind(this);
-		this.toggleSimulationPause = toggleSimulationPause.bind(this);
 		this.toggleGamePause = toggleGamePause.bind(this);
+		this.toggleAboutDialog = this.toggleAboutDialog.bind(this);
+		this.toggleSimulationPause = toggleSimulationPause.bind(this);
+		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
+		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
+		this.toggleBeatYourFriendDialog = this.toggleBeatYourFriendDialog.bind(this);
+		this.onMouseMove = onMouseMove.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
@@ -127,6 +136,8 @@ export default class HomePage extends React.Component {
 	}
 
 	toggleDialog(e) {
+		console.log("clicked");
+		
 		const target = e && e.currentTarget || null;
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
@@ -145,17 +156,53 @@ export default class HomePage extends React.Component {
 			this.toggleGameDialog();
 		}
 	}
+	toggleAboutDialog(){
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
+		}
+	}
 	toggleShareDialog(e) {
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
-			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareModalOpen: !prevState.shareModalOpen }));
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareDialogOpen: !prevState.shareDialogOpen }));
 		} else {
 			this.toggleGamePause();
-			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, shareModalOpen: !prevState.shareModalOpen }));
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, shareDialogOpen: !prevState.shareDialogOpen }));
 		}
 		setTimeout(() => {
 			this.setState({ isCopied: false });
 		}, 1000);
+	}
+	toggleStaySafeDialog() {
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
+		}
+	}
+	toggleHowToPlayDialog() {
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
+		}
+	}
+	toggleBeatYourFriendDialog() {
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
+		}
 	}
 	toggleNavbarItemsExpand() {
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
@@ -172,7 +219,6 @@ export default class HomePage extends React.Component {
 				}
 		 	});
 	}
-
 	render() {
 		return (
 			<section className="main">
@@ -187,6 +233,8 @@ export default class HomePage extends React.Component {
 					toggleSimulationDialog={this.toggleSimulationDialog}
 					toggleShareDialog={this.toggleShareDialog}
 					toggleGameDialog={this.toggleGameDialog}
+					toggleAboutDialog={this.toggleAboutDialog}
+					toggleStaySafeDialog={this.toggleStaySafeDialog}
 					simulationSettings={this.state.simulationSettings}
 					gameSettings={this.state.gameSettings}
 					isSimulationActive={this.state.isSimulationActive}
@@ -214,17 +262,45 @@ export default class HomePage extends React.Component {
 					settings={this.state.gameSettings}
 					setGameSettings={this.setGameSettings}
 				/>
-				<GameEndDialog
+				<TimeChallengeEndDialog
 					isGameActive={this.state.isGameActive}
 					gameEnded={this.state.gameEnded}
+					gameSettings={this.state.gameSettings}
 					didPlayerWin={this.state.didPlayerWin}
 					closeGameEndDialog={this.closeGameEndDialog}
 				/>
+				<TimeOpenEndDialog
+					isGameActive={this.state.isGameActive}
+					gameEnded={this.state.gameEnded}
+					gameSettings={this.state.gameSettings}
+					closeGameEndDialog={this.closeGameEndDialog}
+					clockTime={this.state.clockTime}
+				/>
 				<ShareDialog
-					isOpen={this.state.shareModalOpen}
+					isOpen={this.state.shareDialogOpen}
 					toggle={this.toggleShareDialog}
 					copy={this.copyToClipboard}
 					isCopied={this.state.isCopied}
+				/>
+				<AboutDialog
+					isOpen={this.state.aboutDialogOpen}
+					toggle={this.toggleAboutDialog}
+					toggleStaySafeDialog={this.toggleStaySafeDialog}
+				/>
+				<StaySafeDialog
+					isOpen={this.state.staySafeDialogOpen}
+					toggle={this.toggleStaySafeDialog}
+				/>
+				<HowToPlayDialog
+					startGame={this.stopStartGame}
+					isOpen={this.state.howToPlayDialogOpen}
+					toggle={this.toggleHowToPlayDialog}
+					gameSettings={this.state.gameSettings}
+				/>
+				<BeatYourFriendDialog
+					isOpen={this.state.beatYourFriendDialogOpen}
+					toggle={this.toggleBeatYourFriendDialog}
+					gameSettings={this.state.gameSettings}
 				/>
 				<QuarantineButtons
 					quarantineButtonsActive={this.state.quarantineButtonsActive}

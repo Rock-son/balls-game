@@ -1,6 +1,11 @@
 export { SimulationDialog } from "./SimulationDialog/SimulationDialog";
 export { NavBar } from "./Navbar/Navbar";
-export { ShareDialog } from "./ShareModal/ShareDialog";
+export { ShareDialog } from "./ShareDialog/ShareDialog";
 export { GameDialog } from "./GameDialog/GameDialog";
 export { QuarantineButtons } from "./QuarantineButtons/QuarantineButtons";
-export { GameEndDialog } from "./GameEndDialog/GameEndDialog";
+export { TimeChallengeEndDialog } from "./TimeChallengeEndDialog/TimeChallengeEndDialog";
+export { TimeOpenEndDialog } from "./TimeOpenEndDialog/TimeOpenEndDialog";
+export { AboutDialog } from "./AboutDialog/Aboutdialog";
+export { StaySafeDialog } from "./StaySafeDialog/StaySafeDialog";
+export { HowToPlayDialog } from "./HowToPlayDialog/HowToPlayDialog";
+export { BeatYourFriendDialog } from "./BeatYourFriendDialog/BeatYourFriendDialog";

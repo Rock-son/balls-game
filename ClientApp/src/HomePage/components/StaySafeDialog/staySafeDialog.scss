@@ -1,0 +1,63 @@
+@import "../../helpers/colors.scss";
+
+// working over default component classes
+
+// setting the width of the modal dialog
+
+@media (min-width: 576px) {
+	.modal-dialog.staysafe-dialog {
+		max-width: 400px;
+	}	
+}
+.staysafe-dialog {
+	& .modal-content {
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		background-color: $black;
+	}
+	& .modal-header {
+		border-bottom: none;
+		padding-top: 1rem;
+		color: $grey;
+		padding-bottom: 0px;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		& .modal-title {
+			text-align: center;
+			font-weight: 700;
+			font-size: 19px;
+			padding-top: 1rem;
+			margin: auto;
+		}
+		& .close {
+			position: absolute;
+			right: 20px;
+			text-align: right;
+			color: $light-grey;
+			margin: -1rem;
+			font-size: 19px;
+			font-weight: 300;
+			text-shadow: none;
+		}
+	}
+	&__text {
+		font-weight: 700;
+		color: $light-grey;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		text-align: center;
+		margin-bottom: 1rem;
+		font-size: 17px;
+		& .nav-link {
+			color: $light-grey;
+			text-decoration: underline;
+			display: inline-block;
+			padding: 0 5px;
+			&:active, &:hover {
+				color: $white;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			&.countdown {
+				color: $white;
+			}
+		}
+	}
+}
