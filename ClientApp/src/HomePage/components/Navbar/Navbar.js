@@ -6,7 +6,7 @@ import "./navbar.scss";
 
 export const NavBar = props => {
 	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
-		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, clockTime,
+		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, 
 		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded } = props;
 
 	// count in the in-game start delay
@@ -72,7 +72,7 @@ export const NavBar = props => {
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink className="navbar__nav__link" >About</NavLink>
+						<NavLink className="navbar__nav__link" onClick={toggleAboutDialog}>About</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
