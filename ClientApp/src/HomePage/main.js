@@ -3,7 +3,7 @@ import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog,
-	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog } from "./components";
+	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -40,7 +40,8 @@ export default class HomePage extends React.Component {
 			shareDialogOpen: false,
 			aboutDialogOpen: false,
 			staySafeDialogOpen: false,
-			howToPlayDialogOpen: false
+			howToPlayDialogOpen: false,
+			beatYourFriendDialogOpen: true
 		}
 
 		this.interval = null;
@@ -59,6 +60,7 @@ export default class HomePage extends React.Component {
 		this.toggleSimulationPause = toggleSimulationPause.bind(this);
 		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
 		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
+		this.toggleBeatYourFriendDialog = this.toggleBeatYourFriendDialog.bind(this);
 		this.onMouseMove = onMouseMove.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
@@ -193,6 +195,15 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
 		}
 	}
+	toggleBeatYourFriendDialog() {
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
+		}
+	}
 	toggleNavbarItemsExpand() {
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
 	}
@@ -284,6 +295,11 @@ export default class HomePage extends React.Component {
 					startGame={this.stopStartGame}
 					isOpen={this.state.howToPlayDialogOpen}
 					toggle={this.toggleHowToPlayDialog}
+					gameSettings={this.state.gameSettings}
+				/>
+				<BeatYourFriendDialog
+					isOpen={this.state.beatYourFriendDialogOpen}
+					toggle={this.toggleBeatYourFriendDialog}
 					gameSettings={this.state.gameSettings}
 				/>
 				<QuarantineButtons
