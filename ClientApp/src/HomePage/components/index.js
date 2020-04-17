@@ -6,3 +6,4 @@ export { QuarantineButtons } from "./QuarantineButtons/QuarantineButtons";
 export { TimeChallengeEndDialog } from "./TimeChallengeEndDialog/TimeChallengeEndDialog";
 export { TimeOpenEndDialog } from "./TimeOpenEndDialog/TimeOpenEndDialog";
 export { AboutDialog } from "./AboutDialog/Aboutdialog";
+export { StaySafeDialog } from "./StaySafeDialog/StaySafeDialog";

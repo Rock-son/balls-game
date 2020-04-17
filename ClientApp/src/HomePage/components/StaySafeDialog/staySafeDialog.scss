@@ -5,11 +5,11 @@
 // setting the width of the modal dialog
 
 @media (min-width: 576px) {
-	.modal-dialog.game-open-end {
+	.modal-dialog.staysafe-dialog {
 		max-width: 400px;
 	}	
 }
-.game-open-end {
+.staysafe-dialog {
 	& .modal-content {
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		background-color: $black;
@@ -38,71 +38,26 @@
 			text-shadow: none;
 		}
 	}
-	& .text {
+	&__text {
 		font-weight: 700;
+		color: $light-grey;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 17px;
-		& .grey {
+		& .nav-link {
 			color: $light-grey;
-			&.stats {
-				padding: 0 20px;
-			}
-		}
-		& .white {
-			color: $white;
-		}
-	}
-	& .link {
-		font-weight: 700;
-		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-		text-align: center;
-		margin-bottom: 1rem;
-		&__header {
-			color: $white;
-			font-size: 17px;
-			font-weight: 700;
-		}
-		&__copied {
-			color: $white;
-			margin-top: 1rem;
-			padding: 5px 15px;
-		}
-		& .grey {
-			color: $light-grey;
-			font-weight: 700;
-		}
-		& .btn {
-			color: $white;
-			margin-top: 1rem;
-			background-color: $dark-grey;
-			border: none;
-			padding: 5px 25px;
+			text-decoration: underline;
+			display: inline-block;
+			padding: 0 5px;
 			&:active, &:hover {
-				background-color: $grey;
+				color: $white;
+				text-decoration: underline;
+				cursor: pointer;
 			}
-			&:focus {
-				border: none;
-				box-shadow: none;
+			&.countdown {
+				color: $white;
 			}
 		}
-
-
-
 	}
-	& .modal-footer {
-		padding: 1.1rem 0;
-		text-align: center;
-		justify-content: center;
-		color: $white;
-		font-size: 17px;
-		background-color: $dark-grey;
-		font-weight: 700;
-		cursor: pointer;
-		border-top: none;;
-	}
-}
-.last-row-inline {
-	justify-content: center;
 }

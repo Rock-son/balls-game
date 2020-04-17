@@ -2,7 +2,7 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, TimeOpenEndDialog, AboutDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -53,7 +53,7 @@ export default class HomePage extends React.Component {
 
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.toggleGamePause = toggleGamePause.bind(this);
-		this.toggleStaySafe = this.toggleStaySafe.bind(this);
+		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
 		this.toggleAboutDialog = this.toggleAboutDialog.bind(this);
 		this.toggleSimulationPause = toggleSimulationPause.bind(this);
 		this.onMouseMove = onMouseMove.bind(this);
@@ -131,6 +131,8 @@ export default class HomePage extends React.Component {
 	}
 
 	toggleDialog(e) {
+		console.log("clicked");
+		
 		const target = e && e.currentTarget || null;
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
@@ -152,38 +154,31 @@ export default class HomePage extends React.Component {
 	toggleAboutDialog(){
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
-			this.setState(prevState => ({ simulationPaused: true, aboutDialogOpen: !prevState.aboutDialogOpen }));
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
 		} else {
 			this.toggleGamePause();
-			this.setState(prevState => ({ gamePaused: true, aboutDialogOpen: !prevState.aboutDialogOpen }));
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
 		}
 	}
 	toggleShareDialog(e) {
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
-			this.setState(prevState => ({ simulationPaused: true, shareDialogOpen: !prevState.shareDialogOpen }));
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareDialogOpen: !prevState.shareDialogOpen }));
 		} else {
 			this.toggleGamePause();
-			this.setState(prevState => ({ gamePaused: true, shareDialogOpen: !prevState.shareDialogOpen }));
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, shareDialogOpen: !prevState.shareDialogOpen }));
 		}
 		setTimeout(() => {
 			this.setState({ isCopied: false });
 		}, 1000);
 	}
-	toggleStaySafe() {
-		if (this.state.aboutDialogOpen)  {
-			this.setState({
-				aboutDialogOpen: false
-			});
-			setTimeout(() => {
-				this.setState({
-					staySafeDialogOpen: true
-				})
-			}, 500);
+	toggleStaySafeDialog() {
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
 		} else {
-			this.setState({
-				staySafeDialogOpen: true
-			})
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
 		}
 	}
 	toggleNavbarItemsExpand() {
@@ -216,6 +211,7 @@ export default class HomePage extends React.Component {
 					toggleShareDialog={this.toggleShareDialog}
 					toggleGameDialog={this.toggleGameDialog}
 					toggleAboutDialog={this.toggleAboutDialog}
+					toggleStaySafeDialog={this.toggleStaySafeDialog}
 					simulationSettings={this.state.simulationSettings}
 					gameSettings={this.state.gameSettings}
 					isSimulationActive={this.state.isSimulationActive}
@@ -266,7 +262,11 @@ export default class HomePage extends React.Component {
 				<AboutDialog
 					isOpen={this.state.aboutDialogOpen}
 					toggle={this.toggleAboutDialog}
-					toggleStaySafe={this.toggleStaySafe}
+					toggleStaySafeDialog={this.toggleStaySafeDialog}
+				/>
+				<StaySafeDialog
+					isOpen={this.state.staySafeDialogOpen}
+					toggle={this.toggleStaySafeDialog}
 				/>
 				<QuarantineButtons
 					quarantineButtonsActive={this.state.quarantineButtonsActive}

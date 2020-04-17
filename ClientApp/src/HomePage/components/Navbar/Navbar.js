@@ -5,7 +5,7 @@ import { Button, Navbar, Nav, NavbarToggler,
 import "./navbar.scss";
 
 export const NavBar = props => {
-	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious,
+	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, 
 		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded } = props;
 
@@ -60,7 +60,7 @@ export const NavBar = props => {
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link" >Stay Safe</NavLink>
+						<NavLink data="game" className="navbar__nav__link" onClick={toggleStaySafeDialog}>Stay Safe</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
