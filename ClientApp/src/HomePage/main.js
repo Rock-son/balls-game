@@ -2,7 +2,7 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, TimeOpenEndDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -32,7 +32,6 @@ export default class HomePage extends React.Component {
 			healthy: 199,
 			// nav & buttons
 			startButtonText: "CONTINUE SIMULATION",
-			isCopied: false,
 			isNavbarExpanded: false,
 			isNavbarVisible: true,
 			// modals - popups
@@ -57,7 +56,6 @@ export default class HomePage extends React.Component {
 		this.handleResize = this.handleResize.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleRefocus = this.handleRefocus.bind(this);
-		this.copyToClipboard = this.copyToClipboard.bind(this);
 		// GAME
 		this.gameEnded = gameEnded.bind(this);
 		this.gameRestart = gameRestart.bind(this);
@@ -163,15 +161,6 @@ export default class HomePage extends React.Component {
 	toggleNavbarVisibility() {
 		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
-	copyToClipboard() {
-		navigator.permissions.query({name: "clipboard-write"})
-			.then(result => {
-				if (result.state === "granted" || result.state === "prompt") {
-					navigator.clipboard.writeText("https://www.covidsimulator.com");
-					this.setState({ isCopied: true });
-				}
-		 	});
-	}
 
 	render() {
 		return (
@@ -217,7 +206,14 @@ export default class HomePage extends React.Component {
 				<TimeChallengeEndDialog
 					isGameActive={this.state.isGameActive}
 					gameEnded={this.state.gameEnded}
+					gameSettings={this.state.gameSettings}
 					didPlayerWin={this.state.didPlayerWin}
+					closeGameEndDialog={this.closeGameEndDialog}
+				/>
+				<TimeOpenEndDialog
+					isGameActive={this.state.isGameActive}
+					gameEnded={this.state.gameEnded}
+					gameSettings={this.state.gameSettings}
 					closeGameEndDialog={this.closeGameEndDialog}
 				/>
 				<ShareDialog
