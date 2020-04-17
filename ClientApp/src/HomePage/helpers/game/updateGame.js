@@ -7,7 +7,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		return;
 	}
 	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win //TODO: should put this into some state variable
-	if (sprite.reactContext.state.gameSettings["mode"] === 1 && sprite.reactContext.state.clockTime.getSeconds() > (sprite.reactContext.state.gameSettings["difficulty"] * 60 + 18 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
+	if (sprite.reactContext.state.gameSettings["mode"] === 1 && sprite.reactContext.state.clockTime.getSeconds() > (300 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
 		if (sprite.myID === 0) {
 			// it is imperative to call these functions only once
 			sprite.reactContext.toggleGamePause();

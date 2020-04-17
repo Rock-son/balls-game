@@ -2,7 +2,8 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog,
+	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -38,7 +39,8 @@ export default class HomePage extends React.Component {
 			// modals - popups
 			shareDialogOpen: false,
 			aboutDialogOpen: false,
-			staySafeDialogOpen: false
+			staySafeDialogOpen: false,
+			howToPlayDialogOpen: false
 		}
 
 		this.interval = null;
@@ -53,9 +55,10 @@ export default class HomePage extends React.Component {
 
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.toggleGamePause = toggleGamePause.bind(this);
-		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
 		this.toggleAboutDialog = this.toggleAboutDialog.bind(this);
 		this.toggleSimulationPause = toggleSimulationPause.bind(this);
+		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
+		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
 		this.onMouseMove = onMouseMove.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
@@ -181,6 +184,15 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
 		}
 	}
+	toggleHowToPlayDialog() {
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
+		}
+	}
 	toggleNavbarItemsExpand() {
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
 	}
@@ -267,6 +279,12 @@ export default class HomePage extends React.Component {
 				<StaySafeDialog
 					isOpen={this.state.staySafeDialogOpen}
 					toggle={this.toggleStaySafeDialog}
+				/>
+				<HowToPlayDialog
+					startGame={this.stopStartGame}
+					isOpen={this.state.howToPlayDialogOpen}
+					toggle={this.toggleHowToPlayDialog}
+					gameSettings={this.state.gameSettings}
 				/>
 				<QuarantineButtons
 					quarantineButtonsActive={this.state.quarantineButtonsActive}

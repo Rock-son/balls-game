@@ -24,7 +24,7 @@ export const NavBar = props => {
 	// TIME CHALLENGE - countdown mode
 	else if (isGameActive && mode === 1) {
 		const positiveSeconds = delayedSeconds < 0 ? 0 : delayedSeconds;
-		const coundownTime = new Date((difficulty*60 + 18 - positiveSeconds) * 1000);
+		const coundownTime = new Date((300 - positiveSeconds) * 1000);
 		minutes = coundownTime.getMinutes();
 		seconds = coundownTime.getSeconds();
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;

@@ -45,6 +45,7 @@ export const resetSettings = {
 	quarantineButtonsActive: true, // change this setting
 	quarantinePlaced: false,
 	gameSettingsOpen: false,
+	howToPlayDialogOpen: false,
 	gamePaused: false,
 	gameStopped: false,
 	quarantineCancelled: false,

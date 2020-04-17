@@ -7,3 +7,4 @@ export { TimeChallengeEndDialog } from "./TimeChallengeEndDialog/TimeChallengeEn
 export { TimeOpenEndDialog } from "./TimeOpenEndDialog/TimeOpenEndDialog";
 export { AboutDialog } from "./AboutDialog/Aboutdialog";
 export { StaySafeDialog } from "./StaySafeDialog/StaySafeDialog";
+export { HowToPlayDialog } from "./HowToPlayDialog/HowToPlayDialog";
