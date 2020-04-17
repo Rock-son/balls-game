@@ -136,8 +136,6 @@ export default class HomePage extends React.Component {
 	}
 
 	toggleDialog(e) {
-		console.log("clicked");
-		
 		const target = e && e.currentTarget || null;
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
@@ -247,6 +245,7 @@ export default class HomePage extends React.Component {
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
 					isSimulationActive={this.state.isSimulationActive}
+					isSimulationStopped={this.state.simulationPaused}
 					isOpen={this.state.simulationSettingsOpen}
 					toggle={this.toggleSimulationDialog}
 					buttonText={this.state.startButtonText}
@@ -257,6 +256,7 @@ export default class HomePage extends React.Component {
 					startGame={this.stopStartGame}
 					isOpen={this.state.gameSettingsOpen}
 					isGameActive={this.state.isGameActive}
+					isGameStopped={this.state.gameStopped}
 					toggle={this.toggleGameDialog}
 					buttonText={this.state.startButtonText}
 					settings={this.state.gameSettings}
@@ -314,7 +314,7 @@ export default class HomePage extends React.Component {
 					onContextMenu={this.onContextMenuHideQuarantine}
 				>
 				</article>
-				<article 
+				<article
 					className={`simulator-fadein ${this.state.simulationRestarting ? "visible" : ""}`}
 					tabIndex="-1"
 					role="presentation"

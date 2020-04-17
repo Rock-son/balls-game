@@ -10,7 +10,7 @@ export const simulationSettings = {
 	simulationSettingsOpen: false,
 	// SETTINGS
 	simulationSettings: {
-		size: 5,
+		size: 8,
 		speed: .6,
 		quantity: 300,
 		deactivateAfter: 0,

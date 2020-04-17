@@ -1,5 +1,5 @@
-import React from "react";   
-import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
+import React from "react";
+import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
 import { sizeOptions, quantityValues, speedOptions, deactivateOptions, booleanOptions } from "./simulationOptions";
@@ -46,10 +46,10 @@ export class SimulationDialog extends React.Component {
 
 	render() {
 
-		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, 
+		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, isSimulationStopped,
 					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = this.props;
 
-		return (		
+		return (
 			<Modal key="simulator" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
 				<ModalHeader charCode="X" toggle={toggle}>SIMULATION SETTINGS</ModalHeader>
 				<ModalBody>
@@ -61,7 +61,7 @@ export class SimulationDialog extends React.Component {
 									if (typeof sizeOption != "object") {
 										return <NavLink className="disabled" key={idx}>{sizeOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
 												tabIndex="0"
 												data-option={`${JSON.stringify({size: sizeOption.value})}`}
@@ -81,7 +81,7 @@ export class SimulationDialog extends React.Component {
 									if (quantityValue === "|") {
 										return <NavLink className="disabled" key={idx}>{quantityValue}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
 												tabIndex="0"
 												data-option={`${JSON.stringify({quantity: quantityValue})}`}
@@ -90,7 +90,7 @@ export class SimulationDialog extends React.Component {
 													{quantityValue}
 											</NavLink>;
 								})}
-							</Nav>				
+							</Nav>
 						</Container>
 					</Row>
 					<Row>
@@ -101,9 +101,9 @@ export class SimulationDialog extends React.Component {
 									if (typeof speedOption != "object") {
 										return <NavLink className="disabled" key={idx}>{speedOption}</NavLink>;
 									}
-									return	<NavLink 
+									return	<NavLink
 												key={idx}
-												tabIndex="0" 
+												tabIndex="0"
 												data-option={`${JSON.stringify({speed: speedOption.value})}`}
 												onClick={setSimulationSettings}
 												active={speedOption.value === speed}>
@@ -121,18 +121,18 @@ export class SimulationDialog extends React.Component {
 									if (deactivateOption === "|") {
 										return <NavLink className="disabled" key={idx}>{deactivateOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
-												tabIndex="0" 
+												tabIndex="0"
 												data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
 												onClick={setSimulationSettings}
 												active={deactivateOption === deactivateAfter}>
 													{deactivateOption === 0 ? "no" : `${deactivateOption/1000}s`}
 											</NavLink>;
 								})}
-							</Nav>				
+							</Nav>
 						</Container>
-					</Row>				
+					</Row>
 					<Row className="flexContainer d-flex justify-content-center">
 						<Container className="col-4 choice">
 							<div className="choice__header">Show time</div>
@@ -141,9 +141,9 @@ export class SimulationDialog extends React.Component {
 									if (typeof timeOption !== "object") {
 										return <NavLink className="disabled" key={idx}>{timeOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
-												tabIndex="0" 
+												tabIndex="0"
 												data-option={`${JSON.stringify({showTime: timeOption.value})}`}
 												onClick={setSimulationSettings}
 												active={timeOption.value === showTime}>
@@ -159,9 +159,9 @@ export class SimulationDialog extends React.Component {
 									if (typeof statOption !== "object") {
 										return <NavLink className="disabled" key={idx}>{statOption}</NavLink>;
 									}
-									return 	<NavLink 
-												key={idx} 
-												tabIndex="0" 
+									return 	<NavLink
+												key={idx}
+												tabIndex="0"
 												data-option={`${JSON.stringify({showStats: statOption.value})}`}
 												onClick={setSimulationSettings}
 												active={statOption.value === showStats}>
@@ -177,9 +177,9 @@ export class SimulationDialog extends React.Component {
 									if (typeof restartOption !== "object") {
 										return <NavLink className="disabled" key={idx}>{restartOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
-												tabIndex="0" 
+												tabIndex="0"
 												data-option={`${JSON.stringify({autorestart: restartOption.value})}`}
 												onClick={setSimulationSettings}
 												active={restartOption.value === autorestart}>
@@ -191,7 +191,7 @@ export class SimulationDialog extends React.Component {
 					</Row>
 				</ModalBody>
 				<ModalFooter onClick={startSimulation} className="simulator-modal__footer">
-					&gt;&gt;&gt;&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;&lt;&lt;&lt;
+				{isSimulationStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isSimulationStopped ? "<<<" : ""}
 				</ModalFooter>
 		</Modal>
 	)};

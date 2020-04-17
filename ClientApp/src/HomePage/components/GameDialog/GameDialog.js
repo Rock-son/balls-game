@@ -1,5 +1,5 @@
-import React from "react";   
-import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
+import React from "react";
+import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
 import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDiffVals, speedOptions, speedDiffValues } from "./gameOptions";
@@ -38,7 +38,7 @@ export class GameDialog extends React.Component {
 		if (this.props.settings.quantity > maxQuantity ) {
 			return this.props.setGameSettings({ quantity: maxQuantity, speed: changedSpeed });
 		}
-		if (this.props.settings.quantity < minQuantity ) {			
+		if (this.props.settings.quantity < minQuantity ) {
 			return this.props.setGameSettings({ quantity: minQuantity, speed: changedSpeed });
 		}
 		// if min, max values are not a problem, then set speed
@@ -49,10 +49,10 @@ export class GameDialog extends React.Component {
 
 	render() {
 
-		const { isOpen, toggle, startGame, buttonText, setGameSettings, 
+		const { isOpen, toggle, startGame, buttonText, setGameSettings, isGameStopped,
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
-		
-		return (		
+
+		return (
 			<Modal key="game" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
 				<ModalHeader charCode="X" toggle={toggle}>GAME SETTINGS</ModalHeader>
 				<ModalBody>
@@ -64,7 +64,7 @@ export class GameDialog extends React.Component {
 									if (typeof modeOption != "object") {
 										return <NavLink className="disabled" key={idx}>{modeOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
 												tabIndex="0"
 												data-option={`${JSON.stringify({ mode: modeOption.value })}`}
@@ -85,7 +85,7 @@ export class GameDialog extends React.Component {
 									if (difficultyOption === "|") {
 										return <NavLink className="disabled" key={idx}>{difficultyOption}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
 												tabIndex="0"
 												title={difficultyOption.value === 0 ? "33% infection rate" : difficultyOption.value === 1 ? "50% infection rate" : "100% infection rate"}
@@ -95,7 +95,7 @@ export class GameDialog extends React.Component {
 													{difficultyOption.type}
 											</NavLink>;
 								})}
-							</Nav>				
+							</Nav>
 						</Container>
 					</Row>
 					<Row>
@@ -106,9 +106,9 @@ export class GameDialog extends React.Component {
 									if (typeof sizeOption != "object") {
 										return <NavLink className="disabled" key={idx}>{sizeOption}</NavLink>;
 									}
-									return	<NavLink 
+									return	<NavLink
 												key={idx}
-												tabIndex="0" 
+												tabIndex="0"
 												data-option={`${JSON.stringify({size: sizeOption.value})}`}
 												onClick={setGameSettings}
 												active={sizeOption.value === size}>
@@ -132,7 +132,7 @@ export class GameDialog extends React.Component {
 									) {
 										return <NavLink disabled={true} key={idx}>{quantityValue}</NavLink>;
 									}
-									return 	<NavLink 
+									return 	<NavLink
 												key={idx}
 												tabIndex="0"
 												data-option={`${JSON.stringify({quantity: quantityValue})}`}
@@ -141,7 +141,7 @@ export class GameDialog extends React.Component {
 													{quantityValue}
 											</NavLink>;
 								})}
-							</Nav>	
+							</Nav>
 						</Container>
 					</Row>
 					<Row>
@@ -155,9 +155,9 @@ export class GameDialog extends React.Component {
 									if (speedOption.difficulty !== difficulty ) {
 										return <NavLink className="disabled" key={idx}>{speedOption.type}</NavLink>;
 									}
-									return	<NavLink 
+									return	<NavLink
 												key={idx}
-												tabIndex="0" 
+												tabIndex="0"
 												data-option={`${JSON.stringify({speed: speedOption.value})}`}
 												onClick={setGameSettings}
 												active={speedOption.value === speed}>
@@ -168,8 +168,8 @@ export class GameDialog extends React.Component {
 						</Container>
 					</Row>
 				</ModalBody>
-				<ModalFooter onClick={startGame} className="game-modal__footer">
-					&gt;&gt;&gt;&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;&lt;&lt;&lt;
+				<ModalFooter onClick={startGame} data-title={isGameStopped ? "" : "RESTART by changing game settings"} className="game-modal__footer">
+					{isGameStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isGameStopped ? "<<<" : ""}
 				</ModalFooter>
 		</Modal>
 	)};
