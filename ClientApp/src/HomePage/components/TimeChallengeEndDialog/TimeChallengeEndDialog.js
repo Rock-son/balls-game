@@ -2,9 +2,9 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, Nav, NavLink } from "reactstrap";
 
-import "./gameEndDialog.scss";
+import "./timeChallengeEndDialog.scss";
 
-export class GameEndDialog extends React.Component {
+export class TimeChallengeEndDialog extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		// starightforward - in case simulation is active, this component should not update

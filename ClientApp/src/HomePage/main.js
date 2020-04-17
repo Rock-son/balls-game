@@ -2,7 +2,7 @@ import React from "react";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, GameEndDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -214,7 +214,7 @@ export default class HomePage extends React.Component {
 					settings={this.state.gameSettings}
 					setGameSettings={this.setGameSettings}
 				/>
-				<GameEndDialog
+				<TimeChallengeEndDialog
 					isGameActive={this.state.isGameActive}
 					gameEnded={this.state.gameEnded}
 					didPlayerWin={this.state.didPlayerWin}
