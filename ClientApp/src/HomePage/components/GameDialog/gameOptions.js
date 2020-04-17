@@ -1,5 +1,5 @@
 export const modeOptions = [
-	{ type: "Open Time", value: 0 },
+	{ type: "Keep Uninfected", value: 0 },
 	"|",
 	{ type: "Time Challenge", value: 1 }
 ];

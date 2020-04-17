@@ -11,19 +11,20 @@
 .game-modal {
 	& .modal-content {
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		line-height: 22px;
 		background-color: $black;
 	}
 	& .modal-header {
 		border-bottom: none;
-		padding: 1rem 1rem 0 0;
+		padding-top: 1rem;
 		color: $grey;
-		padding-bottom: 15px;
+		padding-bottom: 0px;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		& .modal-title {
 			text-align: center;
 			font-weight: 700;
-			font-size: 19px;
-			padding-top: 1rem;
+			font-size: 17px;
+			padding-top: 15px;
 			margin: auto;
 		}
 		& .close {
@@ -67,9 +68,11 @@
 			& .nav-link:nth-child(even) {
 				color: $dark-grey;
 				cursor: text;
+				outline: none;
 			}
 			& .nav-link {
-				padding: 0 3px;
+				padding: 0 4px;
+				outline: none;
 				&:hover, &.active {
 					color: $white;
 					cursor: pointer;

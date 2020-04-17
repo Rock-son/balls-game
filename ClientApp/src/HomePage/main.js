@@ -41,7 +41,7 @@ export default class HomePage extends React.Component {
 			aboutDialogOpen: false,
 			staySafeDialogOpen: false,
 			howToPlayDialogOpen: false,
-			beatYourFriendDialogOpen: true
+			beatYourFriendDialogOpen: false
 		}
 
 		this.interval = null;
