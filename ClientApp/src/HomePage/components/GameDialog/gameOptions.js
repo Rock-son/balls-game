@@ -53,3 +53,14 @@ export const speedDiffValues = {
 	1: .6,
 	2: 1
 }
+
+export const speedToString = {
+	0.3: "slow",
+	0.6: "medium",
+	1: "fast"
+}
+export const sizeToString = {
+	5: "small",
+	8: "medium",
+	10: "large"
+}

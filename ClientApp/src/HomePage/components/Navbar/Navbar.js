@@ -20,10 +20,6 @@ export const NavBar = props => {
 		minutes = delayedSeconds < 4 ? "0" : new Date(clockTime.getTime() - delayInSeconds*1000).getMinutes();
 		seconds = delayedSeconds % 60;
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;
-		if (gameEnded) {
-			minutes = "0";
-			formattedSeconds = "00";
-		}
 	} 
 	// TIME CHALLENGE - countdown mode
 	else if (isGameActive && mode === 1) {

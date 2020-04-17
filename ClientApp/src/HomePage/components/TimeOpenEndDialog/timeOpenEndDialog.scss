@@ -3,12 +3,13 @@
 // working over default component classes
 
 // setting the width of the modal dialog
+
 @media (min-width: 576px) {
-	.simulator-modal.modal-dialog {
+	.modal-dialog.game-open-end {
 		max-width: 400px;
 	}	
 }
-.simulator-modal {
+.game-open-end {
 	& .modal-content {
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		background-color: $black;
@@ -17,7 +18,7 @@
 		border-bottom: none;
 		padding: 1rem 1rem 0 0;
 		color: $grey;
-		padding-bottom: 15px;
+		padding-bottom: 0px;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		& .modal-title {
 			text-align: center;
@@ -37,47 +38,58 @@
 			text-shadow: none;
 		}
 	}
-	& .modal-body {
-		padding: 1rem 0;
-		& .flexContainer {
-			padding-left: 20px;
-			padding-right: 20px;
+	& .text {
+		font-weight: 700;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		text-align: center;
+		margin-bottom: 1rem;
+		font-size: 17px;
+		& .grey {
+			color: $light-grey;
+			&.stats {
+				padding: 0 20px;
+			}
+		}
+		& .white {
+			color: $white;
 		}
 	}
-	& .choice {
-		color: $grey;
+	& .link {
 		font-weight: 700;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		text-align: center;
 		margin-bottom: 1rem;
 		&__header {
-			color: $grey;
+			color: $white;
 			font-size: 17px;
 			font-weight: 700;
 		}
-		&__options {
-			font-family: inherit;
-			font-size: 17px;
-			font-weight: 300;
-			padding: 0;
+		&__copied {
+			color: $white;
+			margin-top: 1rem;
+			padding: 5px 15px;
+		}
+		& .grey {
 			color: $light-grey;
-			justify-content: center;
-			& .disabled {
-				color: $grey;
+			font-weight: 300;
+		}
+		& .btn {
+			color: $white;
+			margin-top: 1rem;
+			background-color: $dark-grey;
+			border: none;
+			padding: 5px 25px;
+			&:active, &:hover {
+				background-color: $grey;
 			}
-			& .nav-link:nth-child(even) {
-				color: $dark-grey;
-				cursor: text;
-			}
-			& .nav-link {
-				padding: 0 3px;
-				&:hover, &.active {
-					color: $white;
-					cursor: pointer;
-					text-decoration: underline;
-				}
+			&:focus {
+				border: none;
+				box-shadow: none;
 			}
 		}
+
+
+
 	}
 	& .modal-footer {
 		padding: 1.1rem 0;

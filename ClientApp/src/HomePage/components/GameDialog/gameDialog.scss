@@ -17,20 +17,19 @@
 		border-bottom: none;
 		padding: 1rem 1rem 0 0;
 		color: $grey;
-		padding-bottom: 3rem;
+		padding-bottom: 15px;
 		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 		& .modal-title {
-			position: absolute;
 			text-align: center;
-			width: 100%;
 			font-weight: 700;
 			font-size: 19px;
 			padding-top: 1rem;
+			margin: auto;
 		}
 		& .close {
 			position: absolute;
+			right: 20px;
 			text-align: right;
-			width: 100%;
 			color: $light-grey;
 			margin: -1rem;
 			font-size: 19px;

@@ -215,6 +215,7 @@ export default class HomePage extends React.Component {
 					gameEnded={this.state.gameEnded}
 					gameSettings={this.state.gameSettings}
 					closeGameEndDialog={this.closeGameEndDialog}
+					clockTime={this.state.clockTime}
 				/>
 				<ShareDialog
 					isOpen={this.state.shareModalOpen}

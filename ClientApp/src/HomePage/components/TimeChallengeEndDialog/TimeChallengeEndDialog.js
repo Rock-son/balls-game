@@ -11,7 +11,7 @@ export class TimeChallengeEndDialog extends React.Component {
 		if (!nextProps.isGameActive) {
 			return false;
 		}
-		if (nextProps.gameEnded !== this.props.gameEnded) {
+		if (nextProps.gameEnded !== this.props.gameEnded && nextProps.gameSettings["mode"] === 1) {			
 			return true;
 		}
 		return false;
@@ -19,9 +19,10 @@ export class TimeChallengeEndDialog extends React.Component {
 
 
 	render() {
-		const { gameEnded, closeGameEndDialog, didPlayerWin } = this.props;		
+		const { gameEnded, closeGameEndDialog, didPlayerWin } = this.props;
+		const shouldDialogOpen = gameEnded && this.props.gameSettings["mode"] === 1;
 		return (		
-			<Modal key="game-end" zIndex={gameEnded ? 1000: -1} isOpen={gameEnded} centered={true} fade={true} className="game-end">
+			<Modal key="game-time-challenge-end" zIndex={shouldDialogOpen ? 1000: -1} isOpen={shouldDialogOpen} centered={true} fade={true} className="game-end">
 				<ModalBody>
 					<Row>
 						<Container className={`game-end-modal ${didPlayerWin ? "game-end-modal--won" : "game-end-modal--lost"}`}>
@@ -29,7 +30,7 @@ export class TimeChallengeEndDialog extends React.Component {
 								<div className="game-end-modal__text__container__notif">{didPlayerWin ? "WON!" : "LOST!" }</div>
 								<div
 									className="game-end-modal__text__container__btn"
-									tabindex="0"
+									tabIndex="0"
 									role="button"
 									onClick={closeGameEndDialog}
 									className="game-end-modal__text__container__btn">

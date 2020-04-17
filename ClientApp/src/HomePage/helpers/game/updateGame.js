@@ -247,17 +247,17 @@ function getContagion(sprite, loader) {
 	const gameSettings = sprite.reactContext.state.gameSettings || {};
 
 	// GAME END
-	// Open time - show stats and share dialog
-	if (sprite.myID === 0 && gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
+	// Open time - show stats and share dialog	
+	if (gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
 		sprite.reactContext.toggleGamePause();
+		sprite.reactContext.gameEnded({ playerWin: true });
+		return;
 	} 
 	// TIME CHALLENGE - if there is no more healthy balls and obviously time is not up (is beeing checked at the start of this function) - player looses
 	else if (gameSettings["mode"] === 1 && sprite.reactContext.state.healthy === 0) {
-		if (sprite.myID === 0) {
-			// it is imperative to call these functions only once
-			sprite.reactContext.toggleGamePause();
-			sprite.reactContext.gameEnded({ playerWin: false });
-		}
+		// it is imperative to call these functions only once
+		sprite.reactContext.toggleGamePause();
+		sprite.reactContext.gameEnded({ playerWin: false });
 		return;
 	}
 }
