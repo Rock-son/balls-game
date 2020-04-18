@@ -93,15 +93,9 @@ function handleOnImageLoaded(simulationSettings) {
 	let x, y;
 	for (let i = 0; i < nrImages; i++) {
 		// red ball always starts in the middle - for more beautiful effec
-		if (i === 0) {
-			contagion = 1;
-			x = maxWidth / 2;
-			y = maxHeight / 2;
-		} else {
-			contagion = 0;
-			x = randomIntNumber(radius * 2, maxWidth);
-			y = randomIntNumber(radius * 2, maxHeight);
-		}
+		contagion = i === 0 ? 1 : 0
+		x = randomIntNumber(radius * 2, maxWidth);
+		y = randomIntNumber(radius * 2, maxHeight);
 		if (i !== 0) {
 			for (let j = 0; j < spriteArr.length; j++) {
 				if (circleIntersect(x, y, radius, spriteArr[j].x, spriteArr[j].y, spriteArr[j].radius)) {	
