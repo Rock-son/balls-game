@@ -8,6 +8,7 @@ export const gameSettings = {
 	gameStopped: true,
 	// gamesettings - popups
 	gameSettingsOpen: false,
+	gameRestarting: false,
 	// PLAYER
 	gameEnded: false,
 	didPlayerWin: false,
@@ -58,12 +59,12 @@ export const resetSettings = {
 }
 // GAMEPLAY
 export function gameEnded({ playerWin }) {
-	this.setState({ 
+	this.setState({
 		gameEnded: true,
 		gamePaused: true,
 		gameStopped: true,
-		didPlayerWin: playerWin 
-	});	
+		didPlayerWin: playerWin
+	});
 }
 export function closeGameEndDialog() {
 	const playerWin = this.state.didPlayerWin;
@@ -130,19 +131,23 @@ export function onMouseMove(e) {
 export function stopStartGame() {
 	if (this.state.gamePaused && !this.state.gameStopped) { // CONTINUE
 		this.toggleGameDialog();
-	} else {								// START
-		this.stop();
-		this.startGame(true);
-		this.setState(prevState => {		
-			return {
-				isGameActive: true,
-				clockTime: new Date(0),
-				startButtonText: "CONTINUE GAME",
-				healthy: prevState.gameSettings["quantity"] - 1,
-				contagious: 1,
-				...resetSettings
-			}
-		});
+	} else {												// START
+		this.setState({ gameRestarting: true });
+		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+		setTimeout(() => {
+			this.stop();
+			this.startGame(true);
+			this.setState(prevState => {
+				return {
+					isGameActive: true,
+					clockTime: new Date(0),
+					startButtonText: "CONTINUE GAME",
+					healthy: prevState.gameSettings["quantity"] - 1,
+					contagious: 1,
+					...resetSettings
+				}
+			});
+		}, 400)
 		setTimeout(() => {
 			const audio = new Audio(sound);
 			audio.play();
@@ -150,18 +155,6 @@ export function stopStartGame() {
 	}
 }
 
-// TODO: not so simple
-export function gameRestart() {
-	this.stop();
-	this.startGame(true);
-	this.setState(prevState => ({
-		clockTime: new Date(0),
-		startButtonText: "CONTINUE SIMULATION",
-		healthy: prevState.gameSettings["quantity"] - 1,
-		contagious: 1,
-		...resetSettings
-	}));
-}
 export function setGameSettings(e) {
 	let targetData, parsedData;
 	// triggered on event
@@ -173,24 +166,28 @@ export function setGameSettings(e) {
 		parsedData = e;
 	}
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
-	this.setState(prevState => {
-		this.stop();
-		this.startGame(false, newGameSettings);	
-		// reset settings as you would at game start
-		return ({
-			isGameActive: true,
-			clockTime: new Date(0),
-			gameSettings: newGameSettings,
-			healthy: newGameSettings["quantity"] - 1,
-			contagious: 1,
-			startButtonText: "START GAME",
-			...resetSettings,
-			// override reset settings after this
-			gameSettingsOpen: true,
-			gameStopped: true,
-			gamePaused: true,
+	this.setState({ gameRestarting: true });
+	setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+	setTimeout(() => {
+		this.setState(prevState => {
+			this.stop();
+			this.startGame(false, newGameSettings);
+			// reset settings as you would at game start
+			return ({
+				isGameActive: true,
+				clockTime: new Date(0),
+				gameSettings: newGameSettings,
+				healthy: newGameSettings["quantity"] - 1,
+				contagious: 1,
+				startButtonText: "START GAME",
+				...resetSettings,
+				// override reset settings after this
+				gameSettingsOpen: true,
+				gameStopped: true,
+				gamePaused: true,
+			});
 		});
-	});
+	}, 400);
 }
 export function resetDraggedQuarantineId() {
 	this.setState({
@@ -238,20 +235,24 @@ export function toggleGamePause() {
 }
 export function toggleGameDialog() {
 	if (this.state.isSimulationActive) {
-		this.stop();
-		this.startGame(false);
-		// only when clicking on navbar link -> stop simulation and show game dialog
-		this.setState(prevState => {
-			return ({
-				gameSettingsOpen: true,
-				gamePaused: true,
-				startButtonText: "START GAME",
-				isSimulationActive: false,
-				isGameActive: true,
-				simulationPaused: true,
-				simulationStopped: true
-			})
-		});
+		this.setState({ gameRestarting: true });
+		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+		setTimeout(() => {
+			this.stop();
+			this.startGame(false);
+			// only when clicking on navbar link -> stop simulation and show game dialog
+			this.setState(prevState => {
+				return ({
+					gameSettingsOpen: true,
+					gamePaused: true,
+					startButtonText: "START GAME",
+					isSimulationActive: false,
+					isGameActive: true,
+					simulationPaused: true,
+					simulationStopped: true
+				})
+			});
+		}, 400);
 	} else {
 		this.toggleGamePause();
 		this.setState(prevState => {

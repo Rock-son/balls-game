@@ -5,7 +5,7 @@ export { GameDialog } from "./GameDialog/GameDialog";
 export { QuarantineButtons } from "./QuarantineButtons/QuarantineButtons";
 export { TimeChallengeEndDialog } from "./TimeChallengeEndDialog/TimeChallengeEndDialog";
 export { TimeOpenEndDialog } from "./TimeOpenEndDialog/TimeOpenEndDialog";
-export { AboutDialog } from "./AboutDialog/Aboutdialog";
+export { AboutDialog } from "./AboutDialog/AboutDialog";
 export { StaySafeDialog } from "./StaySafeDialog/StaySafeDialog";
 export { HowToPlayDialog } from "./HowToPlayDialog/HowToPlayDialog";
 export { BeatYourFriendDialog } from "./BeatYourFriendDialog/BeatYourFriendDialog";

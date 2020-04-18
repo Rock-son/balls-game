@@ -112,8 +112,8 @@ function handleOnImageLoaded(gameSettings) {
 		const particleID = quantity + index;
 		const quarantine = new PIXI.Sprite(greenTexture);
 		quarantine.alpha = 1;
-		quarantine.x = -500;
-		quarantine.y = -500;
+		quarantine.x = -500 * (index+1); // so quarantines don't crash all the time in each other
+		quarantine.y = -500 * (index+1); // so quarantines don't crash all the time in each other
 		quarantine.alpha = .5;
 		quarantine.duration = randomTimeInSeconds * 1000;
 		quarantine.width = width;
