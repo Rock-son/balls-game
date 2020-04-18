@@ -76,7 +76,7 @@ function handleOnImageLoaded(gameSettings) {
 
 	const quarantineArr = [];
 	const timeTextArr = [];
-	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [60, 70] };
+	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
 	// TEXT & QUARANTINES
 	for (let index = 0; index < nrOfQuarantines; index++) {
 		const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
