@@ -6,7 +6,7 @@
 @media (min-width: 576px) {
 	.game-modal.modal-dialog {
 		max-width: 400px;
-	}	
+	}
 }
 .game-modal {
 	& .modal-content {
@@ -81,7 +81,7 @@
 			}
 		}
 	}
-	& .modal-footer {
+	& .game-modal__footer{
 		padding: 1.1rem 0;
 		text-align: center;
 		justify-content: center;
@@ -90,7 +90,19 @@
 		background-color: $dark-grey;
 		font-weight: 700;
 		cursor: pointer;
-		border-top: none;;
+		border-top: none;
+		transition: .3s;
+		&:hover:after {
+			content: attr(data-title);
+			color: $light-grey;
+			position: absolute;
+			font-size: 13px;
+			font-weight: 300;
+			background-color: $dark-grey;
+			margin-top: -37px;
+			border-radius: 0 0 5px 5px;
+			width: 398px;
+		}
 	}
 }
 .last-row-inline {
