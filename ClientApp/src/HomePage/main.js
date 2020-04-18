@@ -307,10 +307,11 @@ export default class HomePage extends React.Component {
 				/>
 				<article
 					id="canvas-container"
-					onClick={this.toggleDialog}
-					onMouseMove={this.onMouseMove}
+					onPointerDown={this.toggleDialog}
+					onPointerMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
 					onContextMenu={this.onContextMenuHideQuarantine}
+					touch-action="auto"
 				>
 				</article>
 				<article
