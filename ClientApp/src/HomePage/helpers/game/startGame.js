@@ -76,7 +76,7 @@ function handleOnImageLoaded(gameSettings) {
 
 	const quarantineArr = [];
 	const timeTextArr = [];
-	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
+	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [60, 70] };
 	// TEXT & QUARANTINES
 	for (let index = 0; index < nrOfQuarantines; index++) {
 		const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
@@ -112,8 +112,8 @@ function handleOnImageLoaded(gameSettings) {
 		const particleID = quantity + index;
 		const quarantine = new PIXI.Sprite(greenTexture);
 		quarantine.alpha = 1;
-		quarantine.x = -500;
-		quarantine.y = -500;
+		quarantine.x = -500 * (index+1); // so quarantines don't crash all the time in each other
+		quarantine.y = -500 * (index+1); // so quarantines don't crash all the time in each other
 		quarantine.alpha = .5;
 		quarantine.duration = randomTimeInSeconds * 1000;
 		quarantine.width = width;

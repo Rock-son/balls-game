@@ -16,7 +16,6 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		return;
 	}
 
-
 	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
 	if (sprite.isTextSprite) {
 		if (sprite.dropTime != null) {
@@ -24,26 +23,26 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;
 		}
 		// must not calculate any further as text object has no need for it
-		return;	
+		return;
 	}
 
 	// QUARANTINE (and text)
 	if (sprite.isQuarantineSprite) {
 		// 1. DRAG/DROP/CANCEL/MOVE-RESIZE - eval if it is the dragged quarantine and it hasn't been placed yet (dropTime == null)
-		if (sprite.myID === sprite.reactContext.state.draggedQuarantine["id"] && sprite.dropTime == null) {			
+		if (sprite.myID === sprite.reactContext.state.draggedQuarantine["id"] && sprite.dropTime == null) {
 			const textSprite = spriteArr[sprite.myID + quarantineObj.length] || {};
 			sprite.isDragged = true;
 			// CANCEL dragged quarantine if right clicked and stop calculating
 			if (sprite.reactContext.state.quarantineCancelled) {
-				sprite.x = -500;
-				sprite.y = -500;
+				sprite.x = -500 * textSprite.myID;
+				sprite.y = -500 * textSprite.myID;
 				textSprite.x = -500;
 				textSprite.y = -500;
 				sprite.isDragged = false;
 
 				// set quarantine texture for future drag
 				const green = new PIXI.Graphics();
-				green.beginFill(0x69b11c, 0.35); 
+				green.beginFill(0x69b11c, 0.35);
 				green.drawCircle(0,0,sprite.radius);
 				green.endFill();
 				sprite.texture = green.generateCanvasTexture();
@@ -72,13 +71,15 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 				sprite.texture = empty.generateCanvasTexture();
 				sprite.alpha = 1;
 
+				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
+				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 				// TEXT
 				textSprite.x = sprite.reactContext.state.draggedQuarantine.x;
 				textSprite.y = sprite.reactContext.state.draggedQuarantine.y + 15 - spriteArr[sprite.reactContext.state.draggedQuarantine.id].width / 2;
 				// reset dragged quarantine so it doesn't trigger on next loop calc
 				sprite.reactContext.resetDraggedQuarantineId();
 			}
-			// DRAG and RESIZE on wheelscroll 
+			// DRAG and RESIZE on wheelscroll
 			else if (sprite.isDragged) {
 				const size = sprite.reactContext.state.draggedQuarantine["size"]
 
@@ -133,13 +134,13 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		// HIDE quarantine - when clock goes beyond duration (duration + dropTime)
 		else if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) > 0) {
 			const textSprite = spriteArr[sprite.myID + quarantineObj.length] || {};
-			sprite.x = -500;
-			sprite.y = -500;
+			sprite.x = -500 * textSprite.myID;
+			sprite.y = -500 * textSprite.myID;
 			textSprite.x = -500;
 			textSprite.y = -500;
 			sprite.dropTime = null;
 			textSprite.dropTime = null;
-			
+
 			// prepare values for next appearance
 			const green = new PIXI.Graphics();
 			green.beginFill(0x69b11c, 0.35); // set future pick up color (green)
@@ -247,12 +248,12 @@ function getContagion(sprite, loader) {
 	const gameSettings = sprite.reactContext.state.gameSettings || {};
 
 	// GAME END
-	// Open time - show stats and share dialog	
+	// Open time - show stats and share dialog
 	if (gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
 		sprite.reactContext.toggleGamePause();
 		sprite.reactContext.gameEnded({ playerWin: true });
 		return;
-	} 
+	}
 	// TIME CHALLENGE - if there is no more healthy balls and obviously time is not up (is beeing checked at the start of this function) - player looses
 	else if (gameSettings["mode"] === 1 && sprite.reactContext.state.healthy === 0) {
 		// it is imperative to call these functions only once
@@ -337,16 +338,47 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 	else if (particle.myID >= quantity){
 		const particleDistance = distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius;
 		// make a border > -2 for outside particles
-		if (particleDistance > -4) {
-			otherParticle.velocity.x = -otherParticle.velocity.x;
-			otherParticle.velocity.y = -otherParticle.velocity.y;
+		if (particleDistance > -3) {
+			// X BOUNDARIES
+			// RIGHT
+			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
+				otherParticle.velocity.x = otherParticle.velocity.x > 0 ? otherParticle.velocity.x : -otherParticle.velocity.x;
+			}
+			// LEFT
+			if ((particle.x - particle.radius/4) >= otherParticle.x + otherParticle.radius) {
+				otherParticle.velocity.x = otherParticle.velocity.x < 0 ? otherParticle.velocity.x : -otherParticle.velocity.x;
+			}
+			// Y BOUNDARIES
+			// UP
+			if ((particle.y + particle.radius/4) <= otherParticle.y - otherParticle.radius) { // resize only up
+				otherParticle.velocity.y = otherParticle.velocity.y > 0 ? otherParticle.velocity.y : -otherParticle.velocity.y;
+			}
+			// DOWN
+			if ((particle.y - particle.radius/4) >= otherParticle.y + otherParticle.radius) {
+				otherParticle.velocity.y = otherParticle.velocity.y < 0 ? otherParticle.velocity.y : -otherParticle.velocity.y;
+			}
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
 		}
 		// border < -2 for inside particles (so inside / outside don+t touch!)
-		if (particleDistance > -8 && particleDistance < -4) {
-			otherParticle.velocity.x = -otherParticle.velocity.x;
-			otherParticle.velocity.y = -otherParticle.velocity.y;
+		if (particleDistance > -10 && particleDistance < -5) {
+			// RIGHT
+			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
+				otherParticle.velocity.x = otherParticle.velocity.x > 0 ? -otherParticle.velocity.x : otherParticle.velocity.x;
+			}
+			// LEFT
+			if ((particle.x - particle.radius/4) >= otherParticle.x + otherParticle.radius) {
+				otherParticle.velocity.x = otherParticle.velocity.x < 0 ? -otherParticle.velocity.x : otherParticle.velocity.x;
+			}
+			// Y BOUNDARIES
+			// UP
+			if ((particle.y + particle.radius/4) <= otherParticle.y - otherParticle.radius) { // resize only up
+				otherParticle.velocity.y = otherParticle.velocity.y > 0 ? -otherParticle.velocity.y : otherParticle.velocity.y;
+			}
+			// DOWN
+			if ((particle.y - particle.radius/4) >= otherParticle.y + otherParticle.radius) {
+				otherParticle.velocity.y = otherParticle.velocity.y < 0 ? -otherParticle.velocity.y : otherParticle.velocity.y;
+			}
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
 		}
