@@ -18,13 +18,14 @@ const pageArr = [page0, page1, page2, page3, page4, page5, page6, page7];
 export class StaySafeDialog extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { page: 0, maxPage: instructions.length -1 };
+		this.state = { page: 0, pageTurn: false, maxPage: instructions.length -1 };
+
 		this.movePage = this.movePage.bind(this);
 		this.closeDialog = this.closeDialog.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if (nextProps.isOpen !== this.props.isOpen || nextState.page !== this.state.page) {			
+		if (nextProps.isOpen !== this.props.isOpen || nextState.page !== this.state.page || nextState.pageTurn !== this.state.pageTurn) {			
 			return true;
 		}
 		return false;
@@ -39,15 +40,17 @@ export class StaySafeDialog extends React.Component {
 		if (this.state.page === this.state.maxPage) {
 			return this.closeDialog();
 		}
+		this.setState({ pageTurn: true });
+		setTimeout(() => this.setState({ pageTurn: false }), 1000);
+		setTimeout(() => {
 		this.setState(prevState => {
-			console.log("page", prevState.maxPage, prevState.page);
-			
 			if (prevState.maxPage === prevState.page) {
 				return { page: 0 };
 			}
 			return { page: prevState.page + 1}
 		});
-	}
+	}, 500);
+}
 
 
 	render() {
@@ -73,6 +76,10 @@ export class StaySafeDialog extends React.Component {
 					>
 					{this.state.page === this.state.maxPage ? "CLOSE" : "NEXT"}
 					</NavLink>
+					<div
+						className={`dialog-fadein ${this.state.pageTurn? "visible" : ""}`}
+						tabIndex="-1"
+						role="presentation" />
 				</ModalBody>
 			</Modal>
 		)
