@@ -68,17 +68,21 @@ export function gameEnded({ playerWin }) {
 }
 export function closeGameEndDialog() {
 	const playerWin = this.state.didPlayerWin;
-	this.stop();
-	this.startGame(false);
-	this.setState({
-		...resetSettings,
-		clockTime: new Date(0),
-		startButtonText: "START GAME",
-		didPlayerWin: playerWin,
-		gameSettingsOpen: true,
-		gamePaused: true,
-		gameStopped: true
-	});
+	this.setState({ gameRestarting: true });
+	setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+	setTimeout(() => {
+		this.stop();
+		this.startGame(false);
+		this.setState({
+			...resetSettings,
+			clockTime: new Date(0),
+			startButtonText: "START GAME",
+			didPlayerWin: playerWin,
+			gameSettingsOpen: true,
+			gamePaused: true,
+			gameStopped: true
+		});
+	}, 400);
 }
 
 
