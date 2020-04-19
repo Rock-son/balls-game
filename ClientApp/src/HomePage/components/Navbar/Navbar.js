@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Navbar, Nav, NavbarToggler,
 	Collapse, NavItem, NavLink, NavbarText } from "reactstrap";
 
@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, 
-		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded } = props;
+		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -42,8 +42,8 @@ export const NavBar = props => {
 	const gameStartCountdownTime = (delayedSeconds < 0) ? (-delayedSeconds) : "";
 	return(
 		<>
-		<Navbar onMouseMove={onMouseMove} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
-			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm">
+		<Navbar onPointerMove={onMouseMove} onClick={toggleDialog} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
+			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm" >
 				<NavbarToggler onClick={toggleNavbarItemsExpand} />
 				<Collapse isOpen={isNavbarExpanded} navbar>
 				<Nav className="navbar__nav left" navbar>

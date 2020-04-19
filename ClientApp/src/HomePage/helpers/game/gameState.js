@@ -152,7 +152,7 @@ export function stopStartGame() {
 				}
 			});
 		}, 400)
-		setTimeout(() => {
+		this.gameTimeout = setTimeout(() => {
 			const audio = new Audio(sound);
 			audio.play();
 		}, 3000);
@@ -167,11 +167,15 @@ export function setGameSettings(e) {
 		parsedData = JSON.parse(targetData) || {};
 	} else {
 		// triggered directly from dialog
-		parsedData = e;
+/*3*/		parsedData = e;
+			this.setState({ gameRestarting: false });		
+			clearTimeout(this.gameTimeout);
 	}
+	
+	console.log("second time is a charm", this.state.gameRestarting);
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
-	this.setState({ gameRestarting: true });
-	setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+/*1*/	this.setState({ gameRestarting: true });
+/*4*/	this.gameTimeout = setTimeout(() => this.setState({ gameRestarting: false }), 1000);
 	setTimeout(() => {
 		this.setState(prevState => {
 			this.stop();
@@ -191,7 +195,7 @@ export function setGameSettings(e) {
 				gamePaused: true,
 			});
 		});
-	}, 400);
+/*2*/	}, 400);
 }
 export function resetDraggedQuarantineId() {
 	this.setState({
@@ -237,7 +241,9 @@ export function setQuarantineNonactive(id) {
 export function toggleGamePause() {
 	return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();
 }
-export function toggleGameDialog() {
+export function toggleGameDialog(e) {
+	e && e.preventDefault();
+	e && e.stopPropagation();
 	if (this.state.isSimulationActive) {
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);

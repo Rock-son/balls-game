@@ -25,24 +25,28 @@ export function toggleSimulationPause() {
 export function stopStartSimulation() {
 	if (this.state.simulationPaused && !this.state.simulationStopped) { // CONTINUE
 		this.toggleSimulationDialog();
-	} else {
-		this.stop();						// START
-		this.startSimulation(true);
-		this.setState(prevState => ({
-			clockTime: new Date(0),
-			simulationStopped: false,
-			simulationPaused: false,
-			startButtonText: "CONTINUE SIMULATION",
-			simulationSettingsOpen: false,
-			healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
-			// reset game settings
-			...gameResetSettings,
-			isGameActive: false,
-			gamePaused: true,
-			gameStopped: true,
-			quarantineButtonsActive: false, // only for testing purposes
-			availableQuarantines: []
-		}));
+	} else {	
+		this.setState({ gameRestarting: true });
+		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+		setTimeout(() => {
+			this.stop();						// START
+			this.startSimulation(true);
+			this.setState(prevState => ({
+				clockTime: new Date(0),
+				simulationStopped: false,
+				simulationPaused: false,
+				startButtonText: "CONTINUE SIMULATION",
+				simulationSettingsOpen: false,
+				healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
+				// reset game settings
+				...gameResetSettings,
+				isGameActive: false,
+				gamePaused: true,
+				gameStopped: true,
+				quarantineButtonsActive: false, // only for testing purposes
+				availableQuarantines: []
+			}));
+		}, 400);
 	}
 }
 export function simulationRestart() {
@@ -91,7 +95,9 @@ export function setSimulationSettings(e) {
 	}, 400);
 }
 
-export function toggleSimulationDialog() {
+export function toggleSimulationDialog(e) {
+	e && e.preventDefault();
+	e && e.stopPropagation();
 	if (this.state.isGameActive) {
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
