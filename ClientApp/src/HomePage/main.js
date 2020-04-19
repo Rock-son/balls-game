@@ -32,7 +32,8 @@ export default class HomePage extends React.Component {
 			clockTime: new Date(0),
 			// canvas state
 			contagious: 1,
-			healthy: 199,
+			healthy: simulationSettings.simulationSettings["quantity"] - 1,
+			healed: 0,
 			// nav & buttons
 			startButtonText: "CONTINUE SIMULATION",
 			isNavbarExpanded: false,
@@ -252,12 +253,13 @@ export default class HomePage extends React.Component {
 					gamePaused={this.state.gamePaused}
 					contagious={this.state.contagious}
 					healthy={this.state.healthy}
+					healed={this.state.healed}
 					gameEnded={this.state.gameEnded}
 				/>
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
 					isSimulationActive={this.state.isSimulationActive}
-					isSimulationStopped={this.state.simulationPaused}
+					isSimulationStopped={this.state.simulationStopped}
 					isOpen={this.state.simulationSettingsOpen}
 					toggle={this.toggleSimulationDialog}
 					buttonText={this.state.startButtonText}

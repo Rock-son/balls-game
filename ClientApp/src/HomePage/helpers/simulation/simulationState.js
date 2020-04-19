@@ -14,6 +14,8 @@ export const simulationSettings = {
 		speed: .6,
 		quantity: 300,
 		deactivateAfter: 0,
+		healedAfter: 40000,
+		heal: true,
 		showTime: true,
 		showStats: true,
 		autorestart: true
@@ -52,7 +54,7 @@ export function stopStartSimulation() {
 export function simulationRestart() {
 	// fade out-in effect
 	this.setState({ simulationRestarting: true });
-	setTimeout(() => this.setState({ simulationRestarting: false }), 1200);
+	setTimeout(() => this.setState({ simulationRestarting: false }), 1000);
 	setTimeout(() => {
 		this.stop();
 		this.startSimulation(true);
@@ -63,9 +65,10 @@ export function simulationRestart() {
 			startButtonText: "CONTINUE SIMULATION",
 			simulationSettingsOpen: false,
 			healthy: prevState.simulationSettings["quantity"] - 1,
-			contagious: 1
+			contagious: 1,
+			healed: 0
 		}));
-	}, 600);
+	}, 400);
 
 }
 export function setSimulationSettings(e) {
@@ -77,10 +80,27 @@ export function setSimulationSettings(e) {
 	} else {
 		// triggered directly from dialog
 		parsedData = e;
+		this.setState({ gameRestarting: false });
+		clearTimeout(this.gameTimeoutId);	
 	}
-	this.setState({ simulationRestarting: true });
-	setTimeout(() => this.setState({ simulationRestarting: false }), 1000);
-	setTimeout(() => {
+	// fade in only on change (size, speed or quantity of balls)
+	if (parsedData["size"] || parsedData["speed"] || parsedData["quantity"]) {
+		setTimeout(() => this.setState({ gameRestarting: true }), 100);
+		this.gameTimeoutId = setTimeout(() => this.setState({ gameRestarting: false }), 1200);
+		setTimeout(() => {
+			this.setState(prevState => {
+				const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
+				// only reset simulation for size and quantity - for preview
+				if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
+					this.stop();
+					this.startSimulation(false, newSimulationSettings);
+					return ({ simulationSettings: newSimulationSettings, clockTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1,
+							contagious: 1, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
+				}
+				return ({ simulationSettings: newSimulationSettings });
+			});
+		}, 500);
+	} else {
 		this.setState(prevState => {
 			const newSimulationSettings = {...prevState.simulationSettings, ...parsedData};
 			// only reset simulation for size and quantity - for preview
@@ -92,7 +112,7 @@ export function setSimulationSettings(e) {
 			}
 			return ({ simulationSettings: newSimulationSettings });
 		});
-	}, 400);
+	}
 }
 
 export function toggleSimulationDialog(e) {

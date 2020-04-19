@@ -122,7 +122,7 @@ function handleOnImageLoaded(simulationSettings) {
 		sprite.radius = radius;
 		sprite.reactContext = this;
 		sprite.contagion = contagion;
-		sprite.contagiousFrom = null;
+		sprite.contagiousFrom = sprite.contagion ? new Date().getTime() : null;
 		const randomX = Math.random() - .5;
 		const randomY = Math.random() - .5;
 		sprite.velocity = { 
