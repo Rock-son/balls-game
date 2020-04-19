@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js-legacy";
 export function startSimulation(autostart, simulationSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
-
+	PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 	this.simulationApp = new PIXI.Application({
 		width: this.canvasWidth,
 		height: this.canvasHeight,
@@ -27,7 +27,7 @@ export function startSimulation(autostart, simulationSettings = null) {
 
 
 	if (this.simulationApp.loader.resources.sheet == null) {
-		this.simulationApp.loader.add("sheet", "balls.json")
+		this.simulationApp.loader.add("sheet", "textures.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
@@ -87,8 +87,8 @@ function handleOnImageLoaded(simulationSettings) {
 	const nrImages = +quantity;
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
-	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white-15.png"];
-	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red-15.png"];
+	const whiteBall = this.simulationApp.loader.resources.sheet.textures["ball-white.svg"];
+	const redBall = this.simulationApp.loader.resources.sheet.textures["ball-red.svg"];
 
 	let x, y;
 	for (let i = 0; i < nrImages; i++) {

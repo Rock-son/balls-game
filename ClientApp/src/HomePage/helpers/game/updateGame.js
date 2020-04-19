@@ -181,7 +181,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		if (sprite.contagiousFrom && (sprite.reactContext.state.currentTime - sprite.contagiousFrom > sprite.reactContext.state.simulationSettings["deactivateAfter"])) {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = 0;
-			sprite.texture = loader.resources.sheet.textures["ball-white-15.png"];
+			sprite.texture = loader.resources.sheet.textures["ball-white.svg"];
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}*/
@@ -244,7 +244,7 @@ function getContagion(sprite, loader) {
 	sprite.contagion = 1;
 	sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 	sprite.contagiousFrom = new Date().getTime();
-	sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+	sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
 	const gameSettings = sprite.reactContext.state.gameSettings || {};
 
 	// GAME END
