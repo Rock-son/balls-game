@@ -84,9 +84,9 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 				const size = sprite.reactContext.state.draggedQuarantine["size"]
 
 				// resize and move (x, y)
-				sprite.width = size < 75 ? 75: size > 360 ? 360 : size;
-				sprite.height = size < 75 ? 75: size > 360 ? 360 : size;
-				sprite.radius = size < 75 ? 35: size > 360 ? 180 : size / 2;
+				sprite.width = size < 90 ? 90: size > 360 ? 360 : size;
+				sprite.height = size < 90 ? 90: size > 360 ? 360 : size;
+				sprite.radius = size < 90 ? 45: size > 360 ? 180 : size / 2;
 				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 				// TEXT
@@ -337,8 +337,8 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 	}	// QUARANTENE
 	else if (particle.myID >= quantity){
 		const particleDistance = distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius;
-		// make a border > -2 for outside particles
-		if (particleDistance > -3) {
+		// OUTSIDE BORDER
+		if (particleDistance > -3 ) {
 			// X BOUNDARIES
 			// RIGHT
 			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
@@ -360,8 +360,8 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
 		}
-		// border < -2 for inside particles (so inside / outside don+t touch!)
-		if (particleDistance > -10 && particleDistance < -5) {
+		// INSIDE BORDER
+		if (particleDistance > -10 && particleDistance < -5 && xVelocityDiff * xDist + yVelocityDiff * yDist) {
 			// RIGHT
 			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
 				otherParticle.velocity.x = otherParticle.velocity.x > 0 ? -otherParticle.velocity.x : otherParticle.velocity.x;
@@ -382,6 +382,7 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
 		}
+
 	}
 }
 
