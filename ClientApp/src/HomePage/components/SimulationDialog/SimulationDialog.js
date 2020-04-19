@@ -52,7 +52,7 @@ export class SimulationDialog extends React.Component {
 	render() {
 
 		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, isSimulationStopped,
-					settings: { size, speed, quantity, deactivateAfter, heal, showTime, showStats, autorestart} } = this.props;
+					settings: { size, speed, quantity, deactivateAfter, healedAfter, heal, showTime, showStats, autorestart} } = this.props;
 
 		return (
 			<Modal key="simulator" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
@@ -128,6 +128,7 @@ export class SimulationDialog extends React.Component {
 									}
 									return 	<NavLink
 												key={idx}
+												title={deactivateOption !== 0 ? `Deactivates after ${deactivateOption/1000}s ${heal ? "" : "after not beeing touched by another infected"}` : "No deactivation"}
 												tabIndex="0"
 												data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
 												onClick={setSimulationSettings}
@@ -148,7 +149,7 @@ export class SimulationDialog extends React.Component {
 									}
 									return 	<NavLink
 												key={idx}
-												title={deactivateAfter > 0 ? "Deactivate ball option excludes this one." : ""}
+												title={`Start healing after ${healedAfter/1000}s`}
 												tabIndex="0"
 												data-option={`${JSON.stringify({heal: healOption.value})}`}
 												onClick={setSimulationSettings}
