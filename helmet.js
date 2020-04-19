@@ -9,7 +9,7 @@ module.exports = function a(app) {
 	app.use(helmet.contentSecurityPolicy({
 		directives: {
 			"defaultSrc": 	[ "'self'" ],
-			"scriptSrc": 	[ "'self'", "'unsafe-eval'", "https://polyfill.io"],
+			"scriptSrc": 	[ "'self'", "'unsafe-eval'", "https://polyfill.io", "https://code.jquery.com"],
 			"styleSrc": 	[ "'self'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com" ],
 			"fontSrc": 		[ "'self'" , "https://fonts.gstatic.com" ],
 			"imgSrc":	    [ "'self'", "data:" ],			
