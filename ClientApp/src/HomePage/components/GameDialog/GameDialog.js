@@ -60,11 +60,11 @@ export class GameDialog extends React.Component {
 		if (this.props.settings.quantity > maxQuantity ) {
 			return this.props.setGameSettings({ quantity: maxQuantity, speed: changedSpeed });
 		}
-		if (this.props.settings.quantity < minQuantity ) {
+		else if (this.props.settings.quantity < minQuantity ) {
 			return this.props.setGameSettings({ quantity: minQuantity, speed: changedSpeed });
 		}
 		// if min, max values are not a problem, then set speed
-		if (this.props.settings.speed !== changedSpeed) {
+		else if (this.props.settings.speed !== changedSpeed) {
 			return this.props.setGameSettings({ speed: changedSpeed });
 		}
 	}

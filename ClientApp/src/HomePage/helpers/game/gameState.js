@@ -168,8 +168,8 @@ export function setGameSettings(e) {
 	} else {
 		// triggered directly from dialog
 		parsedData = e;
-		this.setState({ gameRestarting: false });	
-		clearTimeout(this.gameTimeoutId);			
+		this.setState({ gameRestarting: false });
+		clearTimeout(this.gameTimeoutId);
 	}
 	
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
