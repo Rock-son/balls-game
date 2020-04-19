@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 		this.autostart = true;
 		this.simulationApp = null;
 		this.gameApp = null;
-		this.gameTimeout = null;
+		this.gameTimeoutId = null;
 
 		this.state = {
 			...simulationSettings,

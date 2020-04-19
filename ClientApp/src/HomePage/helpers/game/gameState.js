@@ -152,7 +152,7 @@ export function stopStartGame() {
 				}
 			});
 		}, 400)
-		this.gameTimeout = setTimeout(() => {
+		setTimeout(() => {
 			const audio = new Audio(sound);
 			audio.play();
 		}, 3000);
@@ -167,15 +167,14 @@ export function setGameSettings(e) {
 		parsedData = JSON.parse(targetData) || {};
 	} else {
 		// triggered directly from dialog
-/*3*/		parsedData = e;
-			this.setState({ gameRestarting: false });		
-			clearTimeout(this.gameTimeout);
+		parsedData = e;
+		this.setState({ gameRestarting: false });	
+		clearTimeout(this.gameTimeoutId);			
 	}
 	
-	console.log("second time is a charm", this.state.gameRestarting);
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
-/*1*/	this.setState({ gameRestarting: true });
-/*4*/	this.gameTimeout = setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+	setTimeout(() => this.setState({ gameRestarting: true }), 100);
+	this.gameTimeoutId = setTimeout(() => this.setState({ gameRestarting: false }), 1200);
 	setTimeout(() => {
 		this.setState(prevState => {
 			this.stop();
@@ -195,7 +194,7 @@ export function setGameSettings(e) {
 				gamePaused: true,
 			});
 		});
-/*2*/	}, 400);
+	}, 500);
 }
 export function resetDraggedQuarantineId() {
 	this.setState({
