@@ -5,9 +5,9 @@ import { Button, Navbar, Nav, NavbarToggler,
 import "./navbar.scss";
 
 export const NavBar = props => {
-	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, toggleStaySafeDialog,
+	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, 
-		simulationSettings: { showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
+		simulationSettings: { heal, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -44,6 +44,10 @@ export const NavBar = props => {
 		<>
 		<Navbar onPointerMove={onMouseMove} onClick={toggleDialog} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm" >
+				<div className="caption">
+					<div className="bold">ViralBalls</div>
+					<div className="ordinary">{isGameActive ? "Game" : "Simulator"}</div>
+				</div>
 				<NavbarToggler onClick={toggleNavbarItemsExpand} />
 				<Collapse isOpen={isNavbarExpanded} navbar>
 				<Nav className="navbar__nav left" navbar>
@@ -80,10 +84,6 @@ export const NavBar = props => {
 					<NavItem>
 						<NavLink className="navbar__nav__link" onClick={toggleNavbarVisibility}>Hide</NavLink>
 					</NavItem>
-					<NavItem className="navbar__nav__link caption">
-						<div className="bold">ViralBalls</div>
-						<div className="ordinary">{isGameActive ? "Game" : "Simulator"}</div>
-					</NavItem>
 				</Nav>
 				</Collapse>
 			</Navbar>
@@ -103,6 +103,7 @@ export const NavBar = props => {
 					<NavItem className={`stats ${!isNavbarVisible ? "drop" : ""}`}>
 						<NavbarText className="stats__infected">{showStats ? `Infected: ${contagious}` : ""}</NavbarText>
 						<NavbarText className="stats__healthy">{showStats ? `Healthy: ${healthy}` : ""}</NavbarText>
+						<NavbarText className="stats__healed">{heal ? "Healed:" : ""} &nbsp; {heal ? healed : ""}</NavbarText>
 						<NavbarText className="stats__timer">{showTime ? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
 					</NavItem>
 				</Nav>
