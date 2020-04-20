@@ -31,8 +31,10 @@ canvas {
 	&.visible {
 		opacity: 0;
 		z-index: 1;
-		animation: fade-in-out 1.2s ease-in-out;
-		animation-iteration-count: 1;
+		animation-name: fade-in-out;
+		animation-duration: 1.2s;
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: 1; //infinite
 	}
 }
 @keyframes fade-in-out {

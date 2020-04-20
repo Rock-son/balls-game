@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js-legacy";
 export function startGame(autostart, gameSettings = null) {
 	this.autostart = autostart || false;
 	// UTILITIES
-
+	PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 	this.gameApp = new PIXI.Application({
 		width: this.canvasWidth,
 		height: this.canvasHeight,
@@ -85,6 +85,7 @@ function handleOnImageLoaded(gameSettings) {
 		const timeText = new PIXI.Text(formattedTime, {
 			fill: 0x69b11c,
 			fontSize: "21px",
+			fontWeight: "700",
 			fontFamily : "Roboto Condensed"
 		});
 		timeText.alpha = 1;
@@ -152,8 +153,8 @@ function handleOnImageLoaded(gameSettings) {
 	const nrImages = +quantity;
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
-	const whiteBall = this.gameApp.loader.resources.sheet.textures["ball-white-15.png"];
-	const redBall = this.gameApp.loader.resources.sheet.textures["ball-red-15.png"];
+	const whiteBall = this.gameApp.loader.resources.sheet.textures["ball-white.svg"];
+	const redBall = this.gameApp.loader.resources.sheet.textures["ball-red.svg"];
 
 	for (let i = 0; i < nrImages; i++) {
 
