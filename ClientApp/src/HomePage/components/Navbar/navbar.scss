@@ -16,9 +16,10 @@
 		left: 0;
 		color: $white;
 		padding: 0;
-		transition: transform .5s;
+		padding-top: 15px;
+		transition: top .5s;
 		&.hidden {
-			transform: translateY(-50%);
+			top: -40px;
 		}
 		&__toggler {
 			position: absolute;
@@ -32,8 +33,8 @@
 			border-bottom-left-radius: 200px;
 			border-bottom-right-radius: 200px;
 			transform: translate(-70%, -50%);
-			transition: opacity .3s, background-color .3s;
-			padding: 20px 12px 0 12px;
+			transition: opacity .5s, background-color .5s;
+			padding: 20px 12px 0px 12px;
 			& img {
 				width: 20px;
 				height: 10px;
@@ -49,10 +50,28 @@
 		}
 		&__left {
 			position: relative;
+			left: 0;
 			font-size: 17px;
-			font-weight: 900;
-			line-height: 0;
-			transform: translateY(-60%);
+			line-height: 10px;
+			& .caption {
+				position: absolute;
+				font-size: 19px;
+    			right: 0;
+				color: $white;
+				transform: translate(50%, -50%);
+				& .bold {
+					font-weight: 700;
+					display: inline-block;
+					line-height: 1px;
+					vertical-align: text-bottom;
+				}
+				& .ordinary {
+					font-weight: 300;
+					display: inline-block;
+					vertical-align: text-bottom;
+					line-height: 0px;
+				}
+			}
 			& .nav-link.stick {
 				padding-left: 2px;
 				padding-right: 2px;
@@ -61,8 +80,9 @@
 		}
 		&__right {
 			position: relative;
+			right: 0;
 			font-size: 17px;
-			line-height: 1rem;
+			line-height: 10px;
 		}
 	}
 	& .game-start-countdown {
@@ -88,30 +108,19 @@
 				color: $white !important;
 				cursor: pointer;
 			}
-			&.caption {
-				position: absolute;
-				font-size: 19px;
-    			right: 0;
-				color: $white;
-				transform: translate(50%, -33%);
-				& .bold {
-					font-weight: 700;
-					display: inline-block;
-					line-height: 1px;
-					vertical-align: text-bottom;
-				}
-				& .ordinary {
-					font-weight: 300;
-					display: inline-block;
-					vertical-align: text-bottom;
-					line-height: 0px;
-				}
-			}
 		}
 		&__separator {
 			padding: 10px;
 		}
+		&.left {
+			position: absolute;
+			left: 5px;
+			font-size: 17px;
+			text-align: right;
+		}
 		&.right {
+			position: absolute;
+			right: 5px;
 			font-size: 17px;
 			text-align: right;
 			& .countdown-link {
@@ -119,33 +128,50 @@
 				padding-right: 2px;
 			}
 			& .stats {
+				position: relative;
+				top: 0;
 				font-size: 17px;
 				line-height: 15px;
-				transition: margin-top .5s;
+				transition: top .5s;
 				&.drop {
-					margin-top: 2.5rem;
+					top: 5px;
 				}
 				&__infected {
+					position: absolute;
+					top: 0;
+					left: 0;
 					padding-left: 1px;
 					color: $red;
-					float: left;
 					padding-top: 0;
-					width: 95px;
 					text-align: left;
 				}
 				&__healthy {
+					position: absolute;
+					top: 0;
+					left: 100px;
 					color: $white;
-					float: left;
 					text-align: left;
 					padding-top: 0;
 				}
 				&__timer {
-					float: right;
+					position: absolute;
+					top: 0;
+					right: 0;
 					padding-top: 0;
 					font-weight: 300;
 					font-size: 46px;
-					line-height: 30px;
+					line-height: 34px;
 					color: $white;
+					padding-top: 0;
+				}
+				&__healed {
+					position: absolute;
+					padding-left: 1px;
+					color: $grey;
+					left: 0;
+					top: 19px;
+					padding-top: 0;
+					text-align: left;
 				}
 			}
 		}

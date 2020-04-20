@@ -6,7 +6,7 @@ import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, T
 	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
 
@@ -19,6 +19,7 @@ export default class HomePage extends React.Component {
 		this.autostart = true;
 		this.simulationApp = null;
 		this.gameApp = null;
+		this.gameTimeoutId = null;
 
 		this.state = {
 			...simulationSettings,
@@ -31,7 +32,8 @@ export default class HomePage extends React.Component {
 			clockTime: new Date(0),
 			// canvas state
 			contagious: 1,
-			healthy: 199,
+			healthy: simulationSettings.simulationSettings["quantity"] - 1,
+			healed: 0,
 			// nav & buttons
 			startButtonText: "CONTINUE SIMULATION",
 			isNavbarExpanded: false,
@@ -153,7 +155,9 @@ export default class HomePage extends React.Component {
 			this.toggleGameDialog();
 		}
 	}
-	toggleAboutDialog(){
+	toggleAboutDialog(e){
+		e.preventDefault();
+		e.stopPropagation();
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
@@ -163,6 +167,8 @@ export default class HomePage extends React.Component {
 		}
 	}
 	toggleShareDialog(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareDialogOpen: !prevState.shareDialogOpen }));
@@ -174,7 +180,9 @@ export default class HomePage extends React.Component {
 			this.setState({ isCopied: false });
 		}, 1000);
 	}
-	toggleStaySafeDialog() {
+	toggleStaySafeDialog(e) {
+		e && e.preventDefault();
+		e && e.stopPropagation();
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
@@ -183,7 +191,7 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
 		}
 	}
-	toggleHowToPlayDialog() {
+	toggleHowToPlayDialog(e) {
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
@@ -201,10 +209,14 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
 		}
 	}
-	toggleNavbarItemsExpand() {
+	toggleNavbarItemsExpand(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
 	}
-	toggleNavbarVisibility() {
+	toggleNavbarVisibility(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
 	copyToClipboard() {
@@ -232,6 +244,7 @@ export default class HomePage extends React.Component {
 					toggleGameDialog={this.toggleGameDialog}
 					toggleAboutDialog={this.toggleAboutDialog}
 					toggleStaySafeDialog={this.toggleStaySafeDialog}
+					toggleDialog={this.toggleDialog}
 					simulationSettings={this.state.simulationSettings}
 					gameSettings={this.state.gameSettings}
 					isSimulationActive={this.state.isSimulationActive}
@@ -239,12 +252,13 @@ export default class HomePage extends React.Component {
 					gamePaused={this.state.gamePaused}
 					contagious={this.state.contagious}
 					healthy={this.state.healthy}
+					healed={this.state.healed}
 					gameEnded={this.state.gameEnded}
 				/>
 				<SimulationDialog
 					startSimulation={this.stopStartSimulation}
 					isSimulationActive={this.state.isSimulationActive}
-					isSimulationStopped={this.state.simulationPaused}
+					isSimulationStopped={this.state.simulationStopped}
 					isOpen={this.state.simulationSettingsOpen}
 					toggle={this.toggleSimulationDialog}
 					buttonText={this.state.startButtonText}
@@ -302,8 +316,13 @@ export default class HomePage extends React.Component {
 					gameSettings={this.state.gameSettings}
 				/>
 				<QuarantineButtons
-					quarantineButtonsActive={this.state.quarantineButtonsActive}
+					clockTime={this.state.clockTime}
+					settings={this.state.gameSettings}
+					isGameActive={this.state.isGameActive}
 					setQuarantineInMotion={this.setQuarantineInMotion}
+					draggedQuarantine={this.state.draggedQuarantine}
+					availableQuarantines={this.availableQuarantines}
+					gameRestarting={this.state.gameRestarting}
 				/>
 				<article
 					id="canvas-container"
