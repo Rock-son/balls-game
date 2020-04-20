@@ -9,9 +9,10 @@ import { simulationSettings, stopStartSimulation, simulationRestart, setSimulati
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
-
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
+
+//import Modernizr from "../modernizr"
 
 export default class HomePage extends React.Component {
 	constructor(props) {
@@ -229,6 +230,7 @@ export default class HomePage extends React.Component {
 		 	});
 	}
 	render() {
+
 		return (
 			<section className="main">
 				<NavBar
