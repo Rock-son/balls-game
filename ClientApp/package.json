@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "bootstrap": "^4.4.1",
+    "modernizr": "^3.10.0",
     "node-sass": "^4.13.1",
     "pixi.js-legacy": "^5.2.1",
     "reactstrap": "^8.4.1"
