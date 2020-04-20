@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
-import { sizeOptions, quantityValues, speedOptions, deactivateOptions, booleanOptions } from "./simulationOptions";
+import { sizeOptions, quantityValues, speedValues, speedOptions, deactivateOptions, booleanOptions } from "./simulationOptions";
 import "./simulationDialog.scss";
 
 export class SimulationDialog extends React.Component {
@@ -19,6 +19,7 @@ export class SimulationDialog extends React.Component {
 			this.props.settings["speed"] !== nextProps.settings["speed"] ||
 			this.props.settings["quantity"] !== nextProps.settings["quantity"] ||
 			this.props.settings["deactivateAfter"] !== nextProps.settings["deactivateAfter"] ||
+			this.props.settings["heal"] !== nextProps.settings["heal"] ||
 			this.props.settings["showTime"] !== nextProps.settings["showTime"] ||
 			this.props.settings["showStats"] !== nextProps.settings["showStats"] ||
 			this.props.settings["autorestart"] !== nextProps.settings["autorestart"]
@@ -35,11 +36,15 @@ export class SimulationDialog extends React.Component {
 		}
 		const minQuantity = quantityValues[this.props.settings.size][0] || 0;
 		const maxQuantity = quantityValues[this.props.settings.size].slice(-1)[0] || 1000;
+		// if speed is changed, healed after time must change also
+		if (this.props.settings["speed"] !== prevProps.settings["speed"]) {
+			return this.props.setSimulationSettings({ healedAfter: 60000 / speedValues[this.props.settings["speed"]] });
+		}
 		// if quantity is greater or smaller than it should be according to size
-		if (this.props.settings.quantity > maxQuantity ) {
+		if (this.props.settings["quantity"] > maxQuantity) {
 			return this.props.setSimulationSettings({ quantity: maxQuantity });
 		}
-		if (this.props.settings.quantity < minQuantity ) {
+		if (this.props.settings["quantity"] < minQuantity ) {
 			return this.props.setSimulationSettings({ quantity: minQuantity });
 		}
 	}
@@ -47,7 +52,7 @@ export class SimulationDialog extends React.Component {
 	render() {
 
 		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, isSimulationStopped,
-					settings: { size, speed, quantity, deactivateAfter, showTime, showStats, autorestart} } = this.props;
+					settings: { size, speed, quantity, deactivateAfter, healedAfter, heal, showTime, showStats, autorestart} } = this.props;
 
 		return (
 			<Modal key="simulator" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
@@ -123,6 +128,7 @@ export class SimulationDialog extends React.Component {
 									}
 									return 	<NavLink
 												key={idx}
+												title={deactivateOption !== 0 ? `Deactivates after ${deactivateOption/1000}s ${heal ? "" : "after not beeing touched by another infected"}` : "No deactivation"}
 												tabIndex="0"
 												data-option={`${JSON.stringify({deactivateAfter: deactivateOption})}`}
 												onClick={setSimulationSettings}
@@ -134,7 +140,26 @@ export class SimulationDialog extends React.Component {
 						</Container>
 					</Row>
 					<Row className="flexContainer d-flex justify-content-center">
-						<Container className="col-4 choice">
+					<Container className="col-3 choice choice--container">
+							<div className="choice__header">Heal</div>
+							<Nav className="choice__options">
+								{booleanOptions.map((healOption, idx) => {
+									if (typeof healOption !== "object") {
+										return <NavLink className="disabled" key={idx}>{healOption}</NavLink>;
+									}
+									return 	<NavLink
+												key={idx}
+												title={`Start healing after ${healedAfter/1000}s`}
+												tabIndex="0"
+												data-option={`${JSON.stringify({heal: healOption.value})}`}
+												onClick={setSimulationSettings}
+												active={healOption.value === heal}>
+													{healOption.type}
+											</NavLink>;
+								})}
+							</Nav>
+						</Container>
+						<Container className="col-3 choice choice--container">
 							<div className="choice__header">Show time</div>
 							<Nav className="choice__options">
 								{booleanOptions.map((timeOption, idx) => {
@@ -152,7 +177,7 @@ export class SimulationDialog extends React.Component {
 								})}
 							</Nav>
 						</Container>
-						<Container className="col-4 choice">
+						<Container className="col-3 choice choice--container">
 							<div className="choice__header">Show stats</div>
 							<Nav className="choice__options">
 								{booleanOptions.map((statOption, idx) => {
@@ -170,7 +195,7 @@ export class SimulationDialog extends React.Component {
 								})}
 							</Nav>
 						</Container>
-						<Container className="col-4 choice">
+						<Container className="col-3 choice choice--container">
 							<div className="choice__header">Autorestart</div>
 							<Nav className="choice__options">
 								{booleanOptions.map((restartOption, idx) => {

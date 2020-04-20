@@ -18,42 +18,61 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["deactivateAfter"]) {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = null;
-			sprite.texture = loader.resources.sheet.textures["ball-white-15.png"];
+			sprite.texture = loader.resources.sheet.textures["ball-white.svg"];
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}
+	// 
+	if (sprite.reactContext.state.simulationSettings["autorestart"] && (sprite.reactContext.state.contagious === 0 || sprite.reactContext.state.healthy === 0)) {
+		// only need to restart it once but stop calculating further!
+		if (sprite.myID === 0) {
+			sprite.reactContext.toggleSimulationPause();
+			sprite.reactContext.simulationRestart();
+			return;
+		}
+		return;
+	}
+	// CALCULATE HEALED IF APPLIED
+	if (sprite.reactContext.state.simulationSettings["heal"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
+			sprite.contagion = 2;
+			sprite.contagiousFrom = null;
+			sprite.texture = loader.resources.sheet.textures["ball-grey.svg"];
+			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1, healed: prevState.healed + 1 }));
+		}
+	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
-	for (let i = 0; i < spriteArr.length; i++) {
+	for (let i = sprite.myID; i < spriteArr.length; i++) {
 		if (sprite.myID === spriteArr[i].myID) {
 			continue;
 		}
 
 		if (circleIntersect(sprite.x, sprite.y, sprite.radius, spriteArr[i].x, spriteArr[i].y, spriteArr[i].radius)) {		
 			const otherSprite = spriteArr[i];
-			// with deactivation time on, any red can infect another red again
-			if (sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0 && (otherSprite.contagion || sprite.contagion)) {
-				sprite.contagiousFrom = new Date().getTime();
-				otherSprite.contagiousFrom = new Date().getTime();
+				// ACTIVATE TIME contagiousFrom - if not already healed
+			if (sprite.contagion !== 2) {
+					// with deactivation time on and healed off
+				if ((sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0 && !sprite.reactContext.state.simulationSettings["heal"]) &&
+					(otherSprite.contagion || sprite.contagion)) //any red can infect another red again
+				{
+					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;
+					otherSprite.contagiousFrom = sprite.contagion ? new Date().getTime() : otherSprite.contagiousFrom;
+				} // with deactivation time on or off and heal on, red cannot infect another red again
+				else if ((otherSprite.contagion && !sprite.contagion) || (!otherSprite.contagion && sprite.contagion))
+				{
+					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;
+					otherSprite.contagiousFrom = sprite.contagion ? new Date().getTime() : otherSprite.contagiousFrom;
+				}
 			}
-			// only calculate crashes where one particle is contagious
-			if (otherSprite.contagion && !sprite.contagion) {				
+			// only calculate crashes where one particle is contagious - exclude healed from the equation
+			if (sprite.contagion === 0 && otherSprite.contagion === 1) {				
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				sprite.contagion = 1;
-				sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-				// ON AUTORESTART=TRUE
-				if (sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0) {
-					sprite.reactContext.toggleSimulationPause();
-					sprite.reactContext.simulationRestart();
-				}
-			} else if (sprite.contagion && !otherSprite.contagion) {
+				sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
+			} else if (sprite.contagion === 1 && otherSprite.contagion === 0) {
 				sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 				otherSprite.contagion = 1;
-				otherSprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
-				// ON AUTORESTART=TRUE
-				if (sprite.reactContext.state.simulationSettings["autorestart"] && sprite.reactContext.state.healthy === 0) {
-					sprite.reactContext.toggleSimulationPause();
-					sprite.reactContext.simulationRestart();
-				}
+				otherSprite.texture = loader.resources.sheet.textures["ball-red.svg"];
 			}
 			resolveCollision(sprite, otherSprite);
 		}
