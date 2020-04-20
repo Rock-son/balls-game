@@ -54,7 +54,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 
 			// SET DROP TIME - if quarantine is draged and placed, it cannot have dropTime null at the same time
-			else if (sprite.reactContext.state.quarantinePlaced) {
+			else if (sprite.reactContext.state.quarantinePlaced) {sprite.myID === sprite.reactContext.state.gameSettings["quantity"] && console.log("wrong from quarantine placed");
 				const dropTime = sprite.reactContext.state.clockTime.getTime();
 				sprite.dropTime = dropTime;
 				textSprite.dropTime = dropTime;
@@ -330,7 +330,7 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 	else if (particle.myID >= quantity){
 		const particleDistance = distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius;
 		// OUTSIDE BORDER
-		if (particleDistance > -3 ) {
+		if (particleDistance > -2 ) {
 			// X BOUNDARIES
 			// RIGHT
 			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
@@ -353,7 +353,7 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 			particle.velocity.y = 0;
 		}
 		// INSIDE BORDER
-		if (particleDistance > -10 && particleDistance < -5 && xVelocityDiff * xDist + yVelocityDiff * yDist) {
+		if (particleDistance > -6 && particleDistance < -3 && xVelocityDiff * xDist + yVelocityDiff * yDist) {
 			// RIGHT
 			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
 				otherParticle.velocity.x = otherParticle.velocity.x > 0 ? -otherParticle.velocity.x : otherParticle.velocity.x;
