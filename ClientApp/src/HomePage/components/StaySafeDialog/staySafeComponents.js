@@ -1,6 +1,6 @@
 import { NavLink } from "reactstrap";
 
-import React from "react";   
+import React from "react";
 
 export const page0 = () => {
 	return (
@@ -13,7 +13,7 @@ export const page0 = () => {
 export const page1 = () => {
 	return (
 		<div className="staysafe-dialog__container__items">
-			<p>As the simulator shows, viruses spread quickest where there are large amounts of people. It is a good idea to avoid crowded areas and restrict all unnecessary travel.</p>
+			<p>As the simulator shows, viruses spread quickest where there are large amounts of people. Avoid crowded areas and restrict all unnecessary travel.</p>
 		</div>
 	)
 }
@@ -35,13 +35,14 @@ export const page3 = () => {
 export const page4 = () => {
 	return (
 		<div className="staysafe-dialog__container__items">
-			<p>Many factors influence our immunity. Overall preparedness and good health are very important, but attitudes and beliefs play a huge role too. Check 
-				<NavLink 
-					href="https://www.youtube.com/watch?v=6Rfcza4tD2k" 
-					target="_blank" 
-					rel="noopener noreferrer" > 
-						this interesting study 
-				</NavLink> 
+			<p>Many factors influence our immunity. Overall preparedness and good health are very important, but attitudes and beliefs play a huge role too. Check
+				<a
+					className="nav-link"
+					href="https://www.youtube.com/watch?v=6Rfcza4tD2k"
+					target="_blank"
+					rel="noopener noreferrer" >
+						this interesting study
+				</a>
 				how having a positive mindset and faith can increase your immunity.
 			</p>
 		</div>
@@ -69,13 +70,14 @@ export const page6 = () => {
 				<li>• Give away or sell what you don´t need.</li>
 				<li>• Read books you´ve been waiting to read.</li>
 				<li>• Write new life plans, have a vision, stay motivated.</li>
-				<li>• If entrepreneurial study and 
-					<NavLink 
-						href="https://www.smartpassiveincome.com/" 
-						target="_blank" 
+				<li>• If entrepreneurial study and
+					<a
+						className="nav-link"
+						href="https://www.smartpassiveincome.com/"
+						target="_blank"
 						rel="noopener noreferrer" >
 							learn
-					</NavLink>new things.</li>
+					</a>new things.</li>
 				<li>• Start a business or a personal project.</li>
 				<li>• Stay active and exercise every day.</li>
 				<li>• Learn to dance, you can do it solo or with a partner</li>
@@ -88,20 +90,22 @@ export const page7 = () => {
 		<div className="staysafe-dialog__container__items">
 			<p>We hope you got some new ideas to help you stay well now and in the future!"</p>
 			<p>If you found the simulator interesting, please share it with your friends. Copy the link and send it forward"</p>
-			<p>We also invite you to check our 
-				<NavLink 
-					href="https://www.countdownkings.com" 
-					target="_blank" 
+			<p>We also invite you to check our
+				<a
+					className="nav-link"
+					href="https://www.countdownkings.com"
+					target="_blank"
 					rel="noopener noreferrer" >
 						main project.
-				</NavLink> 
-				You can find some additional free resources there. Illustrations done by 
-				<NavLink 
-					href="https://www.instagram.com/Darkitsch" 
-					target="_blank" 
+				</a>
+				You can find some additional free resources there. Illustrations done by
+				<a
+					className="nav-link"
+					href="https://www.instagram.com/Darkitsch"
+					target="_blank"
 					rel="noopener noreferrer" >
 						Darka
-				</NavLink></p>
+				</a></p>
 			<p>Be good and stay safe!</p>
 		</div>
 	)
