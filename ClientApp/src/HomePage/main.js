@@ -6,7 +6,7 @@ import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, T
 	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, gameRestart, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
 
@@ -137,7 +137,6 @@ export default class HomePage extends React.Component {
 	}
 
 	toggleDialog(e) {
-		console.log("biatch, motherfucker");
 		const target = e && e.currentTarget || null;
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
@@ -317,8 +316,13 @@ export default class HomePage extends React.Component {
 					gameSettings={this.state.gameSettings}
 				/>
 				<QuarantineButtons
-					quarantineButtonsActive={this.state.quarantineButtonsActive}
+					clockTime={this.state.clockTime}
+					settings={this.state.gameSettings}
+					isGameActive={this.state.isGameActive}
 					setQuarantineInMotion={this.setQuarantineInMotion}
+					draggedQuarantine={this.state.draggedQuarantine}
+					availableQuarantines={this.availableQuarantines}
+					gameRestarting={this.state.gameRestarting}
 				/>
 				<article
 					id="canvas-container"

@@ -157,6 +157,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			textSprite.duration = randomTimeInSeconds * 1000;
 			sprite.duration = randomTimeInSeconds * 1000;
 			textSprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
+			//sprite.reactContext.setState({ availableQuarantines: {...sprite.reactContext.state.availableQuarantines,  id: sprite.myID, duration: sprite.duration }});
 		}
 	}
 
@@ -182,7 +183,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		return;
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES - substract Text objects!
-	for (let i = sprite.myID; i < spriteArr.length - quarantineObj.length; i++) {
+	for (let i = 0; i < spriteArr.length - quarantineObj.length; i++) {
 		// don't calculate collisions for same objects
 		if (sprite.myID === spriteArr[i].myID) {
 			continue;
