@@ -14,7 +14,6 @@ export const gameSettings = {
 	didPlayerWin: false,
 	// GAME
 	// quarantine settings
-	quarantineButtonsActive: false,
 	quarantinePlaced: false,
 	availableQuarantines: [],
 	quarantineBeingDragged: false,
@@ -24,6 +23,7 @@ export const gameSettings = {
 		id: -1,
 		x: 0,
 		y: 0,
+		duration: 0,
 		size: 250
 	},
 	// game settings
@@ -43,7 +43,6 @@ export const resetSettings = {
 	didPlayerWin: false,
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
-	quarantineButtonsActive: true, // change this setting
 	quarantinePlaced: false,
 	gameSettingsOpen: false,
 	howToPlayDialogOpen: false,
@@ -123,7 +122,7 @@ export function onWheelScroll(e) {
 	}
 }
 export function onMouseMove(e) {
-	if (this.state.quarantineButtonsActive) {
+	if (this.state.quarantineBeingDragged) {
 		const pageX = e.pageX;
 		const pageY = e.pageY;
 		this.setState(prevstate => {
@@ -168,10 +167,13 @@ export function setGameSettings(e) {
 	} else {
 		// triggered directly from dialog
 		parsedData = e;
+		this.setState({ gameRestarting: false });
+		clearTimeout(this.gameTimeoutId);
 	}
+	
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
-	this.setState({ gameRestarting: true });
-	setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+	setTimeout(() => this.setState({ gameRestarting: true }), 100);
+	this.gameTimeoutId = setTimeout(() => this.setState({ gameRestarting: false }), 1200);
 	setTimeout(() => {
 		this.setState(prevState => {
 			this.stop();
@@ -191,7 +193,7 @@ export function setGameSettings(e) {
 				gamePaused: true,
 			});
 		});
-	}, 400);
+	}, 500);
 }
 export function resetDraggedQuarantineId() {
 	this.setState({
@@ -208,10 +210,11 @@ export function setQuarantineInMotion(e) {
 				id: prevState.availableQuarantines.slice(0,1)[0] || -1,
 				x: pageX,
 				y: pageY,
+				// TODO: 
+				//duration: 
 				size: prevState.draggedQuarantine.size
 			},
 			quarantineBeingDragged: true,
-			quarantineButtonsActive: true,
 			quarantinePlaced: false,
 			availableQuarantines: prevState.availableQuarantines.slice(1)
 		};
@@ -237,7 +240,9 @@ export function setQuarantineNonactive(id) {
 export function toggleGamePause() {
 	return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();
 }
-export function toggleGameDialog() {
+export function toggleGameDialog(e) {
+	e && e.preventDefault();
+	e && e.stopPropagation();
 	if (this.state.isSimulationActive) {
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);

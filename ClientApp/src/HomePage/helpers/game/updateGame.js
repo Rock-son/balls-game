@@ -84,9 +84,9 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 				const size = sprite.reactContext.state.draggedQuarantine["size"]
 
 				// resize and move (x, y)
-				sprite.width = size < 75 ? 75: size > 360 ? 360 : size;
-				sprite.height = size < 75 ? 75: size > 360 ? 360 : size;
-				sprite.radius = size < 75 ? 35: size > 360 ? 180 : size / 2;
+				sprite.width = size < 90 ? 90: size > 360 ? 360 : size;
+				sprite.height = size < 90 ? 90: size > 360 ? 360 : size;
+				sprite.radius = size < 90 ? 45: size > 360 ? 180 : size / 2;
 				sprite.x = sprite.reactContext.state.draggedQuarantine.x;
 				sprite.y = sprite.reactContext.state.draggedQuarantine.y;
 				// TEXT
@@ -157,6 +157,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			textSprite.duration = randomTimeInSeconds * 1000;
 			sprite.duration = randomTimeInSeconds * 1000;
 			textSprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
+			//sprite.reactContext.setState({ availableQuarantines: {...sprite.reactContext.state.availableQuarantines,  id: sprite.myID, duration: sprite.duration }});
 		}
 	}
 
@@ -176,15 +177,6 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if ((sprite.y - sprite.radius) < 0) {
 		sprite.velocity.y = -sprite.velocity.y;
 	}
-	/* CALCULATE DEACTIVATION TIME IF APPLIED - MAYBE WILL BE USED FOR PREVOIUS INFECTED - VIOLET
-	if (sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0) {
-		if (sprite.contagiousFrom && (sprite.reactContext.state.currentTime - sprite.contagiousFrom > sprite.reactContext.state.simulationSettings["deactivateAfter"])) {
-			sprite.contagion = 0;
-			sprite.contagiousFrom = 0;
-			sprite.texture = loader.resources.sheet.textures["ball-white-15.png"];
-			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
-		}
-	}*/
 
 	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
 	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantinePlaced) {
@@ -244,7 +236,7 @@ function getContagion(sprite, loader) {
 	sprite.contagion = 1;
 	sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 	sprite.contagiousFrom = new Date().getTime();
-	sprite.texture = loader.resources.sheet.textures["ball-red-15.png"];
+	sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
 	const gameSettings = sprite.reactContext.state.gameSettings || {};
 
 	// GAME END
@@ -337,8 +329,8 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 	}	// QUARANTENE
 	else if (particle.myID >= quantity){
 		const particleDistance = distance(particle.x, particle.y, otherParticle.x, otherParticle.y) - particle.radius + otherParticle.radius;
-		// make a border > -2 for outside particles
-		if (particleDistance > -3) {
+		// OUTSIDE BORDER
+		if (particleDistance > -3 ) {
 			// X BOUNDARIES
 			// RIGHT
 			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
@@ -360,8 +352,8 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
 		}
-		// border < -2 for inside particles (so inside / outside don+t touch!)
-		if (particleDistance > -10 && particleDistance < -5) {
+		// INSIDE BORDER
+		if (particleDistance > -10 && particleDistance < -5 && xVelocityDiff * xDist + yVelocityDiff * yDist) {
 			// RIGHT
 			if ((particle.x + particle.radius/4) <= otherParticle.x - otherParticle.radius) {
 				otherParticle.velocity.x = otherParticle.velocity.x > 0 ? -otherParticle.velocity.x : otherParticle.velocity.x;
@@ -382,6 +374,7 @@ function resolveCollision(particle, otherParticle, circleIntersect) {
 			particle.velocity.x = 0;
 			particle.velocity.y = 0;
 		}
+
 	}
 }
 
@@ -398,27 +391,4 @@ function distance(x1, y1, x2, y2) {
 	const xDist = x2 - x1;
 	const yDist = y2 - y1;
 	return Math.sqrt(xDist * xDist + yDist * yDist);
-}
-function quarantineCollision(particle, otherParticle) {
-	const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x -particle.x);
-
-	// Store mass in var for better readability in collision equation
-	// const m1 = particle.mass;
-	// const m2 = otherParticle.mass;
-
-	// Velocity before equation
-	const u2 = rotate(otherParticle.velocity, angle);
-
-	// Velocity after 1d collision equation
-	const v2 = { x: 0, y: u2.y };
-
-	// Final velocity after rotating axis back to original location
-	const vFinal2 = rotate(v2, -angle);
-
-	// PRESERVE SPEED - calculate startSpeed and newSpeed ratio and apply it to particle x and y velocities
-	const otherParticlePreservedSpeed = preserveSpeed(otherParticle, vFinal2);
-
-	//
-	otherParticle.velocity.x = -otherParticlePreservedSpeed.x;
-	otherParticle.velocity.y = -otherParticlePreservedSpeed.y;
 }
