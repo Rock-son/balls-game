@@ -193,7 +193,7 @@ export class GameDialog extends React.Component {
 						</Container>
 					</Row>
 				</ModalBody>
-				<ModalFooter onClick={startGame} data-title={isGameStopped ? "" : "RESTART by changing game settings"} className="game-modal__footer">
+				<ModalFooter onClick={startGame} data-title={isGameStopped ? "Use mousewheel to make quarantine larger or smaller" : "Restart by changing game settings"} className="game-modal__footer">
 					{isGameStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isGameStopped ? "<<<" : ""}
 				</ModalFooter>
 		</Modal>

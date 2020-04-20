@@ -26,12 +26,14 @@
 					height: 100px;
 					transform: translate(0%, 75%);
 					&__notif {
+						font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 						display: block;
 						font-size: 96px;
 						font-weight: 900;
 						line-height: 144px;
 					}
 					&__btn {
+						font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 						color: $white;
 						display: block;
 						cursor: pointer;
