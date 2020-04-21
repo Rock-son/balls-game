@@ -11,6 +11,7 @@ import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScrol
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
+import soundQuarantine from "./assets/snd-quarantine.mp3";
 
 //import Modernizr from "../modernizr"
 
@@ -158,6 +159,8 @@ export default class HomePage extends React.Component {
 					quarantineButtonsActive: true,
 					quarantinePlaced: true,
 				});
+				const audio = new Audio(soundQuarantine);
+				audio.play();
 			}
 		} else {
 			this.toggleGameDialog();
@@ -279,7 +282,7 @@ export default class HomePage extends React.Component {
 					toggleDialog={this.toggleDialog}
 					simulationSettings={this.state.simulationSettings}
 					gameSettings={this.state.gameSettings}
-					gameTimeDifficulty={this.state.gameTimeDifficulty}
+					gameTimeDifficultyInSeconds={this.state.gameTimeDifficultyInSeconds}
 					isSimulationActive={this.state.isSimulationActive}
 					isGameActive={this.state.isGameActive}
 					gamePaused={this.state.gamePaused}
@@ -306,7 +309,7 @@ export default class HomePage extends React.Component {
 					toggle={this.toggleGameDialog}
 					buttonText={this.state.startButtonText}
 					settings={this.state.gameSettings}
-					gameTimeDifficulty={this.state.gameTimeDifficulty}
+					gameTimeDifficultyInSeconds={this.state.gameTimeDifficultyInSeconds}
 					setGameSettings={this.setGameSettings}
 				/>
 				<TimeChallengeEndDialog

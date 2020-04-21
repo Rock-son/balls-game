@@ -1,4 +1,7 @@
 @import "../../helpers/colors.scss";
+
+$buttonNr: "_1", "_2", "_3", "_4";
+
 .main .quarantine__btn {
 	position: absolute;
 	font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
@@ -28,6 +31,7 @@
 		right: 10px;
 	}
 	&.active {
+		background-color: $green !important;
 		z-index: 1;
 		opacity: 1;
 	}

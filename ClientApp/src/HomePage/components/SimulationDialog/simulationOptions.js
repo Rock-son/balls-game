@@ -22,20 +22,17 @@ export const speedOptions = [
 	"|",
 	{ type: "Fast", value: 1 },
 ];
-export const deactivateOptions = [
+export const healedOptions = [
 	0,
 	"|",
 	10000,
-	"|",
-	15000,
 	"|",
 	20000,
 	"|",
 	30000,
 	"|",
-	45000,
-	"|",
-	60000
+	60000,
+	"|"
 ];
 export const booleanOptions = [
 	{ type: "yes", value: true },

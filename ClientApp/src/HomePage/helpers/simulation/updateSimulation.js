@@ -13,13 +13,22 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 	if ((sprite.y - sprite.radius) < 0) {
 		sprite.velocity.y = -sprite.velocity.y;
 	}
-	// CALCULATE DEACTIVATION TIME IF APPLIED
-	if (sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0) {
-		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["deactivateAfter"]) {
+	// HEAL BALLS IF HEALAFTER TIME IS APPLIED AND DOESN'T STAY HEALED
+	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["heal"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = null;
 			sprite.texture = loader.resources.sheet.textures["ball-white.svg"];
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
+		}
+	}
+	// HEAL BALLS IF HEALAFTER TIME IS APPLIED AND STAYS HEALED
+	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && sprite.reactContext.state.simulationSettings["heal"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
+			sprite.contagion = 2;
+			sprite.contagiousFrom = null;
+			sprite.texture = loader.resources.sheet.textures["ball-grey.svg"];
+			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1, healed: prevState.healed + 1 }));
 		}
 	}
 	// AUTORESTART
@@ -41,15 +50,6 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 		}
 		return;
 	}
-	// CALCULATE HEALED IF APPLIED
-	if (sprite.reactContext.state.simulationSettings["heal"]) {
-		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
-			sprite.contagion = 2;
-			sprite.contagiousFrom = null;
-			sprite.texture = loader.resources.sheet.textures["ball-grey.svg"];
-			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1, healed: prevState.healed + 1 }));
-		}
-	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
 	for (let i = sprite.myID; i < spriteArr.length; i++) {
 		if (sprite.myID === spriteArr[i].myID) {
@@ -60,13 +60,13 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 			const otherSprite = spriteArr[i];
 				// ACTIVATE TIME contagiousFrom - if not already healed
 			if (sprite.contagion !== 2) {
-					// with deactivation time on and healed off
-				if ((sprite.reactContext.state.simulationSettings["deactivateAfter"] > 0 && !sprite.reactContext.state.simulationSettings["heal"]) &&
-					(otherSprite.contagion || sprite.contagion)) //any red can infect another red again
+					// with HEALED time on and healed off
+				if ((sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["heal"]) &&
+					(otherSprite.contagion || sprite.contagion)) // any red can infect another red again
 				{
 					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;
 					otherSprite.contagiousFrom = sprite.contagion ? new Date().getTime() : otherSprite.contagiousFrom;
-				} // with deactivation time on or off and heal on, red cannot infect another red again
+				} // with HEALED time on or off and heal on, red cannot infect another red again
 				else if ((otherSprite.contagion && !sprite.contagion) || (!otherSprite.contagion && sprite.contagion))
 				{
 					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;
