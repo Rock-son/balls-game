@@ -182,7 +182,7 @@ function handleOnImageLoaded(gameSettings) {
 		if (contagion) {
 			//sprite = new PIXI.Sprite(redBall);
 			sprite = new PIXI.AnimatedSprite(animatedsheet.animations["animatedball"]);
-			sprite.animationSpeed = 0.167
+			sprite.animationSpeed = 0.05;
 			sprite.play();
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
