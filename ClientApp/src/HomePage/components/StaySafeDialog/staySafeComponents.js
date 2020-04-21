@@ -88,8 +88,8 @@ export const page6 = () => {
 export const page7 = () => {
 	return (
 		<div className="staysafe-dialog__container__items">
-			<p>We hope you got some new ideas to help you stay well now and in the future!"</p>
-			<p>If you found the simulator interesting, please share it with your friends. Copy the link and send it forward"</p>
+			<p>We hope you got some new ideas to help you stay well now and in the future!</p>
+			<p>If you found the simulator interesting, please share it with your friends. Copy the link and send it forward</p>
 			<p>We also invite you to check our
 				<a
 					className="nav-link"
@@ -98,14 +98,8 @@ export const page7 = () => {
 					rel="noopener noreferrer" >
 						main project.
 				</a>
-				You can find some additional free resources there. Illustrations done by
-				<a
-					className="nav-link"
-					href="https://www.instagram.com/Darkitsch"
-					target="_blank"
-					rel="noopener noreferrer" >
-						Darka
-				</a></p>
+				You can find some additional free resources there. 
+			</p>
 			<p>Be good and stay safe!</p>
 		</div>
 	)

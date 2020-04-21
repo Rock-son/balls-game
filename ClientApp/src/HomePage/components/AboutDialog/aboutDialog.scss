@@ -29,7 +29,6 @@
 		}
 		& .close {
 			position: absolute;
-			top: 20px;
 			right: 20px;
 			text-align: right;
 			color: $light-grey;
@@ -37,6 +36,9 @@
 			font-size: 19px;
 			font-weight: 300;
 			text-shadow: none;
+			&:hover {
+				color: $white;
+			}
 		}
 	}
 	& .about-dialog__photo {

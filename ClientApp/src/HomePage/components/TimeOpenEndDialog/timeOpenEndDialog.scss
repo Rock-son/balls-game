@@ -36,6 +36,9 @@
 			font-size: 19px;
 			font-weight: 300;
 			text-shadow: none;
+			&:hover {
+				color: $white;
+			}
 		}
 	}
 	& .text {

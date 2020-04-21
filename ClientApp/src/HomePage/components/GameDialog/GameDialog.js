@@ -20,7 +20,7 @@ export class GameDialog extends React.Component {
 
 	onMouseEnterInstructions(e) {
 		const mode = JSON.parse(e.currentTarget.getAttribute("data-option"));
-		const modeType = e.currentTarget.getAttribute("data-type");
+		const modeType = e.currentTarget.getAttribute("data-type"); // minutes of duration
 		this.setState({ instructionsOpen: true, mode, modeType });
 	}
 	onMouseLeaveInstructions(e) {
@@ -73,6 +73,7 @@ export class GameDialog extends React.Component {
 
 		const { isOpen, toggle, startGame, buttonText, setGameSettings, isGameStopped,
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
+		const diffTime = this.props.gameTimeDifficulty;
 
 		return (
 			<Modal key="game" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">
@@ -88,6 +89,7 @@ export class GameDialog extends React.Component {
 									}
 									return 	<NavLink
 												key={idx}
+												title={modeOption.value === 0 ? "How long can you last" : `Keep one ball healthy for at least ${diffTime[this.props.settings["difficulty"]]} min`}
 												tabIndex="0"
 												data-type={modeOption.type}
 												data-option={`${JSON.stringify({ mode: modeOption.value })}`}
