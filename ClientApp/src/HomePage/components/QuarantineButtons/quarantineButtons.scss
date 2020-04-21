@@ -2,7 +2,7 @@
 .main .quarantine__btn {
 	position: absolute;
 	font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-	background-color: $green;
+	background-color: $green !important;
 	z-index: -1;
 	opacity: 0;
 	transition: opacity	.3s;
