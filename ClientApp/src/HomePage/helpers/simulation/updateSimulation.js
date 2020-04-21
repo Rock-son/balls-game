@@ -22,12 +22,21 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 			sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious - 1, healthy: prevState.healthy + 1 }));
 		}
 	}
-	// 
+	// AUTORESTART
 	if (sprite.reactContext.state.simulationSettings["autorestart"] && (sprite.reactContext.state.contagious === 0 || sprite.reactContext.state.healthy === 0)) {
 		// only need to restart it once but stop calculating further!
 		if (sprite.myID === 0) {
 			sprite.reactContext.toggleSimulationPause();
 			sprite.reactContext.simulationRestart();
+			return;
+		}
+		return;
+	} // END GAME (AUTORESTART === false)
+	else if ((sprite.reactContext.state.contagious === 0 || sprite.reactContext.state.healthy === 0)) {
+		// only need to STOP it once but stop calculating further!
+		if (sprite.myID === 0) {
+			sprite.reactContext.toggleSimulationPause();
+			sprite.reactContext.toggleSimulationDialogAfterNoRestart();
 			return;
 		}
 		return;
