@@ -1,10 +1,10 @@
-import React, { useState } from "react";   
+import React from "react";   
 import { Button, Row, Modal, ModalHeader, ModalBody, ModalFooter, 
 		Container, NavLink } from "reactstrap";
 
-import "./shareDialog.scss";
+import "./contactDialog.scss";
 
-export class ShareDialog extends React.Component {
+export class ContactDialog extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {	
 		// trigger only on game end and correct game mode
@@ -24,12 +24,12 @@ export class ShareDialog extends React.Component {
 				<ModalBody className="justify-content-center">
 					<Row>
 						<Container className="share">
-							Share with your friends
+							Contact us here
 						</Container>
 					</Row>
 					<Row>
 						<Container>
-							https://www.viralballs.com
+							viralballs.simulator@gmail.com
 						</Container>
 					</Row>
 					<Row>
