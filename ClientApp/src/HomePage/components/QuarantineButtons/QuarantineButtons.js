@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "reactstrap";
 
 import "./quarantineButtons.scss";
@@ -6,9 +6,11 @@ import "./quarantineButtons.scss";
 export class QuarantineButtons extends React.Component {
 	constructor(props) {
 		super(props);
+		this.duration = 0;
 		this.availableButtons = [1,2,3,4];
 
-		this.state = { 
+		this.state = {
+			afterClick: false,
 			active_btn_1: false, 
 			active_btn_2: false, 
 			active_btn_3: false, 
@@ -36,20 +38,23 @@ export class QuarantineButtons extends React.Component {
 			return true;
 		}
 		return false;
+		console.log("one time duration", this.props.draggedQuarantine);
 	}
 	randomIntNumber(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 	onPointerDown = (e) => {
+		e && e.preventDefault();
+		e && e.stopPropagation();		
 		// start quarantine
 		const event = e;
 		this.props.setQuarantineInMotion(event);
 
 		// deactivate button
 		const buttonId = parseInt(event.currentTarget.id);
-		this.setState({ [`active_btn_${buttonId}`]: false });
-		
+		this.setState({ [`active_btn_${buttonId}`]: false, afterClick: true });
 	}
+
 	getRandomButton() {
 		let return_btn = null;
 		let i = 0;
@@ -69,7 +74,7 @@ export class QuarantineButtons extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const { clockTime, settings } = prevProps;
+		const { clockTime } = prevProps;
 		// ON RESTART
 		if (this.props.gameRestarting) {
 			return this.setState({
@@ -78,21 +83,26 @@ export class QuarantineButtons extends React.Component {
 				active_btn_3: false,
 				active_btn_4: false
 			});
-		}
+		}// set the first button
 		if (clockTime.getSeconds() === 3) {
-			// since this is the first button, no need to check for availability
 			const randomButtonStateKey = this.getRandomButton();			
 			return randomButtonStateKey && this.setState({ [randomButtonStateKey]: true });
 		}
-		if (clockTime.getSeconds() > 5 && clockTime.getSeconds() % 5 === 0) {
+		/*
+		if (this.state.afterClick) {
+			// buttons logic
+			const randomButtonStateKey = this.getRandomButton();
+			randomButtonStateKey && this.setState({ [randomButtonStateKey]: true, afterClick: true });
+		}*/
+
+		// set all other random buttons
+		if (clockTime.getSeconds() > 5 && clockTime.getSeconds() % 5 === 0) {			
 			const randomButtonStateKey = this.getRandomButton();
 			return randomButtonStateKey && this.setState({ [randomButtonStateKey]: true });
 		}
 	}
 
 	render() {
-		
-
 		return (
 			<>
 				<Button

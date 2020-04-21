@@ -54,7 +54,7 @@ export class StaySafeDialog extends React.Component {
 
 
 	render() {
-		const { isOpen, toggle } = this.props;		
+		const { isOpen } = this.props;		
 		const Page = pageArr[this.state.page];
 
 		return (

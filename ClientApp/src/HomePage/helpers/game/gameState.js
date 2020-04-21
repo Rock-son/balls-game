@@ -21,11 +21,12 @@ export const gameSettings = {
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
 	quarantineCancelled: false,
+	lastQuarantineDuration: 0,
 	draggedQuarantine: {
 		id: -1,
 		x: 0,
 		y: 0,
-		duration: 0,
+		durationInSeconds: 0,
 		size: 250
 	},
 	// game settings
@@ -55,6 +56,7 @@ export const resetSettings = {
 		id: -1,
 		x: 0,
 		y: 0,
+		durationInSeconds: 0,
 		size: 250
 	},
 }
@@ -212,7 +214,19 @@ export function resetDraggedQuarantineId() {
 		draggedQuarantine: {...resetSettings.draggedQuarantine}
 	});
 }
+
+
 export function setQuarantineInMotion(e) {
+	function randomIntNumber(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	const milisecondsInASecond = 1000;
+	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
+	const difficulty = this.state.gameSettings["difficulty"];
+	const min = difficultyTime[difficulty][0]*milisecondsInASecond;
+	const max = difficultyTime[difficulty][1]*milisecondsInASecond;
+	
+	const randomTimeInSeconds = Math.round(randomIntNumber(min, max) / milisecondsInASecond);	
 	const pageX = e.pageX;
 	const pageY = e.pageY;
 	// pop first value from available quarantines
@@ -222,8 +236,7 @@ export function setQuarantineInMotion(e) {
 				id: prevState.availableQuarantines.slice(0,1)[0] || -1,
 				x: pageX,
 				y: pageY,
-				// TODO: 
-				//duration: 
+				durationInSeconds: randomTimeInSeconds,
 				size: prevState.draggedQuarantine.size
 			},
 			quarantineBeingDragged: true,

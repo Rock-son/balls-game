@@ -3,7 +3,6 @@ import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
 import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDiffVals, speedOptions, speedDiffValues } from "./gameOptions";
-import { InstructionsPopover } from "./instructionsPopover";
 import "./gameDialog.scss";
 
 export class GameDialog extends React.Component {
