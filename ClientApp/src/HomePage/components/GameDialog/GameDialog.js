@@ -73,7 +73,7 @@ export class GameDialog extends React.Component {
 
 		const { isOpen, toggle, startGame, buttonText, setGameSettings, isGameStopped,
 					settings: { mode, difficulty, size, quantity, speed } } = this.props;
-		const diffTime = this.props.gameTimeDifficulty;
+		const diffTime = this.props.gameTimeDifficultyInSeconds;
 
 		return (
 			<Modal key="game" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="game-modal">

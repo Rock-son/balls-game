@@ -6,7 +6,7 @@ import "./navbar.scss";
 
 export const NavBar = props => {
 	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
-		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficulty,
+		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
 		simulationSettings: { heal, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
@@ -25,7 +25,7 @@ export const NavBar = props => {
 	// TIME CHALLENGE - countdown mode
 	else if (isGameActive && mode === 1) {
 		const positiveSeconds = delayedSeconds < 0 ? 0 : delayedSeconds;
-		const coundownTime = new Date((gameTimeDifficulty[difficulty]*60 - positiveSeconds) * 1000);
+		const coundownTime = new Date((gameTimeDifficultyInSeconds[difficulty]*60 - positiveSeconds) * 1000);
 		minutes = coundownTime.getMinutes();
 		seconds = coundownTime.getSeconds();
 		formattedSeconds = seconds < 0 ? "00" : seconds < 10 ? "0" + seconds : seconds;

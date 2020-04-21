@@ -9,9 +9,10 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getTime() <= (sprite.reactContext.state.gameSettings["delayInSeconds"]*1000) + 1000) {
 		
 	}
+	
 	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win
 	if (sprite.reactContext.state.gameSettings["mode"] === 1 &&
-		sprite.reactContext.state.clockTime.getSeconds() > (sprite.reactContext.state.gameTimeDifficulty[sprite.reactContext.state.gameSettings["difficulty"]]*60000 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
+		sprite.reactContext.state.clockTime.getSeconds() > (sprite.reactContext.state.gameTimeDifficultyInSeconds[sprite.reactContext.state.gameSettings["difficulty"]]*60 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
 		if (sprite.myID === 0) {
 			// it is imperative to call these functions only once
 			sprite.reactContext.toggleGamePause();
@@ -247,7 +248,7 @@ function getContagion(sprite, loader) {
 	// Open time - show stats and share dialog
 	if (gameSettings["mode"] === 0 && sprite.reactContext.state.healthy === 0) {
 		sprite.reactContext.toggleGamePause();
-		sprite.reactContext.gameEnded({ playerWin: true });
+		sprite.reactContext.gameEnded({ playerWin: null });
 		return;
 	}
 	// TIME CHALLENGE - if there is no more healthy balls and obviously time is not up (is beeing checked at the start of this function) - player looses
