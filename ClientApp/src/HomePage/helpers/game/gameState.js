@@ -226,9 +226,7 @@ export function setQuarantineInMotion(e) {
 	const min = difficultyTime[difficulty][0]*milisecondsInASecond;
 	const max = difficultyTime[difficulty][1]*milisecondsInASecond;
 	
-	const randomTimeInSeconds = Math.round(randomIntNumber(min, max) / milisecondsInASecond);
-	console.log("wtf", randomTimeInSeconds);
-	
+	const randomTimeInSeconds = Math.round(randomIntNumber(min, max) / milisecondsInASecond);	
 	const pageX = e.pageX;
 	const pageY = e.pageY;
 	// pop first value from available quarantines

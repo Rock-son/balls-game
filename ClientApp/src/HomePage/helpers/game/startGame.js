@@ -17,7 +17,9 @@ export function startGame(autostart, gameSettings = null) {
 	if (this.gameApp.loader.resources.sheet == null) {
 		this.gameApp.loader
 			.add("sheet", "textures.json")
-			.add("animatedsheet", "textures_blink.json")
+			.add("animatedsheet", "textures_blink_black.json")
+			//.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
+			//.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
 			.load(handleOnImageLoaded.bind(this, gameSettings));
 	} else {
@@ -68,7 +70,6 @@ function handleOnImageLoaded(gameSettings) {
 		size: radius,
 		speed,
 		quantity,
-		difficulty,
 		nrOfQuarantines
 	} = gameSettings == null ? this.state.gameSettings : gameSettings;
 
@@ -173,8 +174,6 @@ function handleOnImageLoaded(gameSettings) {
 		if (contagion) {
 			//sprite = new PIXI.Sprite(redBall);
 			sprite = new PIXI.AnimatedSprite(animatedsheet.animations["animatedball"]);
-			sprite.animationSpeed = 0.05;
-			sprite.play();
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
 		}

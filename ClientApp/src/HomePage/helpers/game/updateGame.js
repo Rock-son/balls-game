@@ -4,15 +4,21 @@ const milisecondsInASecond = 1000;
 export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circleIntersect, loader, randomIntNumber) => {
 	// there are no instantiated variables due to garbage collection (optimization purposes)
 
-	// STOP RED BLINKER
-	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === (sprite.reactContext.state.gameSettings["delayInSeconds"])) {
-		sprite.stop();
-		sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
-	}
+
 
 	// DELAY START TIME
-	if (sprite.reactContext.state.clockTime.getSeconds() <= sprite.reactContext.state.gameSettings["delayInSeconds"]) {		
+	if (sprite.reactContext.state.clockTime.getSeconds() <= sprite.reactContext.state.gameSettings["delayInSeconds"]-1) {		
 		return;
+	}
+	// START RED BLINKER
+	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === sprite.reactContext.state.gameSettings["delayInSeconds"] ) {
+		sprite.animationSpeed = 0.1;
+		sprite.play();
+	}
+	// STOP RED BLINKER
+	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === sprite.reactContext.state.gameSettings["delayInSeconds"] + 2) {
+		sprite.stop();
+		sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
 	}
 	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win
 	if (sprite.reactContext.state.gameSettings["mode"] === 1 &&
