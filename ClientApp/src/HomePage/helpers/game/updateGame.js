@@ -1,15 +1,19 @@
 import * as PIXI from "pixi.js-legacy";
+const milisecondsInASecond = 1000;
 
 export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circleIntersect, loader, randomIntNumber) => {
 	// there are no instantiated variables due to garbage collection (optimization purposes)
+
+	// STOP RED BLINKER
+	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === (sprite.reactContext.state.gameSettings["delayInSeconds"])) {
+		sprite.stop();
+		sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
+	}
+
 	// DELAY START TIME
-	if (sprite.reactContext.state.clockTime.getTime() <= sprite.reactContext.state.gameSettings["delayInSeconds"]*1000) {
+	if (sprite.reactContext.state.clockTime.getSeconds() <= sprite.reactContext.state.gameSettings["delayInSeconds"]) {		
 		return;
 	}
-	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getTime() <= (sprite.reactContext.state.gameSettings["delayInSeconds"]*1000) + 1000) {
-		
-	}
-	
 	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win
 	if (sprite.reactContext.state.gameSettings["mode"] === 1 &&
 		sprite.reactContext.state.clockTime.getSeconds() > (sprite.reactContext.state.gameTimeDifficultyInSeconds[sprite.reactContext.state.gameSettings["difficulty"]]*60 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
@@ -24,7 +28,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	// CHANGE TEXT - and stop calculations to avoid collision detection of Text object
 	if (sprite.isTextSprite) {
 		if (sprite.dropTime != null) {
-			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / 1000;
+			const seconds = (sprite.dropTime + sprite.duration - sprite.reactContext.state.clockTime.getTime()) / milisecondsInASecond;
 			sprite.text = `0:${seconds < 10 ? "0" + seconds : seconds}`;
 		}
 		// must not calculate any further as text object has no need for it
@@ -158,9 +162,9 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			// this was done in a hurry (repeated in HomePage/helpers/game/startGame.js) - it is only called on quarantine termination
 			const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
 			const difficulty = sprite.reactContext.state.gameSettings["difficulty"];
-			const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
-			textSprite.duration = randomTimeInSeconds * 1000;
-			sprite.duration = randomTimeInSeconds * 1000;
+			const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*milisecondsInASecond, difficultyTime[difficulty][1]*milisecondsInASecond) / milisecondsInASecond);	// make duration a round seconds number
+			textSprite.duration = randomTimeInSeconds * milisecondsInASecond;
+			sprite.duration = randomTimeInSeconds * milisecondsInASecond;
 			textSprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
 			//sprite.reactContext.setState({ availableQuarantines: {...sprite.reactContext.state.availableQuarantines,  id: sprite.myID, duration: sprite.duration }});
 		}
