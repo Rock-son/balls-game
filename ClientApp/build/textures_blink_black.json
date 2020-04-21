@@ -1,0 +1,31 @@
+{"frames": {
+
+"animatedball_02.svg":
+{
+	"frame": {"x":1,"y":1,"w":20,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":20},
+	"sourceSize": {"w":20,"h":20}
+},
+"animatedball_01.svg":
+{
+	"frame": {"x":23,"y":1,"w":20,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":20},
+	"sourceSize": {"w":20,"h":20}
+}},
+"animations": {
+	"animatedball": ["animatedball_01.svg","animatedball_02.svg"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "textures_blink_black.png",
+	"format": "RGBA8888",
+	"size": {"w":44,"h":22},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:27d3f0dc6da0c41146def33a7fd906de:bbea93a70151677521f4b9cd834bba57:0511c5a74bbb9c9e43e7409b954f9689$"
+}
+}

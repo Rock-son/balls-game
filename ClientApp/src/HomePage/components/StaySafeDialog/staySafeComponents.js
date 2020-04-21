@@ -1,5 +1,3 @@
-import { NavLink } from "reactstrap";
-
 import React from "react";
 
 export const page0 = () => {

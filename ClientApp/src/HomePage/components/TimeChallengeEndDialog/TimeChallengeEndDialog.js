@@ -1,6 +1,5 @@
 import React from "react";   
-import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
-		Container, Nav, NavLink } from "reactstrap";
+import { Row, Modal, ModalBody, Container } from "reactstrap";
 
 import "./timeChallengeEndDialog.scss";
 
@@ -32,8 +31,7 @@ export class TimeChallengeEndDialog extends React.Component {
 									className="game-end-modal__text__container__btn"
 									tabIndex="0"
 									role="button"
-									onClick={closeGameEndDialog}
-									className="game-end-modal__text__container__btn">
+									onClick={closeGameEndDialog}>
 										{didPlayerWin ? "OK" : "Start over"}
 								</div>
 							</div>

@@ -41,7 +41,7 @@ export class AboutDialog extends React.Component {
 				<ModalBody>
 					<Row>
 						<Container className="about-dialog__photo">
-							<img src={aboutImage} alt="creators photo" />>
+							<img src={aboutImage} alt="creators photograph" />>
 						</Container>
 					</Row>
 					<Row>

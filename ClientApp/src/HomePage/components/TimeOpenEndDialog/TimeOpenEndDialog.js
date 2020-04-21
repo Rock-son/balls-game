@@ -1,8 +1,7 @@
 import React from "react";   
-import { Row, Modal, ModalHeader, ModalBody, ModalFooter, 
-		Container, Button, Nav, NavLink } from "reactstrap";
-
+import { Row, Modal, ModalHeader, ModalBody, ModalFooter, Container, Button } from "reactstrap";
 import { speedToString, sizeToString } from "../GameDialog/gameOptions";
+
 import "./timeOpenEndDialog.scss";
 
 export class TimeOpenEndDialog extends React.Component {
