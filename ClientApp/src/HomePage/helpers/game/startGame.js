@@ -16,7 +16,8 @@ export function startGame(autostart, gameSettings = null) {
 
 	if (this.gameApp.loader.resources.sheet == null) {
 		this.gameApp.loader
-			.add("sheet", "balls.json")
+			.add("sheet", "textures.json")
+			.add("animatedsheet", "textures_blink.json")
 			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
@@ -155,6 +156,8 @@ function handleOnImageLoaded(gameSettings) {
 	const maxHeight = this.canvasHeight - radius * 2.5;
 	const whiteBall = this.gameApp.loader.resources.sheet.textures["ball-white.svg"];
 	const redBall = this.gameApp.loader.resources.sheet.textures["ball-red.svg"];
+	const animatedsheet = this.gameApp.loader.resources.animatedsheet.spritesheet;
+	
 
 	for (let i = 0; i < nrImages; i++) {
 
@@ -177,7 +180,10 @@ function handleOnImageLoaded(gameSettings) {
 			}
 		}
 		if (contagion) {
-			sprite = new PIXI.Sprite(redBall);
+			//sprite = new PIXI.Sprite(redBall);
+			sprite = new PIXI.AnimatedSprite(animatedsheet.animations["animatedball"]);
+			sprite.animationSpeed = 0.167
+			sprite.play();
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
 		}
