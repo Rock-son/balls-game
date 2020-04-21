@@ -1,5 +1,7 @@
 
-import sound from "../../assets/gameStart.mp3";
+import soundGameStart from "../../assets/snd-gameStart.mp3";
+import soundLose from "../../assets/snd-lose.mp3";
+import soundWin from "../../assets/snd-win.mp3";
 
 export const gameSettings = {
 	isGameActive: false,
@@ -8,7 +10,7 @@ export const gameSettings = {
 	// gamesettings - popups
 	gameSettingsOpen: false,
 	gameRestarting: false,
-	gameTimeDifficulty: { 0: 7, 1: 5, 2: 3},
+	gameTimeDifficultyInSeconds: { 0: 7, 1: 5, 2: 3},
 	// PLAYER
 	gameEnded: false,
 	didPlayerWin: false,
@@ -64,6 +66,16 @@ export function gameEnded({ playerWin }) {
 		gameStopped: true,
 		didPlayerWin: playerWin
 	});
+	// if null => gameMode === 0
+	if (playerWin != null)  {
+		if (playerWin) {
+			const audio = new Audio(soundWin);
+			audio.play();
+		} else {
+			const audio = new Audio(soundLose);
+			audio.play();
+		}
+	}
 }
 export function closeGameEndDialog() {
 	const playerWin = this.state.didPlayerWin;
@@ -152,7 +164,7 @@ export function stopStartGame() {
 			});
 		}, 400)
 		this.audioTimeoutId = setTimeout(() => {
-			const audio = new Audio(sound);
+			const audio = new Audio(soundGameStart);
 			audio.play();
 		}, 3000);
 	}
