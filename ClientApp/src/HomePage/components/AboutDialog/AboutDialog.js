@@ -9,6 +9,7 @@ export class AboutDialog extends React.Component {
 		super(props);
 
 		this.onStaySafeLinkClick = this.onStaySafeLinkClick.bind(this);
+		this.onContactDialogClick = this.onContactDialogClick.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -18,10 +19,16 @@ export class AboutDialog extends React.Component {
 		}
 		return false;
 	}
-	onStaySafeLinkClick() {
-		this.props.toggle();
+	onStaySafeLinkClick(e) {
+		this.props.toggle(e);
 		setTimeout(() => {
 			this.props.toggleStaySafeDialog();
+		}, 250);
+	}
+	onContactDialogClick(e) {
+		this.props.toggle(e);
+		setTimeout(() => {
+			this.props.toggleContactDialog();
 		}, 250);
 	}
 
@@ -54,7 +61,7 @@ export class AboutDialog extends React.Component {
 							</p>
 							<p>Have a question, comment, suggestion?
 								<NavLink
-									onClick={this.onStaySafeLinkClick}
+									onClick={this.onContactDialogClick}
 									target="_blank"
 									rel="noopener noreferrer">
 										Contact

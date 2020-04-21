@@ -3,7 +3,7 @@ import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog,
-	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog } from "./components";
+	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog, ContactDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog, toggleSimulationDialogAfterNoRestart } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
@@ -43,6 +43,7 @@ export default class HomePage extends React.Component {
 			// modals - popups
 			shareDialogOpen: false,
 			aboutDialogOpen: false,
+			contactDialogOpen: false,
 			staySafeDialogOpen: false,
 			howToPlayDialogOpen: false,
 			beatYourFriendDialogOpen: false
@@ -62,6 +63,7 @@ export default class HomePage extends React.Component {
 		this.toggleGamePause = toggleGamePause.bind(this);
 		this.toggleAboutDialog = this.toggleAboutDialog.bind(this);
 		this.toggleSimulationPause = toggleSimulationPause.bind(this);
+		this.toggleContactDialog = this.toggleContactDialog.bind(this);
 		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
 		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
 		this.toggleBeatYourFriendDialog = this.toggleBeatYourFriendDialog.bind(this);
@@ -71,7 +73,10 @@ export default class HomePage extends React.Component {
 		this.handleResize = this.handleResize.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleRefocus = this.handleRefocus.bind(this);
-		this.copyToClipboard = this.copyToClipboard.bind(this);
+		this.copyUriToClipboard = this.copyUriToClipboard.bind(this);
+		this.copyMailToClipboard = this.copyMailToClipboard.bind(this);
+
+		
 		// GAME
 		this.gameEnded = gameEnded.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
@@ -159,8 +164,8 @@ export default class HomePage extends React.Component {
 		}
 	}
 	toggleAboutDialog(e){
-		e.preventDefault();
-		e.stopPropagation();
+		e && e.preventDefault();
+		e && e.stopPropagation();
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
@@ -170,14 +175,28 @@ export default class HomePage extends React.Component {
 		}
 	}
 	toggleShareDialog(e) {
-		e.preventDefault();
-		e.stopPropagation();
+		e && e.preventDefault();
+		e && e.stopPropagation();
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
 			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, shareDialogOpen: !prevState.shareDialogOpen }));
 		} else {
 			this.toggleGamePause();
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, shareDialogOpen: !prevState.shareDialogOpen }));
+		}
+		setTimeout(() => {
+			this.setState({ isCopied: false });
+		}, 1000);
+	}
+	toggleContactDialog(e) {
+		e && e.preventDefault();
+		e && e.stopPropagation();
+		if (this.state.isSimulationActive) {
+			this.toggleSimulationPause();
+			this.setState(prevState => ({ simulationPaused: !prevState.simulationPaused, contactDialogOpen: !prevState.contactDialogOpen }));
+		} else {
+			this.toggleGamePause();
+			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, contactDialogOpen: !prevState.contactDialogOpen }));
 		}
 		setTimeout(() => {
 			this.setState({ isCopied: false });
@@ -222,11 +241,20 @@ export default class HomePage extends React.Component {
 		e.stopPropagation();
 		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
-	copyToClipboard() {
+	copyUriToClipboard() {
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state === "granted" || result.state === "prompt") {
-					navigator.clipboard.writeText("https://www.covidsimulator.com");
+					navigator.clipboard.writeText("https://www.viralballs.com");
+					this.setState({ isCopied: true });
+				}
+		 	});
+	}
+	copyMailToClipboard() {
+		navigator.permissions.query({name: "clipboard-write"})
+			.then(result => {
+				if (result.state === "granted" || result.state === "prompt") {
+					navigator.clipboard.writeText("viralballs.simulator@gmail.com");
 					this.setState({ isCopied: true });
 				}
 		 	});
@@ -298,13 +326,20 @@ export default class HomePage extends React.Component {
 				<ShareDialog
 					isOpen={this.state.shareDialogOpen}
 					toggle={this.toggleShareDialog}
-					copy={this.copyToClipboard}
+					copy={this.copyUriToClipboard}
+					isCopied={this.state.isCopied}
+				/>
+				<ContactDialog
+					isOpen={this.state.contactDialogOpen}
+					toggle={this.toggleContactDialog}
+					copy={this.copyMailToClipboard}
 					isCopied={this.state.isCopied}
 				/>
 				<AboutDialog
 					isOpen={this.state.aboutDialogOpen}
 					toggle={this.toggleAboutDialog}
 					toggleStaySafeDialog={this.toggleStaySafeDialog}
+					toggleContactDialog={this.toggleContactDialog}
 				/>
 				<StaySafeDialog
 					isOpen={this.state.staySafeDialogOpen}
