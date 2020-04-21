@@ -5,7 +5,7 @@ import { startSimulation, startGame, stop, pause, unPause } from "./helpers/acti
 import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog,
 	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
-	toggleSimulationPause, toggleSimulationDialog } from "./helpers/simulation/simulationState";
+	toggleSimulationPause, toggleSimulationDialog, toggleSimulationDialogAfterNoRestart } from "./helpers/simulation/simulationState";
 import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
 	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
@@ -21,6 +21,7 @@ export default class HomePage extends React.Component {
 		this.simulationApp = null;
 		this.gameApp = null;
 		this.gameTimeoutId = null;
+		this.audioTimeoutId = null;
 
 		this.state = {
 			...simulationSettings,
@@ -64,6 +65,7 @@ export default class HomePage extends React.Component {
 		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
 		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
 		this.toggleBeatYourFriendDialog = this.toggleBeatYourFriendDialog.bind(this);
+		this.toggleSimulationDialogAfterNoRestart = toggleSimulationDialogAfterNoRestart.bind(this);
 		this.onMouseMove = onMouseMove.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
@@ -249,6 +251,7 @@ export default class HomePage extends React.Component {
 					toggleDialog={this.toggleDialog}
 					simulationSettings={this.state.simulationSettings}
 					gameSettings={this.state.gameSettings}
+					gameTimeDifficulty={this.state.gameTimeDifficulty}
 					isSimulationActive={this.state.isSimulationActive}
 					isGameActive={this.state.isGameActive}
 					gamePaused={this.state.gamePaused}
@@ -275,6 +278,7 @@ export default class HomePage extends React.Component {
 					toggle={this.toggleGameDialog}
 					buttonText={this.state.startButtonText}
 					settings={this.state.gameSettings}
+					gameTimeDifficulty={this.state.gameTimeDifficulty}
 					setGameSettings={this.setGameSettings}
 				/>
 				<TimeChallengeEndDialog

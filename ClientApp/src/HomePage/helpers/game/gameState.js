@@ -2,13 +2,13 @@
 import sound from "../../assets/gameStart.mp3";
 
 export const gameSettings = {
-	audioStart: false,
 	isGameActive: false,
 	gamePaused: true,
 	gameStopped: true,
 	// gamesettings - popups
 	gameSettingsOpen: false,
 	gameRestarting: false,
+	gameTimeDifficulty: { 0: 7, 1: 5, 2: 3},
 	// PLAYER
 	gameEnded: false,
 	didPlayerWin: false,
@@ -151,7 +151,7 @@ export function stopStartGame() {
 				}
 			});
 		}, 400)
-		setTimeout(() => {
+		this.audioTimeoutId = setTimeout(() => {
 			const audio = new Audio(sound);
 			audio.play();
 		}, 3000);
@@ -264,6 +264,7 @@ export function toggleGameDialog(e) {
 		}, 400);
 	} else {
 		this.toggleGamePause();
+		this.audioTimeoutId != null && clearTimeout(this.audioTimeoutId);
 		this.setState(prevState => {
 			return ({
 				gameSettingsOpen: !prevState.gameSettingsOpen,

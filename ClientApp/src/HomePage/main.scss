@@ -46,6 +46,10 @@ canvas {
 .audio {
 	display: none;
 }
+.modal-backdrop.show {
+	opacity: .7;
+}
+
 
 @import "./components/Navbar/navbar.scss";
 

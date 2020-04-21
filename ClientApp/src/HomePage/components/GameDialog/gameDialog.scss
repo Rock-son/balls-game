@@ -36,6 +36,9 @@
 			font-size: 19px;
 			font-weight: 300;
 			text-shadow: none;
+			&:hover {
+				color: $white;
+			}
 		}
 	}
 	& .modal-body {
@@ -63,7 +66,7 @@
 			color: $light-grey;
 			justify-content: center;
 			& .disabled {
-				color: $grey;
+				color: $dark-grey;
 			}
 			& .nav-link:nth-child(even) {
 				color: $dark-grey;

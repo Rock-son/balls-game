@@ -114,6 +114,22 @@ export function setSimulationSettings(e) {
 		});
 	}
 }
+export function toggleSimulationDialogAfterNoRestart(e) {
+	e && e.preventDefault();
+	e && e.stopPropagation();
+	this.setState(prevState => {
+		return ({
+			simulationSettingsOpen: !prevState.simulationSettingsOpen,
+			simulationPaused: !prevState.simulationPaused,
+			simulationStopped: true,
+			startButtonText: "START SIMULATION",
+			isSimulationActive: true,
+			isGameActive: false,
+			gamePaused: true,
+			gameStopped: true
+		})
+	});
+}
 
 export function toggleSimulationDialog(e) {
 	e && e.preventDefault();

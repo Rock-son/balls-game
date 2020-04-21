@@ -120,7 +120,7 @@ export class SimulationDialog extends React.Component {
 					</Row>
 					<Row>
 						<Container className="choice">
-							<div className="choice__header">Deactivate ball after</div>
+							<div className="choice__header">Heal ball after</div>
 							<Nav className="choice__options">
 								{deactivateOptions.map((deactivateOption, idx) => {
 									if (deactivateOption === "|") {
