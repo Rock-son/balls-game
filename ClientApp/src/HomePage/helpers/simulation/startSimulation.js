@@ -30,8 +30,6 @@ export function startSimulation(autostart, simulationSettings = null) {
 		this.simulationApp.loader
 			.add("sheet", "textures.json")
 			.add("animatedsheet", "textures_blink.json")
-			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
-			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
 			.load(handleOnImageLoaded.bind(this, simulationSettings));
 	} else {

@@ -15,7 +15,7 @@ export class BeatYourFriendDialog extends React.Component {
 	}
 
 	render() {
-		const { isOpen, toggle, gameSettings, startGame } = this.props;
+		const { isOpen, toggle, startGame } = this.props;
 				
 		return (
 			<Modal key="beatyourfriend-dialog" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="beatyourfriend-dialog">
