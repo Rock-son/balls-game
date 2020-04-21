@@ -146,7 +146,6 @@ export default class HomePage extends React.Component {
 	}
 
 	toggleDialog(e) {
-		const target = e && e.currentTarget || null;
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationDialog();

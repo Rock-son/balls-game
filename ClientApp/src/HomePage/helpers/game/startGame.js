@@ -18,8 +18,6 @@ export function startGame(autostart, gameSettings = null) {
 		this.gameApp.loader
 			.add("sheet", "textures.json")
 			.add("animatedsheet", "textures_blink.json")
-			.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
-			.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
 			.load(handleOnImageLoaded.bind(this, gameSettings));
 	} else {
@@ -77,25 +75,20 @@ function handleOnImageLoaded(gameSettings) {
 
 	const quarantineArr = [];
 	const timeTextArr = [];
-	const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
 	// TEXT & QUARANTINES
 	for (let index = 0; index < nrOfQuarantines; index++) {
-		const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*1000, difficultyTime[difficulty][1]*1000) / 1000);	// make duration a round seconds number
 		// TEXT
-		const formattedTime = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
-		const timeText = new PIXI.Text(formattedTime, {
+		const timeText = new PIXI.Text("", {
 			fill: 0x69b11c,
 			fontSize: "21px",
 			fontWeight: "700",
 			fontFamily : "Roboto Condensed"
 		});
 		timeText.alpha = 1;
-		timeText.text = formattedTime;
 		timeText.isTextSprite = true;
 		timeText.anchor.set(0.5, 0);
 		timeText.x = -500;
 		timeText.y = -500;
-		timeText.duration = randomTimeInSeconds * 1000;
 		timeText.dropTime = null;
 		timeText.reactContext = this;
 		timeText.myID = quantity + nrOfQuarantines + index; // text index (calulate existing quarantines)
@@ -117,7 +110,6 @@ function handleOnImageLoaded(gameSettings) {
 		quarantine.x = -500 * (index+1); // so quarantines don't crash all the time in each other
 		quarantine.y = -500 * (index+1); // so quarantines don't crash all the time in each other
 		quarantine.alpha = .5;
-		quarantine.duration = randomTimeInSeconds * 1000;
 		quarantine.width = width;
 		quarantine.height = height;
 		quarantine.anchor.x = .5;
@@ -155,7 +147,6 @@ function handleOnImageLoaded(gameSettings) {
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
 	const whiteBall = this.gameApp.loader.resources.sheet.textures["ball-white.svg"];
-	const redBall = this.gameApp.loader.resources.sheet.textures["ball-red.svg"];
 	const animatedsheet = this.gameApp.loader.resources.animatedsheet.spritesheet;
 	
 

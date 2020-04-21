@@ -63,7 +63,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 
 			// SET DROP TIME - if quarantine is draged and placed, it cannot have dropTime null at the same time
-			else if (sprite.reactContext.state.quarantinePlaced) {sprite.myID === sprite.reactContext.state.gameSettings["quantity"] && console.log("wrong from quarantine placed");
+			else if (sprite.reactContext.state.quarantinePlaced) {
 				const dropTime = sprite.reactContext.state.clockTime.getTime();
 				sprite.dropTime = dropTime;
 				textSprite.dropTime = dropTime;
@@ -91,7 +91,12 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			// DRAG and RESIZE on wheelscroll
 			else if (sprite.isDragged) {
 				const size = sprite.reactContext.state.draggedQuarantine["size"]
-
+				// text & duration
+				if (sprite.duration == null) {					
+					textSprite.duration = sprite.reactContext.state.draggedQuarantine["durationInSeconds"]*1000;
+					sprite.duration = sprite.reactContext.state.draggedQuarantine["durationInSeconds"]*1000;
+					textSprite.text = `0:${sprite.reactContext.state.draggedQuarantine["durationInSeconds"] < 10 ? "0" + sprite.reactContext.state.draggedQuarantine["durationInSeconds"] + "" : sprite.reactContext.state.draggedQuarantine["durationInSeconds"]}`;
+				}
 				// resize and move (x, y)
 				sprite.width = size < 90 ? 90: size > 360 ? 360 : size;
 				sprite.height = size < 90 ? 90: size > 360 ? 360 : size;
@@ -158,15 +163,6 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			sprite.texture = green.generateCanvasTexture();
 			sprite.alpha = 1;
 			sprite.reactContext.setQuarantineNonactive(sprite.myID);
-			// TEXT
-			// this was done in a hurry (repeated in HomePage/helpers/game/startGame.js) - it is only called on quarantine termination
-			const difficultyTime = { 0: [15, 25], 1: [15, 20], 2: [10, 15] };
-			const difficulty = sprite.reactContext.state.gameSettings["difficulty"];
-			const randomTimeInSeconds = Math.round(randomIntNumber(difficultyTime[difficulty][0]*milisecondsInASecond, difficultyTime[difficulty][1]*milisecondsInASecond) / milisecondsInASecond);	// make duration a round seconds number
-			textSprite.duration = randomTimeInSeconds * milisecondsInASecond;
-			sprite.duration = randomTimeInSeconds * milisecondsInASecond;
-			textSprite.text = `0:${randomTimeInSeconds < 10 ? "0" + randomTimeInSeconds + "" : randomTimeInSeconds}`;
-			//sprite.reactContext.setState({ availableQuarantines: {...sprite.reactContext.state.availableQuarantines,  id: sprite.myID, duration: sprite.duration }});
 		}
 	}
 
