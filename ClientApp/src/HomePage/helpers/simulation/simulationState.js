@@ -13,9 +13,8 @@ export const simulationSettings = {
 		size: 8,
 		speed: .6,
 		quantity: 300,
-		deactivateAfter: 0,
-		healedAfter: 40000,
-		heal: true,
+		healedAfter: 0,
+		staysHealed: true,
 		showTime: true,
 		showStats: true,
 		autorestart: true
@@ -95,7 +94,7 @@ export function setSimulationSettings(e) {
 					this.stop();
 					this.startSimulation(false, newSimulationSettings);
 					return ({ simulationSettings: newSimulationSettings, clockTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1,
-							contagious: 1, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
+							contagious: 1, healed: 0, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
 				}
 				return ({ simulationSettings: newSimulationSettings });
 			});
@@ -108,7 +107,7 @@ export function setSimulationSettings(e) {
 				this.stop();
 				this.startSimulation(false, newSimulationSettings);
 				return ({ simulationSettings: newSimulationSettings, clockTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1,
-						contagious: 1, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
+						contagious: 1, healed: 0, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
 			}
 			return ({ simulationSettings: newSimulationSettings });
 		});

@@ -42,8 +42,8 @@
 	}
 	& .modal-body {
 		padding: 15px 0;
-		& .flexContainer {
-			padding: 10px 10px 0 10px;
+		& .optionsContainer {
+			padding: 10px 20px 0 20px;
 		}
 	}
 	& .choice {
@@ -64,8 +64,11 @@
 			padding: 0;
 			color: $light-grey;
 			justify-content: center;
-			& .disabled {
+			& .disabled:not(.healed) {
 				color: $dark-grey;
+			}
+			& .healed:active {
+				text-decoration: none !important;
 			}
 			& .nav-link:nth-child(even) {
 				color: $dark-grey;
