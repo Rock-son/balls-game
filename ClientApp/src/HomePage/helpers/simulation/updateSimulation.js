@@ -51,7 +51,7 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 		return;
 	}
 	// CALCULATE COLLISION DETECTION TO ALL OTHER IMAGES
-	for (let i = sprite.myID; i < spriteArr.length; i++) {
+	for (let i = 0; i < spriteArr.length; i++) {
 		if (sprite.myID === spriteArr[i].myID) {
 			continue;
 		}
