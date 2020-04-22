@@ -184,19 +184,21 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 
 	// X BOUNDARIES
-	if ((sprite.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
+	if ((sprite.x + sprite.velocity.x + sprite.radius) > (window.innerWidth < sprite.reactContext.canvasWidth ? sprite.reactContext.canvasWidth : window.innerWidth )) {
 		sprite.velocity.x = -sprite.velocity.x;
 	}
-	if ((sprite.x - sprite.radius) < 0) {
+	if ((sprite.x + sprite.velocity.x - sprite.radius) < 0) {
 		sprite.velocity.x = -sprite.velocity.x;
 	}
 	// Y BOUNDARIES
-	if ((sprite.y + sprite.radius) > (window.innerHeight < sprite.reactContext.canvasHeight ? sprite.reactContext.canvasHeight : window.innerHeight)) { // resize only up
+	if ((sprite.y + sprite.velocity.y + sprite.radius) > (window.innerHeight < sprite.reactContext.canvasHeight ? sprite.reactContext.canvasHeight : window.innerHeight)) { // resize only up
 		sprite.velocity.y = -sprite.velocity.y;
 	}
-	if ((sprite.y - sprite.radius) < 0) {
+	if ((sprite.y + sprite.velocity.y - sprite.radius) < 0) {
 		sprite.velocity.y = -sprite.velocity.y;
 	}
+	// FOR BALLS THAT GO OUTSIDE OF BOUNDARIES
+
 
 	// CALCULATE COLLISION DETECTION WITH QUARANTINE ONLY WHEN DROPPED - when draggedID changes this eval will be false!
 	if (sprite.myID === sprite.reactContext.state.draggedQuarantine.id && !sprite.reactContext.state.quarantinePlaced) {
