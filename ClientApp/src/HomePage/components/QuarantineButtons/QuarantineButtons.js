@@ -111,14 +111,14 @@ export class QuarantineButtons extends React.Component {
 		}
 
 		// deploy first button- no need to check anything
-		if (clockTime.getSeconds() === 2) {			
+		if (clockTime.getTime() === 2000) {			
 			const randomButtonStateKey = this.getRandomButton({ expire: false });
 			if (randomButtonStateKey) {
 				this.props.setButtonStatus(true);
 				this.setState({ [randomButtonStateKey]: true });
 			}
 		}		
-		// deploy button 1 sec after quarantine is placed por canceled
+		// deploy button 1 sec after quarantine is placed or canceled
 		if (this.props.quarantinePlaced || this.props.quarantineCancelled) {
 			const randomButtonStateKey = this.getRandomButton({ expire: false });
 			if (randomButtonStateKey) {	
