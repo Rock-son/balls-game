@@ -19,7 +19,7 @@
 		padding-top: 15px;
 		transition: top .5s;
 		&.hidden {
-			top: -40px;
+			top: -30px;
 		}
 		&__toggler {
 			position: absolute;
@@ -167,7 +167,7 @@
 				&__healed {
 					position: absolute;
 					padding-left: 1px;
-					color: $grey;
+					color: $green;
 					left: 0;
 					top: 19px;
 					padding-top: 0;
