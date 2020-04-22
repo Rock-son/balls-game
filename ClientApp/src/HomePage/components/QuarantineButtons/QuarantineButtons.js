@@ -108,6 +108,7 @@ export class QuarantineButtons extends React.Component {
 				active_btn_3: false,
 				active_btn_4: false
 			});
+			return;
 		}
 
 		// deploy first button- no need to check anything
