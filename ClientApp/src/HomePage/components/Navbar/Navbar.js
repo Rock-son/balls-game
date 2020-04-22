@@ -43,8 +43,13 @@ export const NavBar = props => {
 	const gameStartCountdownTime = (delayedSeconds < 0) ? (-delayedSeconds) : "";
 	return(
 		<>
-		<Navbar onPointerMove={onMouseMove} onWheel={onWheel} onClick={toggleDialog} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
-			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm" >
+		<Navbar
+			onPointerMove={onMouseMove} 
+			onWheel={onWheel} 
+			onClick={toggleDialog} 
+			dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} 
+			>
+			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="xl" >
 				<div className="caption">
 					<div className="bold">ViralBalls</div>
 					<div className="ordinary">{isGameActive ? "Game" : "Simulator"}</div>
@@ -59,7 +64,7 @@ export const NavBar = props => {
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link" onClick={toggleGameDialog}>Play game</NavLink>
+						<NavLink data="game" className="navbar__nav__link " onClick={toggleGameDialog}>Play game</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>

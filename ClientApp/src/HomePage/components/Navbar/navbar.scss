@@ -19,7 +19,7 @@
 		padding-top: 15px;
 		transition: top .5s;
 		&.hidden {
-			top: -30px;
+			top: -35px;
 		}
 		&__toggler {
 			position: absolute;
@@ -76,7 +76,13 @@
 				padding-left: 2px;
 				padding-right: 2px;
 				padding-top: 10px;
+				@media (max-width: 1200px) {
+					& {
+						display: none !important;
+					}
+				}
 			}
+			
 		}
 		&__right {
 			position: relative;
@@ -102,6 +108,17 @@
 		color: $grey;
 		font-weight: 900;
 		text-align: left;
+		&.left {
+			position: absolute;
+			left: 5px;
+			font-size: 17px;
+			text-align: right;
+			@media (max-width: 1200px) {
+				& {
+					text-align: left !important;
+				}
+			}
+		}
 		&__link {
 			padding: 10px;
 			&:hover {
@@ -111,12 +128,6 @@
 		}
 		&__separator {
 			padding: 10px;
-		}
-		&.left {
-			position: absolute;
-			left: 5px;
-			font-size: 17px;
-			text-align: right;
 		}
 		&.right {
 			position: absolute;
