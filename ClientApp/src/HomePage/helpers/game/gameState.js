@@ -16,12 +16,15 @@ export const gameSettings = {
 	didPlayerWin: false,
 	// GAME
 	// quarantine settings
+	isAnyButtonActive: false,
 	quarantinePlaced: false,
 	availableQuarantines: [],
+	activeQuarantines: [],
+	quarantineAboutToExpire: false,
 	quarantineBeingDragged: false,
 	quarantineOverlapping: false,
 	quarantineCancelled: false,
-	lastQuarantineDuration: 0,
+	shouldGameUpdateExpiration: true,
 	draggedQuarantine: {
 		id: -1,
 		x: 0,
@@ -42,6 +45,8 @@ export const gameSettings = {
 }
 
 export const resetSettings = {
+	isAnyButtonActive: false,
+	activeQuarantines: [],
 	gameEnded: false,
 	didPlayerWin: false,
 	quarantineBeingDragged: false,
@@ -207,7 +212,7 @@ export function setGameSettings(e) {
 				gamePaused: true,
 			});
 		});
-	}, 500);
+	}, 500);	
 }
 export function resetDraggedQuarantineId() {
 	this.setState({
@@ -230,10 +235,11 @@ export function setQuarantineInMotion(e) {
 	const pageX = e.pageX;
 	const pageY = e.pageY;
 	// pop first value from available quarantines
-	this.setState(prevState => {
+	this.setState(prevState => {		
+		const quarantineId = prevState.availableQuarantines.slice(0,1)[0] || -1;		
 		return {
 			draggedQuarantine: {
-				id: prevState.availableQuarantines.slice(0,1)[0] || -1,
+				id: quarantineId,
 				x: pageX,
 				y: pageY,
 				durationInSeconds: randomTimeInSeconds,
@@ -241,15 +247,27 @@ export function setQuarantineInMotion(e) {
 			},
 			quarantineBeingDragged: true,
 			quarantinePlaced: false,
-			availableQuarantines: prevState.availableQuarantines.slice(1)
+			availableQuarantines: prevState.availableQuarantines.slice(1),
+			activeQuarantines: prevState.activeQuarantines.concat(quarantineId)
 		};
 	});
+	
 }
-export function setQuarantineNonactive(id) {
-	this.setState(prevState => {
-		const index = prevState.availableQuarantines.indexOf(id);
+export function resetQuarantineExpiration() {
+	this.setState({ 
+		quarantineAboutToExpire: false,
+		shouldGameUpdateExpiration: false
+	});
+	setTimeout(() => {
+		this.setState({ shouldGameUpdateExpiration: true });
+	}, 1100);
+}
+export function setQuarantineInactive(id) {
+	this.setState(prevState => {		
+		const indexAvail = prevState.availableQuarantines.indexOf(id);
+		const indexActive = prevState.activeQuarantines.indexOf(id);
 		// index about to be inactive shouldn't be in available quarantines array - so leave it be if you find it
-		if (index > -1) {
+		if (indexAvail > -1) {
 			return {
 				availableQuarantines: prevState.availableQuarantines,
 				quarantineCancelled: false,
@@ -257,10 +275,14 @@ export function setQuarantineNonactive(id) {
 		} else {
 			return {
 				availableQuarantines: prevState.availableQuarantines.concat(id),
+				activeQuarantines: prevState.activeQuarantines.slice(0, indexActive).concat(prevState.activeQuarantines.slice(indexActive + 1)),
 				quarantineCancelled: false,
 			};
 		}
 	});
+}
+export function setButtonStatus(status) {
+	this.setState({ isAnyButtonActive: status });
 }
 export function toggleGamePause() {
 	return this.state.gamePaused && !this.state.gameStopped ? this.unpause() : this.pause();
