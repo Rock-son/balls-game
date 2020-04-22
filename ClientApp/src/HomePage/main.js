@@ -6,8 +6,8 @@ import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, T
 	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog, ContactDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog, toggleSimulationDialogAfterNoRestart } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded,
-	setQuarantineInMotion, setQuarantineNonactive, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded, resetQuarantineExpiration,
+	setQuarantineInMotion, setQuarantineInactive, setButtonStatus, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
@@ -59,7 +59,7 @@ export default class HomePage extends React.Component {
 		this.startGame = startGame.bind(this);
 		this.pause = pause.bind(this);
 		this.unpause = unPause.bind(this);
-
+		// DIALOGS
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.toggleGamePause = toggleGamePause.bind(this);
 		this.toggleAboutDialog = this.toggleAboutDialog.bind(this);
@@ -69,26 +69,27 @@ export default class HomePage extends React.Component {
 		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
 		this.toggleBeatYourFriendDialog = this.toggleBeatYourFriendDialog.bind(this);
 		this.toggleSimulationDialogAfterNoRestart = toggleSimulationDialogAfterNoRestart.bind(this);
+		// EVENTS
 		this.onMouseMove = onMouseMove.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleRefocus = this.handleRefocus.bind(this);
 		this.copyUriToClipboard = this.copyUriToClipboard.bind(this);
-		this.copyMailToClipboard = this.copyMailToClipboard.bind(this);
-
-		
+		this.copyMailToClipboard = this.copyMailToClipboard.bind(this);		
 		// GAME
 		this.gameEnded = gameEnded.bind(this);
 		this.stopStartGame = stopStartGame.bind(this);
 		this.onWheelScroll = onWheelScroll.bind(this);
 		this.setGameSettings = setGameSettings.bind(this);
 		this.toggleGameDialog = toggleGameDialog.bind(this);
+		this.setButtonStatus = setButtonStatus.bind(this);
 		this.closeGameEndDialog = closeGameEndDialog.bind(this);
 		this.setQuarantineInMotion = setQuarantineInMotion.bind(this);
-		this.setQuarantineNonactive = setQuarantineNonactive.bind(this);
+		this.setQuarantineInactive = setQuarantineInactive.bind(this);
 		this.resetDraggedQuarantineId = resetDraggedQuarantineId.bind(this);
 		this.onContextMenuHideQuarantine = onContextMenuHideQuarantine.bind(this);
+		this.resetQuarantineExpiration = resetQuarantineExpiration.bind(this);
 		// SIMULATION
 		this.simulationRestart= simulationRestart.bind(this);
 		this.toggleShareDialog = this.toggleShareDialog.bind(this);
@@ -269,6 +270,7 @@ export default class HomePage extends React.Component {
 					currentTime={this.state.currentTime}
 					clockTime={this.state.clockTime}
 					onMouseMove={this.onMouseMove}
+					onWheel={this.onWheelScroll}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand}
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
 					isNavbarExpanded={this.state.isNavbarExpanded}
@@ -360,12 +362,19 @@ export default class HomePage extends React.Component {
 				/>
 				<QuarantineButtons
 					clockTime={this.state.clockTime}
-					settings={this.state.gameSettings}
 					isGameActive={this.state.isGameActive}
+					activeQuarantines={this.state.activeQuarantines}
+					availableQuarantines={this.state.availableQuarantines}
 					setQuarantineInMotion={this.setQuarantineInMotion}
-					draggedQuarantine={this.state.draggedQuarantine}
-					availableQuarantines={this.availableQuarantines}
-					gameRestarting={this.state.gameRestarting}
+					quarantineAboutToExpire={this.state.quarantineAboutToExpire}
+					isAnyButtonActive={this.state.isAnyButtonActive}
+					setButtonStatus={this.setButtonStatus}
+					quarantinePlaced={this.state.quarantinePlaced}
+					quarantineCancelled={this.state.quarantineCancelled}
+					resetQuarantineExpiration={this.resetQuarantineExpiration}
+					gameStopped={this.state.gameStopped}
+					healthyBalls={this.state.healthy}
+					infectedBalls={this.state.contagious}
 				/>
 				<article
 					id="canvas-container"

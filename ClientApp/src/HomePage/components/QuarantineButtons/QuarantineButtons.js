@@ -6,11 +6,9 @@ import "./quarantineButtons.scss";
 export class QuarantineButtons extends React.Component {
 	constructor(props) {
 		super(props);
-		this.duration = 0;
 		this.availableButtons = [1,2,3,4];
 
 		this.state = {
-			afterClick: false,
 			active_btn_1: false, 
 			active_btn_2: false, 
 			active_btn_3: false, 
@@ -34,71 +32,111 @@ export class QuarantineButtons extends React.Component {
 			) {
 				return true
 		}
-		if (nextProps.draggedQuarantine.id !== this.props.draggedQuarantine.id) {
+		if (nextProps.quarantineAboutToExpire || nextProps.quarantinePlaced || this.props.quarantineCancelled !== nextProps.quarantineCancelled) {
+			return true;
+		}
+		if (this.props.healthyBalls !== nextProps.healthyBalls || this.props.gameStopped != nextProps.gameStopped) {
 			return true;
 		}
 		return false;
-		console.log("one time duration", this.props.draggedQuarantine);
 	}
+
 	randomIntNumber(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
-	onPointerDown = (e) => {
-		e && e.preventDefault();
-		e && e.stopPropagation();		
+
+	onPointerDown = (e) => {	
 		// start quarantine
 		const event = e;
 		this.props.setQuarantineInMotion(event);
+		this.props.setButtonStatus(false);
 
 		// deactivate button
 		const buttonId = parseInt(event.currentTarget.id);
-		this.setState({ [`active_btn_${buttonId}`]: false, afterClick: true });
+		this.setState({ [`active_btn_${buttonId}`]: false });
 	}
 
-	getRandomButton() {
-		let return_btn = null;
-		let i = 0;
-		// if all buttons are taken, return null
-		if (this.state.active_btn_1 && this.state.active_btn_2 && this.state.active_btn_3 && this.state.active_btn_4 ) {
-			return null;
+	getRandomButton({ expire }) {
+		let shouldButtonBeDeployed = false;
+		let buttonToBeDeployed = null;
+		
+		// only deploy button if no button is active at the moment
+		if (!this.props.isAnyButtonActive) {
+			const random = this.randomIntNumber(1, 4);
+			buttonToBeDeployed = `active_btn_${random}`;
 		}
-		// else choose one that is not taken
-		while(!return_btn && i < 100) {
-			const random = this.randomIntNumber(1, 4);			
-			if (!this.state[`active_btn_${random}`]) {
-				return_btn = `active_btn_${random}`;
+		// onyl deploy button if there are more healthy than active quarantines in case less than 6 healthy
+		if (this.props.healthyBalls < 5) {
+			// if expire === true - one active quarantine can be deducted
+			if (expire && this.props.activeQuarantines.length <= this.props.healthyBalls) {
+				shouldButtonBeDeployed = true;
 			}
-			i++;
+			// if expire === false 
+			else if (this.props.activeQuarantines.length < this.props.healthyBalls) {
+				shouldButtonBeDeployed = true;
+			}
 		}
-		return return_btn;
+		// only deploy button if there are more infected balls than quarantines in case less than 6 infected
+		else if (this.props.infectedBalls < 5) {
+			// if expire === true - one active quarantine can be deducted
+			if (expire && this.props.activeQuarantines.length <= this.props.infectedBalls) {
+				shouldButtonBeDeployed = true;
+			}
+			// if expire === false 
+			else if (this.props.activeQuarantines.length < this.props.infectedBalls) {
+				shouldButtonBeDeployed = true;
+			}
+		} else if (this.props.activeQuarantines.length < 5) {
+			shouldButtonBeDeployed = true;
+		}
+
+		if (shouldButtonBeDeployed) {
+			return buttonToBeDeployed;
+		}
+
+		return null;
+
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const { clockTime } = prevProps;
+		const { clockTime } = prevProps;		
 		// ON RESTART
-		if (this.props.gameRestarting) {
+		if (this.props.gameStopped) {
 			return this.setState({
 				active_btn_1: false,
 				active_btn_2: false,
 				active_btn_3: false,
 				active_btn_4: false
 			});
-		}// set the first button
-		if (clockTime.getSeconds() === 3) {
-			const randomButtonStateKey = this.getRandomButton();			
-			return randomButtonStateKey && this.setState({ [randomButtonStateKey]: true });
 		}
-		/*
-		if (this.state.afterClick) {
-			// buttons logic
-			const randomButtonStateKey = this.getRandomButton();
-			randomButtonStateKey && this.setState({ [randomButtonStateKey]: true, afterClick: true });
-		}*/
 
-		// set all other random buttons
-		if (clockTime.getSeconds() > 5 && clockTime.getSeconds() % 5 === 0) {			
-			const randomButtonStateKey = this.getRandomButton();
-			return randomButtonStateKey && this.setState({ [randomButtonStateKey]: true });
+		// deploy first button- no need to check anything
+		if (clockTime.getSeconds() === 2) {			
+			const randomButtonStateKey = this.getRandomButton({ expire: false });
+			if (randomButtonStateKey) {
+				this.props.setButtonStatus(true);
+				this.setState({ [randomButtonStateKey]: true });
+			}
+		}		
+		// deploy button 1 sec after quarantine is placed por canceled
+		if (this.props.quarantinePlaced || this.props.quarantineCancelled) {
+			const randomButtonStateKey = this.getRandomButton({ expire: false });
+			if (randomButtonStateKey) {	
+				this.props.setButtonStatus(true);
+				setTimeout(() => {
+					this.setState({ [randomButtonStateKey]: true });
+				}, 1000);
+			}
+		}
+		// deploy button immediatelly one's about to expire
+		if (this.props.quarantineAboutToExpire) {
+			this.props.resetQuarantineExpiration(); // needed so updateGame.js doesn't come into setState() loop
+			const randomButtonStateKey = this.getRandomButton({ expire: true });
+			if (randomButtonStateKey) {
+				console.log("I was here in giji land");
+				this.props.setButtonStatus(true);
+				this.setState({ [randomButtonStateKey]: true });				
+			}
 		}
 	}
 

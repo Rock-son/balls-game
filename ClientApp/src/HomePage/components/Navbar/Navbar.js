@@ -5,7 +5,7 @@ import { Button, Navbar, Nav, NavbarToggler,
 import "./navbar.scss";
 
 export const NavBar = props => {
-	const { onMouseMove, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
+	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
 		simulationSettings: { heal, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
@@ -43,7 +43,7 @@ export const NavBar = props => {
 	const gameStartCountdownTime = (delayedSeconds < 0) ? (-delayedSeconds) : "";
 	return(
 		<>
-		<Navbar onPointerMove={onMouseMove} onClick={toggleDialog} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
+		<Navbar onPointerMove={onMouseMove} onWheel={onWheel} onClick={toggleDialog} dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} >
 			<Navbar dark className="col-6 main__navbar__left d-inline-flex justify-content-between" expand="sm" >
 				<div className="caption">
 					<div className="bold">ViralBalls</div>
