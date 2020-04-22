@@ -133,7 +133,6 @@ export class QuarantineButtons extends React.Component {
 			this.props.resetQuarantineExpiration(); // needed so updateGame.js doesn't come into setState() loop
 			const randomButtonStateKey = this.getRandomButton({ expire: true });
 			if (randomButtonStateKey) {
-				console.log("I was here in giji land");
 				this.props.setButtonStatus(true);
 				this.setState({ [randomButtonStateKey]: true });				
 			}
