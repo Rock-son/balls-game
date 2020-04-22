@@ -68,6 +68,7 @@ export const resetSettings = {
 // GAMEPLAY
 export function gameEnded({ playerWin }) {
 	this.setState({
+		...resetSettings,
 		gameEnded: true,
 		gamePaused: true,
 		gameStopped: true,
