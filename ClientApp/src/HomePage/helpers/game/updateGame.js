@@ -7,16 +7,16 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 
 
 	// DELAY START TIME
-	if (sprite.reactContext.state.clockTime.getSeconds() <= sprite.reactContext.state.gameSettings["delayInSeconds"]-1) {		
+	if (sprite.reactContext.state.clockTime.getTime() <= (sprite.reactContext.state.gameSettings["delayInSeconds"]-1) * 1000) {		
 		return;
 	}
-	// START RED BLINKER
+	/* START RED BLINKER
 	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === sprite.reactContext.state.gameSettings["delayInSeconds"] ) {
 		sprite.animationSpeed = 0.1;
 		sprite.play();
-	}
+	}*/
 	// STOP RED BLINKER
-	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === sprite.reactContext.state.gameSettings["delayInSeconds"] + 2) {
+	if (sprite.myID === 0 && sprite.reactContext.state.clockTime.getSeconds() === sprite.reactContext.state.gameSettings["delayInSeconds"]) {
 		sprite.stop();
 		sprite.texture = loader.resources.sheet.textures["ball-red.svg"];
 	}
@@ -63,7 +63,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 				sprite.texture = green.generateCanvasTexture();
 				sprite.alpha = 1;
 				// sets quarantineCancelled => false
-				sprite.reactContext.setQuarantineNonactive(sprite.myID);
+				sprite.reactContext.setQuarantineInactive(sprite.myID);
 				sprite.reactContext.resetDraggedQuarantineId();
 			}
 
@@ -160,6 +160,8 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			textSprite.y = -500;
 			sprite.dropTime = null;
 			textSprite.dropTime = null;
+			sprite.duration = null;
+			textSprite.duration = null;
 
 			// prepare values for next appearance
 			const green = new PIXI.Graphics();
@@ -168,7 +170,15 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 			green.endFill();
 			sprite.texture = green.generateCanvasTexture();
 			sprite.alpha = 1;
-			sprite.reactContext.setQuarantineNonactive(sprite.myID);
+			sprite.reactContext.setQuarantineInactive(sprite.myID);
+		}
+
+		// NOTIFY BUTTONS WHEN IT'S TIME TO APPEAR (2 seconds before quarantine time runs out) - always whole numbers!
+		else if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) === -2000) {
+			console.log("come on", sprite.reactContext.state.shouldGameUpdateExpiration, sprite.reactContext.state.quarantineAboutToExpire);
+			if (sprite.reactContext.state.shouldGameUpdateExpiration) {
+				sprite.reactContext.setState({ quarantineAboutToExpire: true });
+			}
 		}
 	}
 

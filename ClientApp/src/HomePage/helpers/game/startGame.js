@@ -174,6 +174,8 @@ function handleOnImageLoaded(gameSettings) {
 		if (contagion) {
 			//sprite = new PIXI.Sprite(redBall);
 			sprite = new PIXI.AnimatedSprite(animatedsheet.animations["animatedball"]);
+			sprite.animationSpeed = 0.1;
+			sprite.play();
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
 		}
@@ -203,6 +205,7 @@ function handleOnImageLoaded(gameSettings) {
 
 	quarantineArr.forEach(item => spriteArr.push(item));
 	timeTextArr.forEach(item => spriteArr.push(item));
+	
 
 	// construct quarantine and text object
 	const quarantineObj = quarantineArr.reduce((acc, obj) => Object.assign(acc, {[obj.myID]: obj}), {length: quarantineArr.length})
