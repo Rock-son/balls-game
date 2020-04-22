@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
-import { sizeOptions, quantityValues, speedOptions, healedOptions, booleanOptions } from "./simulationOptions";
+import { sizeOptions, quantityValues, speedOptions, healedOptions, healedSpeedVals, booleanOptions } from "./simulationOptions";
 import "./simulationDialog.scss";
 
 export class SimulationDialog extends React.Component {
@@ -30,9 +30,25 @@ export class SimulationDialog extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		// in case simulation is active, this component should not trigger update
+		// in case simulation is active, this component should not trigger update¸
 		if (!this.props.isSimulationActive) {
 			return false;
+		}
+		// if "heal" is on and healedAfter is off
+		if (this.props.settings["heal"] && this.props.settings["healedAfter"] === 0) {
+			if (prevProps.settings["heal"]) {
+				return this.props.setSimulationSettings({ heal: false });
+			} else {
+				return this.props.setSimulationSettings({ healedAfter: healedSpeedVals[this.props.settings["speed"]] });
+			}
+		} 
+		// if "heal" is off and healedAfter is on
+		else if (!this.props.settings["heal"] && this.props.settings["healedAfter"] > 0) {
+			if (prevProps.settings["heal"]) {
+				return this.props.setSimulationSettings({ healedAfter: 0 });
+			} else {
+				return this.props.setSimulationSettings({ heal: true });
+			}			
 		}
 		const minQuantity = quantityValues[this.props.settings.size][0] || 0;
 		const maxQuantity = quantityValues[this.props.settings.size].slice(-1)[0] || 1000;
