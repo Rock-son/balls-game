@@ -209,8 +209,8 @@ function handleOnImageLoaded(gameSettings) {
 
 	// construct quarantine and text object
 	const quarantineObj = quarantineArr.reduce((acc, obj) => Object.assign(acc, {[obj.myID]: obj}), {length: quarantineArr.length})
-
 	this.setState({ availableQuarantines: quarantineArr.map(item => item.myID)});
+	
 	const len = spriteArr.length;
 	// draw and animate
 	if (this.autostart) {

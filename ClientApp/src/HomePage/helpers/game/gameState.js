@@ -40,7 +40,7 @@ export const gameSettings = {
 		quantity: 300,
 		speed: 0.6,
 		delayInSeconds: 3,
-		nrOfQuarantines: 5, // max nr
+		nrOfQuarantines: 6, // max nr
 	}
 }
 
