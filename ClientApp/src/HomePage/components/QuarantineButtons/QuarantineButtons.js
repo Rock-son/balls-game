@@ -56,7 +56,7 @@ export class QuarantineButtons extends React.Component {
 		this.setState({ [`active_btn_${buttonId}`]: false });
 	}
 
-	getRandomButton({ expire }) {
+	getRandomButton({ aboutToExpire }) {
 		let shouldButtonBeDeployed = false;
 		let buttonToBeDeployed = null;
 		
@@ -67,26 +67,28 @@ export class QuarantineButtons extends React.Component {
 		}
 		// onyl deploy button if there are more healthy than active quarantines in case less than 6 healthy
 		if (this.props.healthyBalls < 5) {
-			// if expire === true - one active quarantine can be deducted
-			if (expire && this.props.activeQuarantines.length <= this.props.healthyBalls) {
+			// if aboutToExpire === true - one active quarantine can be deducted
+			if (aboutToExpire && this.props.activeQuarantines.length <= this.props.healthyBalls) {
 				shouldButtonBeDeployed = true;
 			}
-			// if expire === false 
+			// if aboutToExpire === false 
 			else if (this.props.activeQuarantines.length < this.props.healthyBalls) {
 				shouldButtonBeDeployed = true;
 			}
 		}
 		// only deploy button if there are more infected balls than quarantines in case less than 6 infected
 		else if (this.props.infectedBalls < 5) {
-			// if expire === true - one active quarantine can be deducted
-			if (expire && this.props.activeQuarantines.length <= this.props.infectedBalls) {
+			// if aboutToExpire === true - one active quarantine can be deducted
+			if (aboutToExpire && this.props.activeQuarantines.length <= this.props.infectedBalls) {
 				shouldButtonBeDeployed = true;
 			}
-			// if expire === false 
+			// if aboutToExpire === false 
 			else if (this.props.activeQuarantines.length < this.props.infectedBalls) {
 				shouldButtonBeDeployed = true;
 			}
-		} else if (this.props.activeQuarantines.length < 5) {
+		} else if ((aboutToExpire && this.props.activeQuarantines.length < 6) || (!aboutToExpire && this.props.activeQuarantines.length < 5)) {
+			console.log("wtf");
+			
 			shouldButtonBeDeployed = true;
 		}
 
@@ -113,7 +115,7 @@ export class QuarantineButtons extends React.Component {
 
 		// deploy first button- no need to check anything
 		if (clockTime.getTime() === 2000) {			
-			const randomButtonStateKey = this.getRandomButton({ expire: false });
+			const randomButtonStateKey = this.getRandomButton({ aboutToExpire: false });
 			if (randomButtonStateKey) {
 				this.props.setButtonStatus(true);
 				this.setState({ [randomButtonStateKey]: true });
@@ -121,7 +123,7 @@ export class QuarantineButtons extends React.Component {
 		}		
 		// deploy button 1 sec after quarantine is placed or canceled
 		if (this.props.quarantinePlaced || this.props.quarantineCancelled) {
-			const randomButtonStateKey = this.getRandomButton({ expire: false });
+			const randomButtonStateKey = this.getRandomButton({ aboutToExpire: false });
 			if (randomButtonStateKey) {	
 				this.props.setButtonStatus(true);
 				setTimeout(() => {
@@ -132,7 +134,7 @@ export class QuarantineButtons extends React.Component {
 		// deploy button immediatelly one's about to expire
 		if (this.props.quarantineAboutToExpire) {
 			this.props.resetQuarantineExpiration(); // needed so updateGame.js doesn't come into setState() loop
-			const randomButtonStateKey = this.getRandomButton({ expire: true });
+			const randomButtonStateKey = this.getRandomButton({ aboutToExpire: true });
 			if (randomButtonStateKey) {
 				this.props.setButtonStatus(true);
 				this.setState({ [randomButtonStateKey]: true });				
