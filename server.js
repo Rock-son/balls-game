@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 		whitelist = process.env.WHITELIST; // HEROKU ENV VAR
 	} else {
 		const secretsContent = fs.readFileSync("./.secrets", {encoding: "utf-8"});
-		whitelist = JSON.parse(JSON.stringify(secretsContent));
+		whitelist = JSON.parse(JSON.stringify(secretsContent)).split("\n");
 	}
 	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
 	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
