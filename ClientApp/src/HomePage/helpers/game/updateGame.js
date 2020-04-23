@@ -174,7 +174,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 		}
 
 		// NOTIFY BUTTONS WHEN IT'S TIME TO APPEAR (2 seconds before quarantine time runs out) - always whole numbers!
-		else if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) === -2000) {
+		else if (sprite.dropTime && (sprite.reactContext.state.clockTime.getTime() - sprite.duration - sprite.dropTime) === -1000) {
 			if (sprite.reactContext.state.shouldGameUpdateExpiration) {
 				sprite.reactContext.setState({ quarantineAboutToExpire: true });
 			}
