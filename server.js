@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 		console.log("Access IP: ",  ip);
 		return next();
 	}
-	console.log("Rejected Adress: ", ip);
+	console.log("Rejected Adress: ", ip, typeof whitelist, whitelist.indexOf(ip));
 	return res.send("Unauthorized");
 });
 
