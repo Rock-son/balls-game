@@ -18,6 +18,9 @@
     "url": "https://github.com/Rock-son/balls-game/issues"
   },
   "homepage": "https://github.com/Rock-son/balls-game#readme",
+  "engines" : { 
+    "node" : "6.17.1" 
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "cross-env": "^7.0.2",
