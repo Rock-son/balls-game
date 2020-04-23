@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 		console.log("Access IP: ",  ip);
 		return next();
 	}
-	console.log("Rejected Adress: ", ip, whitelist );	
+	console.log("Rejected Adress: ", ip, whitelist.indexOf(ip));
 	return res.send("Unauthorized");
 });
 
