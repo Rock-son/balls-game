@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/static/css/main.6752ff59.chunk.css",
-    "main.js": "/static/js/main.a37f4b42.chunk.js",
-    "main.js.map": "/static/js/main.a37f4b42.chunk.js.map",
+    "main.js": "/static/js/main.2ab534a5.chunk.js",
+    "main.js.map": "/static/js/main.2ab534a5.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.2f90d172.js",
     "runtime-main.js.map": "/static/js/runtime-main.2f90d172.js.map",
     "static/css/2.89f067aa.chunk.css": "/static/css/2.89f067aa.chunk.css",
-    "static/js/2.2495f742.chunk.js": "/static/js/2.2495f742.chunk.js",
-    "static/js/2.2495f742.chunk.js.map": "/static/js/2.2495f742.chunk.js.map",
+    "static/js/2.0a8a4c8d.chunk.js": "/static/js/2.0a8a4c8d.chunk.js",
+    "static/js/2.0a8a4c8d.chunk.js.map": "/static/js/2.0a8a4c8d.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.d5faed5bd3f675f8ae53ceac2f1a8330.js": "/precache-manifest.d5faed5bd3f675f8ae53ceac2f1a8330.js",
+    "precache-manifest.0ba8821c03b560bfefa6c105c76eb2c8.js": "/precache-manifest.0ba8821c03b560bfefa6c105c76eb2c8.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.89f067aa.chunk.css.map": "/static/css/2.89f067aa.chunk.css.map",
     "static/css/main.6752ff59.chunk.css.map": "/static/css/main.6752ff59.chunk.css.map",
-    "static/js/2.2495f742.chunk.js.LICENSE.txt": "/static/js/2.2495f742.chunk.js.LICENSE.txt",
+    "static/js/2.0a8a4c8d.chunk.js.LICENSE.txt": "/static/js/2.0a8a4c8d.chunk.js.LICENSE.txt",
     "static/media/01-stay-safe.png": "/static/media/01-stay-safe.906d4e71.png",
     "static/media/02-stay-safe-avoid-crowds.png": "/static/media/02-stay-safe-avoid-crowds.1d7f0483.png",
     "static/media/06-stay-safe-social.png": "/static/media/06-stay-safe-social.c6e63857.png",
@@ -21,13 +21,13 @@
     "static/media/snd-lose.mp3": "/static/media/snd-lose.363fbb0b.mp3",
     "static/media/snd-quarantine.mp3": "/static/media/snd-quarantine.5154d5fa.mp3",
     "static/media/snd-win.mp3": "/static/media/snd-win.823b79df.mp3",
-    "static/media/viralballs-about-img.png": "/static/media/viralballs-about-img.fe648735.png"
+    "static/media/viralballs-about-img.png": "/static/media/viralballs-about-img.d3efc51d.png"
   },
   "entrypoints": [
     "static/js/runtime-main.2f90d172.js",
     "static/css/2.89f067aa.chunk.css",
-    "static/js/2.2495f742.chunk.js",
+    "static/js/2.0a8a4c8d.chunk.js",
     "static/css/main.6752ff59.chunk.css",
-    "static/js/main.a37f4b42.chunk.js"
+    "static/js/main.2ab534a5.chunk.js"
   ]
 }
