@@ -30,14 +30,14 @@ app.use((req, res, next) => {
 		whitelist = process.env.WHITELIST; // HEROKU ENV VAR
 	} else {
 		const secretsContent = fs.readFileSync("./.secrets", {encoding: "utf-8"});
-		whitelist = typeof secretsContent === "string" ? secretsContent.split("\n") : secretsContent;
+		whitelist = JSON.parse(JSON.stringify(secretsContent));
 	}
 	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
 	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
 		console.log("Access IP: ",  ip);
 		return next();
 	}
-	console.log("Rejected Adress: ", ip, typeof whitelist, whitelist.indexOf(ip));
+	console.log("Rejected Adress: ", ip, typeof whitelist, whitelist, whitelist.indexOf(ip));
 	return res.send("Unauthorized");
 });
 
