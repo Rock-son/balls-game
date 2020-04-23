@@ -34,10 +34,8 @@ app.use((req, res, next) => {
 	}
 	var ip = req.headers["x-real-ip"] || req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
 	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
-		console.log("Access IP: ",  ip);
 		return next();
 	}
-	console.log("Rejected Adress: ", ip);
 	return res.send("Unauthorized");
 });
 
