@@ -35,7 +35,7 @@ export class QuarantineButtons extends React.Component {
 		if (nextProps.quarantineAboutToExpire || nextProps.quarantinePlaced || this.props.quarantineCancelled !== nextProps.quarantineCancelled) {
 			return true;
 		}
-		if (this.props.healthyBalls !== nextProps.healthyBalls || this.props.gameStopped != nextProps.gameStopped) {
+		if (this.props.healthyBalls !== nextProps.healthyBalls || this.props.gameStopped !== nextProps.gameStopped) {
 			return true;
 		}
 		return false;

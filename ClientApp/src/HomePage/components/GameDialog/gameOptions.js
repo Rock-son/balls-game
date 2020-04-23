@@ -53,14 +53,23 @@ export const speedDiffValues = {
 	1: .6,
 	2: 1
 }
-
+/************************ OPTIONS ************************** */
 export const speedToString = {
-	0.3: "slow",
-	0.6: "medium",
-	1: "fast"
+	0.3: "Slow",
+	0.6: "Medium",
+	1: 	 "Fast"
 }
 export const sizeToString = {
-	5: "small",
-	8: "medium",
-	10: "large"
+	5:  "Small",
+	8:  "Medium",
+	10: "Large"
+}
+export const modeToString = {
+	0: "Open Time",
+	1: "Time Challenge"
+}
+export const difficultyToString = {
+	0: "Easy",
+	1: "Medium",
+	2: "Hard"
 }

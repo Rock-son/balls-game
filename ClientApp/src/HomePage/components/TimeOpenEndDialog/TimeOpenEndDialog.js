@@ -1,4 +1,5 @@
-import React from "react";   
+import React from "react";
+import SimpleCryptoJS from "simple-crypto-js";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter, Container, Button } from "reactstrap";
 import { speedToString, sizeToString } from "../GameDialog/gameOptions";
 
@@ -32,11 +33,16 @@ export class TimeOpenEndDialog extends React.Component {
 	}
 
 	copyToClipboard() {
+		const myCrypto = new SimpleCryptoJS("/*TODO: add additional logic*/");
+		const encryptedGameSettings = myCrypto.encrypt(JSON.stringify({...this.props.gameSettings, clockTime: this.props.clockTime.getTime() }));
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state === "granted" || result.state === "prompt") {
-					navigator.clipboard.writeText("https://www.viralballs.com");
-					this.setState({ isCopied: true });					
+					navigator.clipboard.writeText(`https://www.viralballs.com?${encodeURI(encryptedGameSettings)}`);
+					this.setState({ isCopied: true });
+					setTimeout(() => {
+						this.setState({ isCopied: false });
+					}, 2000);				
 				}
 		 	});
 	}
@@ -46,8 +52,9 @@ export class TimeOpenEndDialog extends React.Component {
 		const { gameEnded, closeGameEndDialog, clockTime, gameSettings } = this.props;		
 		const shouldDialogOpen = gameEnded && gameSettings["mode"] === 0;
 		const correctedClockTime = new Date(clockTime.getTime() - gameSettings["delayInSeconds"]*1000);
+
 		return (		
-			<Modal key="game-open-end" zIndex={shouldDialogOpen ? 1000: -1} isOpen={shouldDialogOpen} centered={true} fade={true} className="game-open-end">
+			<Modal key="game-open-end" zIndex={shouldDialogOpen ? 1000: -1} toggle={closeGameEndDialog} isOpen={shouldDialogOpen} centered={true} fade={true} className="game-open-end">
 				<ModalHeader charCode="X" toggle={closeGameEndDialog}>GAME FINSHED</ModalHeader>
 				<ModalBody>
 					<Row>
