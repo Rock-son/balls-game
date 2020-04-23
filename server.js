@@ -25,13 +25,17 @@ helmet(app);
 // LIMITER & IP ACCESS CONTROL
 app.use(limiter);
 app.use((req, res, next) => {
-	const whitelist = process.env.WHITELIST || ["::1"]; // HEROKU ENV VAR
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
-	if (ip && whitelist.indexOf(ip) > -1) {
-		console.log("Access IP: ",  ip);
+	let whitelist;
+	if (process.env.WHITELIST) {
+		whitelist = process.env.WHITELIST; // HEROKU ENV VAR
+	} else {
+		const secretsContent = fs.readFileSync("./.secrets", {encoding: "utf-8"});
+		whitelist = JSON.parse(JSON.stringify(secretsContent));
+	}
+	var ip = req.headers["x-real-ip"] || req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
 		return next();
 	}
-	console.log("Rejected Adress: ", ip );	
 	return res.send("Unauthorized");
 });
 
