@@ -31,6 +31,8 @@ app.use((req, res, next) => {
 	} else {
 		const secretsContents = fs.readFileSync("./.secrets", {encoding: "utf-8"});
 		whitelist = secretsContents;
+		console.log("whitelist", whitelist);
+		
 		
 	}
 	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
@@ -38,7 +40,7 @@ app.use((req, res, next) => {
 		console.log("Access IP: ",  ip);
 		return next();
 	}
-	console.log("Rejected Adress: ", ip );	
+	console.log("Rejected Adress: ", ip, whitelist );	
 	return res.send("Unauthorized");
 });
 
