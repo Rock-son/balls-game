@@ -47,9 +47,9 @@ export class AboutDialog extends React.Component {
 					<Row>
 						<Container className="about-dialog__text">
 							<p>ViralBalls is a side project done by designer Igor Donkov and programmer Rok Zigon.
-								The simulator and the game were developed in the midst of Corona / Covid 19, 2020 worldwide plandemic.
+								The simulator and the game were developed in the midst of Corona / Covid 19, 2020 worldwide pandemic.
 							</p>
-							<p>We wanted to visually explore the pandemic situation and add a simple game. Part of the project is to spread
+							<p>We wanted to visually explore the plandemic situation and add a simple game. Part of the project is to spread
 								awareness and add some simple
 								<NavLink
 									onClick={this.onStaySafeLinkClick}
