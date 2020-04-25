@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
 		return next();
 	}
-	return res.send("Unauthorized for: " + ip);
+	return res.send("Unauthorized");
 });
 
 // ROUTES
