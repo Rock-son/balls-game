@@ -206,8 +206,8 @@ export class SimulationDialog extends React.Component {
 						</Container>
 					</Row>
 				</ModalBody>
-				<ModalFooter onClick={startSimulation} className="simulator-modal__footer">
-				{isSimulationStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isSimulationStopped ? "<<<" : ""}
+				<ModalFooter onClick={startSimulation} className="simulator-modal__footer" data-title="For fullscreen press F11">
+					{isSimulationStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isSimulationStopped ? "<<<" : ""}
 				</ModalFooter>
 		</Modal>
 	)};

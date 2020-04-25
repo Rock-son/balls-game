@@ -99,7 +99,18 @@
 		background-color: $dark-grey;
 		font-weight: 700;
 		cursor: pointer;
-		border-top: none;;
+		border-top: none;
+		&:hover:after {
+			content: attr(data-title);
+			color: $light-grey;
+			position: absolute;
+			font-size: 13px;
+			font-weight: 300;
+			background-color: #252525;
+			margin-top: -40px;
+			border-radius: 0 0 5px 5px;
+			width: 398px;
+		}
 	}
 }
 .last-row-inline {
