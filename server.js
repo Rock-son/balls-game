@@ -20,8 +20,6 @@ const limiter = new RateLimiter({
 // SECURITY
 helmet(app);
 
-
-
 // LIMITER & IP ACCESS CONTROL
 app.use(limiter);
 app.use((req, res, next) => {

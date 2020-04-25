@@ -9,7 +9,8 @@ module.exports = function a(app) {
 	app.use(helmet.contentSecurityPolicy({
 		directives: {
 			"defaultSrc": 	[ "'self'" ],
-			"scriptSrc": 	[ "'self'", "'unsafe-eval'", "https://polyfill.io", "https://code.jquery.com"],
+			"connectSrc":	[ "'self'", "https://www.google-analytics.com/"],
+			"scriptSrc": 	[ "'self'", "'unsafe-eval'", "https://polyfill.io", "https://code.jquery.com", "https://www.googletagmanager.com"],
 			"styleSrc": 	[ "'self'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com" ],
 			"fontSrc": 		[ "'self'" , "https://fonts.gstatic.com" ],
 			"imgSrc":	    [ "'self'", "data:" ],
@@ -20,7 +21,7 @@ module.exports = function a(app) {
 		},
 		// set up a POST route for notifying / logging data to server
 		// "reportOnly=true" - policy will not be enforced
-		reportOnly: process.env.NODE_ENV !== "production",
+		reportOnly: false,
 		// This module will detect common mistakes in your directives and throw errors
 		// if it finds any. To disable this, enable "loose mode".
 		loose: true,

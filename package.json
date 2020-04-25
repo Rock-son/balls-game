@@ -4,6 +4,7 @@
   "description": "nodejs server for bals game",
   "main": "server.js",
   "scripts": {
+    "production": "node ./bin/www > stdout.txt 2> stderr.txt &",
     "test": "test",
     "start": "node bin/www",
     "dev": "cross-env NODE_ENV=production nodemon bin/www"
