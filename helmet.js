@@ -21,7 +21,7 @@ module.exports = function a(app) {
 		},
 		// set up a POST route for notifying / logging data to server
 		// "reportOnly=true" - policy will not be enforced
-		reportOnly: process.env.NODE_ENV !== "production",
+		reportOnly: false,
 		// This module will detect common mistakes in your directives and throw errors
 		// if it finds any. To disable this, enable "loose mode".
 		loose: true,
