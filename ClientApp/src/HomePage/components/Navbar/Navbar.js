@@ -117,11 +117,13 @@ export const NavBar = props => {
 			<div className={`game-start-countdown ${isGameActive && !gamePaused && shouldCountdownBeVisible ? "visible" : ""}`}>{gameStartCountdownTime}</div>
 		</Navbar>
 		<Button
-				className={`main__navbar__toggler ${isNavbarVisible && "hidden"}`}
+				className={`main__navbar__toggler ${isNavbarVisible ? "hidden" : "activated"}`}
 				onClick={toggleNavbarVisibility}
 				disabled={isNavbarVisible}
 				>
-					<img src="dropdown-arrow.svg" alt="hide/unhide navbar"></img>
+					<svg x="0px" y="0px" width="21" height="11">
+						<polygon class="arrow" points="10.44,10.39 0.44,4.39 0.44,-0.02 10.44,5.98 20.44,-0.02 20.44,4.39 "/>
+					</svg>
 		</Button>
 	</>
 	);

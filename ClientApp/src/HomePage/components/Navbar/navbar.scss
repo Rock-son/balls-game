@@ -30,22 +30,36 @@
 			z-index: 25;
 			vertical-align: baseline;
 			background-color: $black;
+			color: $white;
 			border-bottom-left-radius: 200px;
 			border-bottom-right-radius: 200px;
 			transform: translate(-70%, -50%);
 			transition: opacity .5s, background-color .5s;
 			padding: 20px 12px 0px 12px;
-			& img {
-				width: 20px;
-				height: 10px;
+			&.activated {
+				animation-delay: .2s;
+				animation-duration: 1.5s;
+				animation-iteration-count: 1;
+				animation-name: blink_bg;
+				& .arrow {
+					fill: $white;
+					animation-delay: .2s;
+					animation-duration: 1.5s;
+					animation-iteration-count: 1;
+					animation-name: blink_arrow;
+				}
+			}
+			&.hidden {
+				opacity: 0;
+				cursor: auto;
 			}
 			&:active, &:focus, &:hover {
 				background-color: $grey;
 				box-shadow: none;
 			}
-			&.hidden {
-				opacity: 0;
-				cursor: auto;
+			& img {
+				width: 20px;
+				height: 10px;
 			}
 		}
 		&__left {
@@ -188,3 +202,32 @@
 		}
 	}
 }
+
+@keyframes blink_bg {
+	0% 	 {background-color: $black;}
+	25%  {background-color: $white;}
+	50%  {background-color: $black;}
+	75%  {background-color: $white;}
+	100% {background-color: $black;}
+}
+  @keyframes blink_arrow {
+	0% 	 {fill: $white;}
+	25%  {fill: $black;}
+	50%  {fill: $white;}
+	75%  {fill: $black;}
+	100% {fill: $white;}
+}
+/*
+@keyframes blink_bg {
+	0% 	 {background-color: $white;}
+	25%  {background-color: $black;}
+	50%  {background-color: $white;}
+	100% {background-color: $black;}
+}
+  @keyframes blink_arrow {
+	0% 	 {fill: $black;}
+	25%  {fill: $white;}
+	50%  {fill: $black;}
+	100% {fill: $white;}
+}
+*/
