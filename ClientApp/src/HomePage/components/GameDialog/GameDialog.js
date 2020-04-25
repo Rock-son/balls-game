@@ -84,7 +84,7 @@ export class GameDialog extends React.Component {
 					<Row>
 						<Container className="choice">
 							<div className="choice__header">Difficulty level</div>
-							<div className="choice__header__sub">Affects infection rate and quarantine.</div>
+							<div className="choice__header__sub">Affects time, infection rate and quarantine.</div>
 							<Nav className="choice__options">
 								{difficultyOptions.map((difficultyOption, idx) => {
 									if (difficultyOption === "|") {
