@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
-		simulationSettings: { heal, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
+		simulationSettings: { healedAfter, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -109,7 +109,7 @@ export const NavBar = props => {
 					<NavItem className={`stats ${!isNavbarVisible ? "drop" : ""}`}>
 						<NavbarText className="stats__infected">{showStats ? `Infected: ${contagious}` : ""}</NavbarText>
 						<NavbarText className="stats__healthy">{showStats ? `Healthy: ${healthy}` : ""}</NavbarText>
-						<NavbarText className="stats__healed">{!isGameActive && heal ? "Healed:" : ""} &nbsp; {!isGameActive && heal ? healed : ""}</NavbarText>
+						<NavbarText className="stats__healed">{showStats && healedAfter > 0 ? `Healed: ${healed}` : ""}</NavbarText>
 						<NavbarText className="stats__timer">{showTime ? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
 					</NavItem>
 				</Nav>
@@ -117,11 +117,13 @@ export const NavBar = props => {
 			<div className={`game-start-countdown ${isGameActive && !gamePaused && shouldCountdownBeVisible ? "visible" : ""}`}>{gameStartCountdownTime}</div>
 		</Navbar>
 		<Button
-				className={`main__navbar__toggler ${isNavbarVisible && "hidden"}`}
+				className={`main__navbar__toggler ${isNavbarVisible ? "hidden" : "activated"}`}
 				onClick={toggleNavbarVisibility}
 				disabled={isNavbarVisible}
 				>
-					<img src="dropdown-arrow.svg" alt="hide/unhide navbar"></img>
+					<svg x="0px" y="0px" width="21" height="11">
+						<polygon class="arrow" points="10.44,10.39 0.44,4.39 0.44,-0.02 10.44,5.98 20.44,-0.02 20.44,4.39 "/>
+					</svg>
 		</Button>
 	</>
 	);

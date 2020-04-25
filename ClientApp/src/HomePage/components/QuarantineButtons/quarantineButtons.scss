@@ -4,15 +4,17 @@ $buttonNr: "_1", "_2", "_3", "_4";
 
 .main .quarantine__btn {
 	position: absolute;
-	font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
-	background-color: $green !important;
 	z-index: -1;
+	font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+	font-weight: 700;
 	opacity: 0;
 	transition: opacity	.3s;
+	background-color: $green !important;
+	border-color: $green !important;
 	&:hover, &:active {
 		color: #fff;
 		background-color: $green;
-		border-color: #545b62;
+		border-color: $green !important;
 	}
 	&--left-top {
 		top: 5rem;

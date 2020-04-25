@@ -1,4 +1,5 @@
 import { resetSettings as gameResetSettings } from "../game/gameState";
+import { quantityValues } from "../../components/SimulationDialog/simulationOptions";
 
 export const simulationSettings = {
 	isSimulationActive: true,
@@ -14,7 +15,7 @@ export const simulationSettings = {
 		speed: .6,
 		quantity: 300,
 		healedAfter: 0,
-		staysHealed: true,
+		staysHealed: false,
 		showTime: true,
 		showStats: true,
 		autorestart: true
@@ -82,6 +83,20 @@ export function setSimulationSettings(e) {
 		this.setState({ gameRestarting: false });
 		clearTimeout(this.gameTimeoutId);	
 	}
+	// change settings according to valid size / numbers values
+	if (parsedData["size"]) {
+		const minQuantity = quantityValues[parsedData["size"]][0] || 0;
+		const maxQuantity = quantityValues[parsedData["size"]].slice(-1)[0] || 1000;
+		
+		// if quantity is greater or smaller than it should be according to size
+		if (this.state.simulationSettings["quantity"] > maxQuantity) {
+			parsedData["quantity"] = maxQuantity;
+		}
+		if (this.state.simulationSettings["quantity"] < minQuantity ) {
+			parsedData["quantity"] = minQuantity;
+		}
+	}
+	
 	// fade in only on change (size, speed or quantity of balls)
 	if (parsedData["size"] || parsedData["speed"] || parsedData["quantity"]) {
 		setTimeout(() => this.setState({ gameRestarting: true }), 100);
@@ -93,8 +108,16 @@ export function setSimulationSettings(e) {
 				if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
 					this.stop();
 					this.startSimulation(false, newSimulationSettings);
-					return ({ simulationSettings: newSimulationSettings, clockTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1,
-							contagious: 1, healed: 0, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
+					return ({ 
+						simulationSettings: newSimulationSettings, 
+						clockTime: new Date(0), 
+						healthy: newSimulationSettings["quantity"] - 1,
+						contagious: 1, 
+						healed: 0, 
+						simulationStopped: true, 
+						simulationPaused: true, 
+						startButtonText: "START SIMULATION" 
+					});
 				}
 				return ({ simulationSettings: newSimulationSettings });
 			});
@@ -106,8 +129,16 @@ export function setSimulationSettings(e) {
 			if (parsedData["size"] || parsedData["quantity"] || parsedData["speed"]) {
 				this.stop();
 				this.startSimulation(false, newSimulationSettings);
-				return ({ simulationSettings: newSimulationSettings, clockTime: new Date(0), healthy: newSimulationSettings["quantity"] - 1,
-						contagious: 1, healed: 0, simulationStopped: true, simulationPaused: true, startButtonText: "START SIMULATION" });
+				return ({ 
+					simulationSettings: newSimulationSettings, 
+					clockTime: new Date(0), 
+					healthy: newSimulationSettings["quantity"] - 1,
+					contagious: 1, 
+					healed: 0, 
+					simulationStopped: true, 
+					simulationPaused: true, 
+					startButtonText: "START SIMULATION" 
+				});
 			}
 			return ({ simulationSettings: newSimulationSettings });
 		});
@@ -134,11 +165,16 @@ export function toggleSimulationDialog(e) {
 	e && e.preventDefault();
 	e && e.stopPropagation();
 	if (this.state.isGameActive) {
+
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
 		setTimeout(() => {
 			this.stop();
 			this.startSimulation(false);
+			// delete url params if they exist	
+			if (window.location.search !== "") {
+				window.history.replaceState({}, document.title, "/");
+			}
 			// only when clicking on navbar link -> stop game and show simulation dialog
 			this.setState(prevState => {
 				return ({
@@ -153,7 +189,7 @@ export function toggleSimulationDialog(e) {
 				})
 			});
 		}, 400);
-	} else {
+	} else {		
 		// in all other cases toggle
 		this.toggleSimulationPause();
 		this.setState(prevState => {

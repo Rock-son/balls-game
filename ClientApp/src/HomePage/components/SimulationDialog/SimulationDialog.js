@@ -19,7 +19,7 @@ export class SimulationDialog extends React.Component {
 			this.props.settings["speed"] !== nextProps.settings["speed"] ||
 			this.props.settings["quantity"] !== nextProps.settings["quantity"] ||
 			this.props.settings["healedAfter"] !== nextProps.settings["healedAfter"] ||
-			this.props.settings["heal"] !== nextProps.settings["heal"] ||
+			this.props.settings["staysHealed"] !== nextProps.settings["staysHealed"] ||
 			this.props.settings["showTime"] !== nextProps.settings["showTime"] ||
 			this.props.settings["showStats"] !== nextProps.settings["showStats"] ||
 			this.props.settings["autorestart"] !== nextProps.settings["autorestart"]
@@ -30,45 +30,31 @@ export class SimulationDialog extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		// in case simulation is active, this component should not trigger update¸
+		// in case simulation is active, this component should not trigger update
 		if (!this.props.isSimulationActive) {
 			return false;
-		}
-		// if "heal" is on and healedAfter is off
-		if (this.props.settings["heal"] && this.props.settings["healedAfter"] === 0) {
-			if (prevProps.settings["heal"]) {
-				return this.props.setSimulationSettings({ heal: false });
-			} else {
+		}			
+		// if "staysHealed" is on and healedAfter is off
+		if (this.props.settings["staysHealed"] && this.props.settings["healedAfter"] === 0) {
+			if (!prevProps.settings["staysHealed"]) {
 				return this.props.setSimulationSettings({ healedAfter: healedSpeedVals[this.props.settings["speed"]] });
-			}
+			} else if (prevProps.settings["staysHealed"]) {
+				return this.props.setSimulationSettings({ staysHealed: false });
+			} 
 		} 
 		// if "heal" is off and healedAfter is on
-		else if (!this.props.settings["heal"] && this.props.settings["healedAfter"] > 0) {
-			if (prevProps.settings["heal"]) {
+		else if (!this.props.settings["staysHealed"] && this.props.settings["healedAfter"] > 0) {
+			if (prevProps.settings["staysHealed"]) {
 				return this.props.setSimulationSettings({ healedAfter: 0 });
-			} else {
-				return this.props.setSimulationSettings({ heal: true });
 			}			
-		}
-		const minQuantity = quantityValues[this.props.settings.size][0] || 0;
-		const maxQuantity = quantityValues[this.props.settings.size].slice(-1)[0] || 1000;
-		// if quantity is greater or smaller than it should be according to size
-		if (this.props.settings["healedAfter"] === 0 && this.props.settings["heal"]) {
-			return this.props.setSimulationSettings({ heal: false });
-		}
-		if (this.props.settings["quantity"] > maxQuantity) {
-			return this.props.setSimulationSettings({ quantity: maxQuantity });
-		}
-		if (this.props.settings["quantity"] < minQuantity ) {
-			return this.props.setSimulationSettings({ quantity: minQuantity });
 		}
 	}
 
 	render() {
 
 		const { isOpen, toggle, startSimulation, buttonText, setSimulationSettings, isSimulationStopped,
-					settings: { size, speed, quantity, healedAfter, heal, showTime, showStats, autorestart} } = this.props;
-
+					settings: { size, speed, quantity, healedAfter, staysHealed, showTime, showStats, autorestart} } = this.props;
+					
 		return (
 			<Modal key="simulator" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="simulator-modal">
 				<ModalHeader charCode="X" toggle={toggle}>SIMULATION SETTINGS</ModalHeader>
@@ -155,9 +141,9 @@ export class SimulationDialog extends React.Component {
 									className="healed"
 									title={healedAfter > 0? `Start healing after ${healedAfter/1000}s`:"You have to chose time value and then enable this option."}
 									tabIndex="0"
-									data-option={`${JSON.stringify({heal: !heal})}`}
+									data-option={`${JSON.stringify({staysHealed: !staysHealed})}`}
 									onClick={setSimulationSettings}
-									active={heal}>
+									active={staysHealed}>
 										stays healed
 								</NavLink>
 							</Nav>
@@ -220,8 +206,8 @@ export class SimulationDialog extends React.Component {
 						</Container>
 					</Row>
 				</ModalBody>
-				<ModalFooter onClick={startSimulation} className="simulator-modal__footer">
-				{isSimulationStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isSimulationStopped ? "<<<" : ""}
+				<ModalFooter onClick={startSimulation} className="simulator-modal__footer" data-title="For fullscreen press F11">
+					{isSimulationStopped ? ">>>" : ""}&nbsp;&nbsp; {buttonText} &nbsp;&nbsp;{isSimulationStopped ? "<<<" : ""}
 				</ModalFooter>
 		</Modal>
 	)};

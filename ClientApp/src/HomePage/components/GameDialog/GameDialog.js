@@ -47,27 +47,6 @@ export class GameDialog extends React.Component {
 		return false;
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		// in case simulation is active, this component should not trigger update
-		if (!this.props.isGameActive) {
-			return false;
-		}
-		const minQuantity = (quantityDiffVals[this.props.settings.difficulty][this.props.settings.size] || { min: 0 }).min;
-		const maxQuantity = (quantityDiffVals[this.props.settings.difficulty][this.props.settings.size] || { max: 1000 }).max;
-		const changedSpeed = speedDiffValues[this.props.settings.difficulty];
-		// if quantity is greater or smaller than it should be according to size
-		if (this.props.settings.quantity > maxQuantity ) {
-			return this.props.setGameSettings({ quantity: maxQuantity, speed: changedSpeed });
-		}
-		else if (this.props.settings.quantity < minQuantity ) {
-			return this.props.setGameSettings({ quantity: minQuantity, speed: changedSpeed });
-		}
-		// if min, max values are not a problem, then set speed
-		else if (this.props.settings.speed !== changedSpeed) {
-			return this.props.setGameSettings({ speed: changedSpeed });
-		}
-	}
-
 	render() {
 
 		const { isOpen, toggle, startGame, buttonText, setGameSettings, isGameStopped,
@@ -105,7 +84,7 @@ export class GameDialog extends React.Component {
 					<Row>
 						<Container className="choice">
 							<div className="choice__header">Difficulty level</div>
-							<div className="choice__header__sub">Affects infection rate and quarantine.</div>
+							<div className="choice__header__sub">Affects time, infection rate and quarantine.</div>
 							<Nav className="choice__options">
 								{difficultyOptions.map((difficultyOption, idx) => {
 									if (difficultyOption === "|") {
@@ -184,6 +163,7 @@ export class GameDialog extends React.Component {
 									return	<NavLink
 												key={idx}
 												tabIndex="0"
+												data-show={JSON.stringify({speed: speedOption.value, comparedSpeed: speed})}
 												data-option={`${JSON.stringify({speed: speedOption.value})}`}
 												onClick={setGameSettings}
 												active={speedOption.value === speed}>
