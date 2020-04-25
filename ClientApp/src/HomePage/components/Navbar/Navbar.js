@@ -122,7 +122,7 @@ export const NavBar = props => {
 				disabled={isNavbarVisible}
 				>
 					<svg x="0px" y="0px" width="21" height="11">
-						<polygon class="arrow" points="10.44,10.39 0.44,4.39 0.44,-0.02 10.44,5.98 20.44,-0.02 20.44,4.39 "/>
+						<polygon className="arrow" points="10.44,10.39 0.44,4.39 0.44,-0.02 10.44,5.98 20.44,-0.02 20.44,4.39 "/>
 					</svg>
 		</Button>
 	</>
