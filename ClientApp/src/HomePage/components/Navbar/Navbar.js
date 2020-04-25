@@ -96,9 +96,9 @@ export const NavBar = props => {
 			<Navbar dark className="col-6 main__navbar__right d-inline-flex justify-content-end" >
 				<Nav className="navbar__nav right" navbar>
 					<NavItem className="d-inline-flex justify-content-between">
-						<NavbarText className="countdown-link">Stay safe. For more visit&nbsp;</NavbarText>
+						<NavbarText className="countdownkings countdownkings__text">Stay safe. For more visit&nbsp;</NavbarText>
 						<NavLink
-							className="countdown-link"
+							className="countdownkings countdownkings__link"
 							href="https://www.countdownkings.com/"
 							target="_blank"
 							rel="nooperner noreferrer"
