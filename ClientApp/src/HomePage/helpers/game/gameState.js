@@ -339,6 +339,10 @@ export function toggleGameDialog(e) {
 	} else {
 		this.toggleGamePause();
 		this.audioTimeoutId != null && clearTimeout(this.audioTimeoutId);
+		// delete url params if they exist	
+		if (window.location.search !== "") {
+			window.history.replaceState({}, document.title, "/");
+		}
 		this.setState(prevState => {
 			return ({
 				gameSettingsOpen: !prevState.gameSettingsOpen,

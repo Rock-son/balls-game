@@ -165,11 +165,16 @@ export function toggleSimulationDialog(e) {
 	e && e.preventDefault();
 	e && e.stopPropagation();
 	if (this.state.isGameActive) {
+
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
 		setTimeout(() => {
 			this.stop();
 			this.startSimulation(false);
+			// delete url params if they exist	
+			if (window.location.search !== "") {
+				window.history.replaceState({}, document.title, "/");
+			}
 			// only when clicking on navbar link -> stop game and show simulation dialog
 			this.setState(prevState => {
 				return ({
@@ -184,7 +189,7 @@ export function toggleSimulationDialog(e) {
 				})
 			});
 		}, 400);
-	} else {
+	} else {		
 		// in all other cases toggle
 		this.toggleSimulationPause();
 		this.setState(prevState => {

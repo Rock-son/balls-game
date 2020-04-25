@@ -101,7 +101,7 @@ export default class HomePage extends React.Component {
 	componentDidMount() {
 		if (window.location.search !== "") {
 			this.startGame(false);
-			this.setState({ beatYourFriendDialogOpen: true, gameStopped: true, gamePaused: true });
+			this.setState({ beatYourFriendDialogOpen: true, gameStopped: true, gamePaused: true, isGameActive: true });
 		} else {
 			this.startSimulation(true);
 		}
