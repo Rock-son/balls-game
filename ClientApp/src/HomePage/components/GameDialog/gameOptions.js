@@ -43,14 +43,14 @@ export const quantityDiffVals = {
 export const speedOptions = [
 	{ type: "Slow", value: 0.3, difficulty: 0 },
 	"|",
-	{ type: "Medium", value: .6, difficulty: 1 },
+	{ type: "Medium", value: 0.6, difficulty: 1 },
 	"|",
 	{ type: "Fast", value: 1, difficulty: 2 }
 ];
 
 export const speedDiffValues = {
-	0: .3,
-	1: .6,
+	0: 0.3,
+	1: 0.6,
 	2: 1
 }
 /************************ OPTIONS ************************** */

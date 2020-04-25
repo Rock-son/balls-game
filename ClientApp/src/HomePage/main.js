@@ -101,7 +101,7 @@ export default class HomePage extends React.Component {
 	componentDidMount() {
 		if (window.location.search !== "") {
 			this.startGame(false);
-			this.setState({ beatYourFriendDialogOpen: true, gameStopped: true, gamePaused: true });
+			this.setState({ beatYourFriendDialogOpen: true, gameStopped: true, gamePaused: true, isGameActive: true });
 		} else {
 			this.startSimulation(true);
 		}
@@ -360,6 +360,7 @@ export default class HomePage extends React.Component {
 					setQuarantineInMotion={this.setQuarantineInMotion}
 					quarantineAboutToExpire={this.state.quarantineAboutToExpire}
 					isAnyButtonActive={this.state.isAnyButtonActive}
+					isQuarantineBeingDragged={this.state.quarantineBeingDragged}
 					setButtonStatus={this.setButtonStatus}
 					quarantinePlaced={this.state.quarantinePlaced}
 					quarantineCancelled={this.state.quarantineCancelled}

@@ -2,6 +2,7 @@
 import soundGameStart from "../../assets/snd-gameStart.mp3";
 import soundLose from "../../assets/snd-lose.mp3";
 import soundWin from "../../assets/snd-win.mp3";
+import { quantityDiffVals, speedDiffValues } from "../../components/GameDialog/gameOptions";
 
 export const gameSettings = {
 	isGameActive: false,
@@ -191,6 +192,31 @@ export function setGameSettings(e) {
 		clearTimeout(this.gameTimeoutId);
 	}
 	
+	// change settings according to valid size, numbers & speed values (difficulty can be 0!)
+	if (parsedData["size"] || parsedData["difficulty"] != null) {		
+		const validDifficulty = parsedData["difficulty"] != null ? parsedData["difficulty"] : this.state.gameSettings["difficulty"];
+		const validSize = parsedData["size"] || this.state.gameSettings["size"];
+
+		const minQuantity = (quantityDiffVals[validDifficulty][validSize] || { min: 0 }).min;
+		const maxQuantity = (quantityDiffVals[validDifficulty][validSize] || { max: 1000 }).max;
+		const changedSpeed = speedDiffValues[validDifficulty];
+		
+		// if quantity is greater or smaller than it should be according to size
+		if (this.state.gameSettings["quantity"] > maxQuantity) {
+			parsedData["quantity"] = maxQuantity;
+		}
+		else if (this.state.gameSettings["quantity"] < minQuantity ) {
+			parsedData["quantity"] = minQuantity;
+		}
+		
+		// if min, max values are not a problem, then set speed
+		if (this.state.gameSettings["speed"] !== changedSpeed) {
+			parsedData["speed"] = changedSpeed;
+		}
+	}
+	// change speed
+
+
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
 	setTimeout(() => this.setState({ gameRestarting: true }), 100);
 	this.gameTimeoutId = setTimeout(() => this.setState({ gameRestarting: false }), 1200);
@@ -313,6 +339,10 @@ export function toggleGameDialog(e) {
 	} else {
 		this.toggleGamePause();
 		this.audioTimeoutId != null && clearTimeout(this.audioTimeoutId);
+		// delete url params if they exist	
+		if (window.location.search !== "") {
+			window.history.replaceState({}, document.title, "/");
+		}
 		this.setState(prevState => {
 			return ({
 				gameSettingsOpen: !prevState.gameSettingsOpen,

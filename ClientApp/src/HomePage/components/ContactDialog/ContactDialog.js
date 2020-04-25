@@ -35,9 +35,9 @@ export class ContactDialog extends React.Component {
 					<Row>
 						<Container>
 							{ isCopied ?
-								<div className="copied__link">Link copied <span role="img" aria-label="smiley face">&#128515;</span></div> 
+								<div className="copied__link">Mail copied <span role="img" aria-label="smiley face">&#128515;</span></div> 
 								:
-								<Button onClick={copy} >Copy link</Button>
+								<Button onClick={copy} >Copy mail</Button>
 							}
 						</Container>
 					</Row>

@@ -56,10 +56,12 @@ export class QuarantineButtons extends React.Component {
 		this.setState({ [`active_btn_${buttonId}`]: false });
 	}
 
-	getRandomButton({ aboutToExpire }) {
+	getRandomButton({ aboutToExpire }) {//only deploy if quarantine is not being dragged at the moment
+		if (this.props.isQuarantineBeingDragged) {
+			return null;
+		}
 		let shouldButtonBeDeployed = false;
 		let buttonToBeDeployed = null;
-		
 		// only deploy button if no button is active at the moment
 		if (!this.props.isAnyButtonActive) {
 			const random = this.randomIntNumber(1, 4);
