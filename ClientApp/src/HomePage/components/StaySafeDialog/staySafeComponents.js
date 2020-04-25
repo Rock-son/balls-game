@@ -35,7 +35,7 @@ export const page4 = () => {
 		<div className="staysafe-dialog__container__items">
 			<p>Many factors influence our immunity. Overall preparedness and good health are very important, but attitudes and beliefs play a huge role too. Check
 				<a
-					className="nav-link"
+					className="just-link"
 					href="https://www.youtube.com/watch?v=6Rfcza4tD2k"
 					target="_blank"
 					rel="noopener noreferrer" >
@@ -70,7 +70,7 @@ export const page6 = () => {
 				<li>• Write new life plans, have a vision, stay motivated.</li>
 				<li>• If entrepreneurial study and
 					<a
-						className="nav-link"
+						className="just-link"
 						href="https://www.smartpassiveincome.com/"
 						target="_blank"
 						rel="noopener noreferrer" >
@@ -90,7 +90,7 @@ export const page7 = () => {
 			<p>If you found the simulator interesting, please share it with your friends. Copy the link and send it forward</p>
 			<p>We also invite you to check our
 				<a
-					className="nav-link"
+					className="just-link"
 					href="https://www.countdownkings.com"
 					target="_blank"
 					rel="noopener noreferrer" >
