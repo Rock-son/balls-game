@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
-		simulationSettings: { healedAfter, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
+		simulationSettings: { healedAfter, showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -96,9 +96,9 @@ export const NavBar = props => {
 			<Navbar dark className="col-6 main__navbar__right d-inline-flex justify-content-end" >
 				<Nav className="navbar__nav right" navbar>
 					<NavItem className="d-inline-flex justify-content-between">
-						<NavbarText className="countdown-link">Stay safe. For more visit&nbsp;</NavbarText>
+						<NavbarText className="countdownkings countdownkings__text">Stay safe. For more visit&nbsp;</NavbarText>
 						<NavLink
-							className="countdown-link"
+							className="countdownkings countdownkings__link"
 							href="https://www.countdownkings.com/"
 							target="_blank"
 							rel="nooperner noreferrer"
@@ -109,8 +109,8 @@ export const NavBar = props => {
 					<NavItem className={`stats ${!isNavbarVisible ? "drop" : ""}`}>
 						<NavbarText className="stats__infected">{showStats ? `Infected: ${contagious}` : ""}</NavbarText>
 						<NavbarText className="stats__healthy">{showStats ? `Healthy: ${healthy}` : ""}</NavbarText>
-						<NavbarText className="stats__healed">{showStats && healedAfter > 0 ? `Healed: ${healed}` : ""}</NavbarText>
-						<NavbarText className="stats__timer">{showTime ? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
+						<NavbarText className="stats__healed">{!isGameActive && staysHealed ? "Healed:" : ""} &nbsp; {!isGameActive && staysHealed ? healed : ""}</NavbarText>
+						<NavbarText className="stats__timer">{showTime || isGameActive? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
 					</NavItem>
 				</Nav>
 			</Navbar>
@@ -122,7 +122,7 @@ export const NavBar = props => {
 				disabled={isNavbarVisible}
 				>
 					<svg x="0px" y="0px" width="21" height="11">
-						<polygon class="arrow" points="10.44,10.39 0.44,4.39 0.44,-0.02 10.44,5.98 20.44,-0.02 20.44,4.39 "/>
+						<polygon className="arrow" points="10.44,10.39 0.44,4.39 0.44,-0.02 10.44,5.98 20.44,-0.02 20.44,4.39 "/>
 					</svg>
 		</Button>
 	</>

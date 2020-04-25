@@ -14,8 +14,8 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 		sprite.velocity.y = -sprite.velocity.y;
 	}
 	// HEAL BALLS IF HEALAFTER TIME IS APPLIED AND DOESN'T STAY HEALED
-	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["heal"]) {
-		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
+	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["staysHealed"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom - sprite.reactContext.state.pausedTime) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = null;
 			sprite.texture = loader.resources.sheet.textures["ball-white.svg"];
@@ -23,8 +23,8 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 		}
 	}
 	// HEAL BALLS IF HEALAFTER TIME IS APPLIED AND STAYS HEALED
-	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && sprite.reactContext.state.simulationSettings["heal"]) {
-		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
+	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && sprite.reactContext.state.simulationSettings["staysHealed"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom - sprite.reactContext.state.pausedTime) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
 			sprite.contagion = 2;
 			sprite.contagiousFrom = null;
 			sprite.texture = loader.resources.sheet.textures["ball-grey.svg"];
@@ -61,7 +61,7 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 				// ACTIVATE TIME contagiousFrom - if not already healed
 			if (sprite.contagion !== 2) {
 					// with HEALED time on and healed off
-				if ((sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["heal"]) &&
+				if ((sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["staysHealed"]) &&
 					(otherSprite.contagion || sprite.contagion)) // any red can infect another red again
 				{
 					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;

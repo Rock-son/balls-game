@@ -37,6 +37,7 @@
 			transition: opacity .5s, background-color .5s;
 			padding: 20px 12px 0px 12px;
 			&.activated {
+				opacity: 1;
 				animation-delay: .2s;
 				animation-duration: 1.5s;
 				animation-iteration-count: 1;
@@ -148,9 +149,14 @@
 			right: 5px;
 			font-size: 17px;
 			text-align: right;
-			& .countdown-link {
+			& .countdownkings {
 				font-size: 15px;
 				padding-right: 2px;
+				&__link:hover {
+					font-size: 15px;
+					color: $white;
+					text-decoration: underline;
+				}
 			}
 			& .stats {
 				position: relative;
@@ -217,17 +223,3 @@
 	75%  {fill: $black;}
 	100% {fill: $white;}
 }
-/*
-@keyframes blink_bg {
-	0% 	 {background-color: $white;}
-	25%  {background-color: $black;}
-	50%  {background-color: $white;}
-	100% {background-color: $black;}
-}
-  @keyframes blink_arrow {
-	0% 	 {fill: $black;}
-	25%  {fill: $white;}
-	50%  {fill: $black;}
-	100% {fill: $white;}
-}
-*/

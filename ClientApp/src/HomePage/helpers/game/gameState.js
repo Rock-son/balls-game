@@ -1,4 +1,3 @@
-
 import soundGameStart from "../../assets/snd-gameStart.mp3";
 import soundLose from "../../assets/snd-lose.mp3";
 import soundWin from "../../assets/snd-win.mp3";
@@ -214,9 +213,7 @@ export function setGameSettings(e) {
 			parsedData["speed"] = changedSpeed;
 		}
 	}
-	// change speed
-
-
+	// set new settings and use fade out
 	const newGameSettings = {...this.state.gameSettings, ...parsedData};
 	setTimeout(() => this.setState({ gameRestarting: true }), 100);
 	this.gameTimeoutId = setTimeout(() => this.setState({ gameRestarting: false }), 1200);

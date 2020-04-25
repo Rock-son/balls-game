@@ -20,8 +20,10 @@ const limiter = new RateLimiter({
 // SECURITY
 helmet(app);
 
-// LIMITER & IP ACCESS CONTROL
+// LIMITER & 
 app.use(limiter);
+
+/* IP ACCESS CONTROL
 app.use((req, res, next) => {
 	let whitelist;
 	if (process.env.WHITELIST) {
@@ -36,6 +38,7 @@ app.use((req, res, next) => {
 	}
 	return res.send("Unauthorized");
 });
+*/
 
 // ROUTES
 app.use(serveStatic(path.join(__dirname, "ClientApp/build/")));

@@ -7,6 +7,8 @@ export const simulationSettings = {
 	simulationRestarting: false,
 	simulationPaused: false,
 	simulationStopped: false,
+	pauseStartedAt: null,
+	pausedTime: 0,
 	// modals - popups
 	simulationSettingsOpen: false,
 	// SETTINGS
@@ -25,15 +27,18 @@ export function toggleSimulationPause() {
 	return this.state.simulationPaused && !this.state.simulationStopped ? this.unpause() : this.pause();
 }
 export function stopStartSimulation() {
-	if (this.state.simulationPaused && !this.state.simulationStopped) { // CONTINUE
+	 // CONTINUE
+	if (this.state.simulationPaused && !this.state.simulationStopped) {
 		this.toggleSimulationDialog();
+	// START
 	} else {	
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
 		setTimeout(() => {
-			this.stop();						// START
+			this.stop();
 			this.startSimulation(true);
 			this.setState(prevState => ({
+				pausedTime: 0,
 				clockTime: new Date(0),
 				simulationStopped: false,
 				simulationPaused: false,
@@ -62,6 +67,8 @@ export function simulationRestart() {
 			clockTime: new Date(0),
 			simulationStopped: false,
 			simulationPaused: false,
+			pausedTime: 0,
+			pauseStartedAt: null,
 			startButtonText: "CONTINUE SIMULATION",
 			simulationSettingsOpen: false,
 			healthy: prevState.simulationSettings["quantity"] - 1,
@@ -164,8 +171,8 @@ export function toggleSimulationDialogAfterNoRestart(e) {
 export function toggleSimulationDialog(e) {
 	e && e.preventDefault();
 	e && e.stopPropagation();
+	// IF GAME ACTIVE
 	if (this.state.isGameActive) {
-
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
 		setTimeout(() => {
@@ -189,11 +196,15 @@ export function toggleSimulationDialog(e) {
 				})
 			});
 		}, 400);
-	} else {		
-		// in all other cases toggle
+	// IF SIMULATION ACTIVE - PAUSE
+	} else {
 		this.toggleSimulationPause();
 		this.setState(prevState => {
+			// if simulation was paused - sum time up, if not - pausedTime stays the same
+			const isPauseBeginningForHealing = prevState.simulationSettings["healedAfter"] > 0 && !prevState.simulationPaused;			
 			return ({
+				pauseStartedAt: isPauseBeginningForHealing ? new Date().getTime() : null,
+				pausedTime: isPauseBeginningForHealing ? prevState.pausedTime : (prevState.pauseStartedAt == null ? 0 : prevState.pausedTime + new Date().getTime() - prevState.pauseStartedAt),
 				simulationSettingsOpen: !prevState.simulationSettingsOpen,
 				simulationPaused: !prevState.simulationPaused,
 				startButtonText: prevState.simulationStopped ? "START SIMULATION" : "CONTINUE SIMULATION",
