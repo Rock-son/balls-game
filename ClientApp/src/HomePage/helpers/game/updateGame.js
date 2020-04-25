@@ -221,14 +221,18 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 					if (sprite.reactContext.state.gameSettings["difficulty"] === 2) {
 						// 100% chance of being here - hard difficulty
 						getContagion(sprite, loader);
-					} else if (d < 0.5 && sprite.reactContext.state.gameSettings["difficulty"] === 1) {
+					} else if (d < 0.5) {
 						// 50% chance of being here - medium
-						getContagion(sprite, loader);
+						if (sprite.reactContext.state.gameSettings["difficulty"] === 1) {
+							getContagion(sprite, loader);
+						}
 					} else if (d < 0.67) {
 						// 17% chance of being here
 					} else {
 						// 33% chance of being here - easy
-						getContagion(sprite, loader);
+						if (sprite.reactContext.state.gameSettings["difficulty"] === 0) {
+							getContagion(sprite, loader);
+						}
 					}
 
 				} else if (sprite.contagion && !otherSprite.contagion) {
@@ -236,14 +240,18 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 					if (sprite.reactContext.state.gameSettings["difficulty"] === 2) {
 						// 100% chance of being here - hard difficulty
 						getContagion(otherSprite, loader);
-					} else if (d < 0.5 && sprite.reactContext.state.gameSettings["difficulty"] === 1) {
+					} else if (d < 0.5) {
 						// 50% chance of being here - medium
-						getContagion(otherSprite, loader);
+						if (sprite.reactContext.state.gameSettings["difficulty"] === 1) {
+							getContagion(otherSprite, loader);
+						}
 					} else if (d < 0.67) {
 						// 17% chance of being here
 					} else {
 						// 33% chance of being here - easy
-						getContagion(otherSprite, loader);
+						if (sprite.reactContext.state.gameSettings["difficulty"] === 0) {
+							getContagion(otherSprite, loader);
+						}
 					}
 				}
 			}
@@ -254,7 +262,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	sprite.y += sprite.velocity.y;
 }
 
-function getContagion(sprite, loader) {
+function getContagion(sprite, loader) {	
 	sprite.contagion = 1;
 	sprite.reactContext.setState(prevState => ({ contagious: prevState.contagious + 1, healthy: prevState.healthy - 1 }));
 	sprite.contagiousFrom = new Date().getTime();
