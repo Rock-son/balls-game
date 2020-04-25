@@ -37,6 +37,7 @@
 			transition: opacity .5s, background-color .5s;
 			padding: 20px 12px 0px 12px;
 			&.activated {
+				opacity: 1;
 				animation-delay: .2s;
 				animation-duration: 1.5s;
 				animation-iteration-count: 1;
