@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
-		simulationSettings: { healedAfter, showTime, showStats }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
+		simulationSettings: { healedAfter, showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -109,8 +109,8 @@ export const NavBar = props => {
 					<NavItem className={`stats ${!isNavbarVisible ? "drop" : ""}`}>
 						<NavbarText className="stats__infected">{showStats ? `Infected: ${contagious}` : ""}</NavbarText>
 						<NavbarText className="stats__healthy">{showStats ? `Healthy: ${healthy}` : ""}</NavbarText>
-						<NavbarText className="stats__healed">{showStats && healedAfter > 0 ? `Healed: ${healed}` : ""}</NavbarText>
-						<NavbarText className="stats__timer">{showTime ? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
+						<NavbarText className="stats__healed">{!isGameActive && staysHealed ? "Healed:" : ""} &nbsp; {!isGameActive && staysHealed ? healed : ""}</NavbarText>
+						<NavbarText className="stats__timer">{showTime || isGameActive? `${minutes}:${formattedSeconds}` : ""}</NavbarText>
 					</NavItem>
 				</Nav>
 			</Navbar>

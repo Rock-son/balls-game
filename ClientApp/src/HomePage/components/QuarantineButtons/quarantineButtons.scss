@@ -36,5 +36,16 @@ $buttonNr: "_1", "_2", "_3", "_4";
 		background-color: $green !important;
 		z-index: 1;
 		opacity: 1;
+		animation-duration: .4s;
+		animation-iteration-count: 3;
+		animation-name: blink_button;
 	}
+}
+
+@keyframes blink_button {
+	0% 	 {opacity: 1;}
+	25%  {opacity: 0;}
+	50%  {opacity: 1;}
+	75%  {opacity: 0;}
+	100% {opacity: 1;}
 }
