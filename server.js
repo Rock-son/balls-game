@@ -20,8 +20,6 @@ const limiter = new RateLimiter({
 // SECURITY
 helmet(app);
 
-
-
 // LIMITER & IP ACCESS CONTROL
 app.use(limiter);
 app.use((req, res, next) => {
@@ -36,7 +34,7 @@ app.use((req, res, next) => {
 	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
 		return next();
 	}
-	return res.send("Unauthorized");
+	return res.send("Unauthorized for: " + ip);
 });
 
 // ROUTES
