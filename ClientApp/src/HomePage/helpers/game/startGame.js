@@ -21,9 +21,9 @@ export function startGame(autostart, gameSettings = null) {
 			//.on("progress", (loader, resource) => console.log(loader.progress + "% loaded"))
 			//.on("load", (loader, resource) => console.log("Asset loaded" + resource.name))
 			.on("error", err => console.error("load error", err))
-			.load(handleOnImageLoaded.bind(this, gameSettings));
+			.load(handleOnImageLoaded.bind(this, gameSettings, autostart));
 	} else {
-		this.gameApp.loader.load(handleOnImageLoaded.bind(this, gameSettings));
+		this.gameApp.loader.load(handleOnImageLoaded.bind(this, gameSettings, autostart));
 	}
 	// Resize function window
 	const resize = (e) => {
@@ -65,7 +65,7 @@ function circleIntersect(x1, y1, r1, x2, y2, r2) {
     return squareDistance <= ((r1 + r2) * (r1 + r2))
 }
 
-function handleOnImageLoaded(gameSettings) {
+function handleOnImageLoaded(gameSettings, autostart) {
 	const {
 		size: radius,
 		speed,
@@ -148,6 +148,7 @@ function handleOnImageLoaded(gameSettings) {
 	const maxWidth = this.canvasWidth - radius * 2.5;
 	const maxHeight = this.canvasHeight - radius * 2.5;
 	const whiteBall = this.gameApp.loader.resources.sheet.textures["ball-white.svg"];
+	const redBall = this.gameApp.loader.resources.sheet.textures["ball-red.svg"];
 	const animatedsheet = this.gameApp.loader.resources.animatedsheet.spritesheet;
 	
 
@@ -172,10 +173,13 @@ function handleOnImageLoaded(gameSettings) {
 			}
 		}
 		if (contagion) {
-			//sprite = new PIXI.Sprite(redBall);
-			sprite = new PIXI.AnimatedSprite(animatedsheet.animations["animatedball"]);
-			sprite.animationSpeed = 0.1;
-			sprite.play();
+			if (autostart) {
+				sprite = new PIXI.AnimatedSprite(animatedsheet.animations["animatedball"]);
+				sprite.animationSpeed = 0.1;
+				sprite.play();
+			} else {
+				sprite = new PIXI.Sprite(redBall);
+			}
 		} else {
 			sprite = new PIXI.Sprite(whiteBall);
 		}
