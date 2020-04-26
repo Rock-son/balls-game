@@ -23,7 +23,7 @@ export class BeatYourFriendDialog extends React.Component {
 	}
 
 	startGame() {
-		const { mode, difficulty, size, quantity, speed } = this.newGameSettings;
+		const { m: mode, d: difficulty, s: size, q: quantity, sp: speed }= this.newGameSettings;
 		this.props.setGameSettings({ mode, difficulty, size, quantity, speed });
 		this.props.toggle();
 		this.props.toggleGameDialog();
@@ -64,6 +64,10 @@ export class BeatYourFriendDialog extends React.Component {
 
 		this.newGameSettings = dataObject;
 		const { m: mode, d: difficulty, s: size, q: quantity, sp: speed, m: minutes, sc: seconds } = dataObject;
+		// fallback in case of wrong settings
+		if (mode == null || difficulty == null || size == null || quantity == null || speed == null || minutes == null || seconds == null ) {
+			this.newGameSettings = { m: 0, d: 2, s: 8, q: 600, sp: .6, m: 0, sc: 20 };
+		}
 
 		return (
 			<Modal key="beatyourfriend-dialog" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="beatyourfriend-dialog">
