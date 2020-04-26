@@ -38,7 +38,7 @@ export class TimeOpenEndDialog extends React.Component {
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state === "granted" || result.state === "prompt") {
-					navigator.clipboard.writeText(`https://www.viralballs.com?${encodeURI(encryptedGameSettings)}`);
+					navigator.clipboard.writeText(`https://www.viralballs.com?settings=${encodeURI(encryptedGameSettings)}`);
 					this.setState({ isCopied: true });
 					setTimeout(() => {
 						this.setState({ isCopied: false });
