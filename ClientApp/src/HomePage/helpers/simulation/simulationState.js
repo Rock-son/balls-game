@@ -39,6 +39,7 @@ export function stopStartSimulation() {
 			this.startSimulation(true);
 			this.setState(prevState => ({
 				pausedTime: 0,
+				pauseStartedAt: null,
 				clockTime: new Date(0),
 				simulationStopped: false,
 				simulationPaused: false,
@@ -201,10 +202,10 @@ export function toggleSimulationDialog(e) {
 		this.toggleSimulationPause();
 		this.setState(prevState => {
 			// if simulation was paused - sum time up, if not - pausedTime stays the same
-			const isPauseBeginningForHealing = prevState.simulationSettings["healedAfter"] > 0 && !prevState.simulationPaused;			
+			const isPauseBeginningForHealing = prevState.simulationSettings["healedAfter"] > 0 && !prevState.simulationPaused;
 			return ({
 				pauseStartedAt: isPauseBeginningForHealing ? new Date().getTime() : null,
-				pausedTime: isPauseBeginningForHealing ? prevState.pausedTime : (prevState.pauseStartedAt == null ? 0 : prevState.pausedTime + new Date().getTime() - prevState.pauseStartedAt),
+				pausedTime: prevState.pauseStartedAt == null ? 0 : new Date().getTime() - prevState.pauseStartedAt,
 				simulationSettingsOpen: !prevState.simulationSettingsOpen,
 				simulationPaused: !prevState.simulationPaused,
 				startButtonText: prevState.simulationStopped ? "START SIMULATION" : "CONTINUE SIMULATION",

@@ -13,9 +13,19 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 	if ((sprite.y + sprite.velocity.y - sprite.radius) < 0) {
 		sprite.velocity.y = -sprite.velocity.y;
 	}
+
+	// PROLONG DURATION OF INFECTED BALLS IF THERE WAS A PAUSE
+	if (sprite.contagion === 1 && sprite.reactContext.state.pausedTime > 0) {
+		sprite.contagiousFrom = sprite.contagiousFrom + sprite.reactContext.state.pausedTime;
+	}
+	// STOP THE PAUSED_TIME
+	if (sprite.myID === sprite.reactContext.state.simulationSettings["quantity"] - 1) {
+		sprite.reactContext.setState({ pausedTime: 0 });
+	}
+
 	// HEAL BALLS IF HEALAFTER TIME IS APPLIED AND DOESN'T STAY HEALED
 	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["staysHealed"]) {
-		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom - sprite.reactContext.state.pausedTime) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
 			sprite.contagion = 0;
 			sprite.contagiousFrom = null;
 			sprite.texture = loader.resources.sheet.textures["ball-white.svg"];
@@ -24,7 +34,7 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 	}
 	// HEAL BALLS IF HEALAFTER TIME IS APPLIED AND STAYS HEALED
 	if (sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && sprite.reactContext.state.simulationSettings["staysHealed"]) {
-		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom - sprite.reactContext.state.pausedTime) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
+		if (sprite.contagiousFrom && (new Date().getTime() - sprite.contagiousFrom) > sprite.reactContext.state.simulationSettings["healedAfter"]) {
 			sprite.contagion = 2;
 			sprite.contagiousFrom = null;
 			sprite.texture = loader.resources.sheet.textures["ball-grey.svg"];
