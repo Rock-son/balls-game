@@ -24,6 +24,9 @@ export class QuarantineButtons extends React.Component {
 		if (!nextProps.isGameActive) {
 			return false;
 		}
+		if (!this.props.isGameActive && nextProps.isGameActive) {
+			return true;
+		}
 		if (nextProps.clockTime !== this.props.clockTime ||
 			this.state.active_btn_1 !== nextState.active_btn_1 ||
 			this.state.active_btn_2 !== nextState.active_btn_2 ||
@@ -101,17 +104,17 @@ export class QuarantineButtons extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const { clockTime } = prevProps;		
-		// ON RESTART
+		const { clockTime } = prevProps;
+		// reset buttons from simulation
 		if (this.props.gameStopped) {
-			return this.setState({
+			this.setState({
 				active_btn_1: false,
 				active_btn_2: false,
 				active_btn_3: false,
 				active_btn_4: false
 			});
-			return;
 		}
+
 
 		// deploy first button- no need to check anything
 		if (clockTime.getTime() === 2000) {			

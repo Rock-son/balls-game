@@ -46,15 +46,19 @@ export function stopStartSimulation() {
 				startButtonText: "CONTINUE SIMULATION",
 				simulationSettingsOpen: false,
 				healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
-				// reset game settings
+				// reset game settings but leave gameActive for active quarantine buttons
 				...gameResetSettings,
-				isGameActive: false,
+				isGameActive: true,
 				gamePaused: true,
 				gameStopped: true,
 				quarantineButtonsActive: false, // only for testing purposes
 				availableQuarantines: []
 			}));
 		}, 400);
+		// quarantine buttons will be reset if there are any
+		setTimeout(() => {
+			this.setState({ isGameActive: false });
+		}, 500);
 	}
 }
 export function simulationRestart() {
