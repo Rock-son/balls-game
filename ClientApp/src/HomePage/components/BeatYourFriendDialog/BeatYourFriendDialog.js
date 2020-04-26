@@ -9,7 +9,9 @@ export class BeatYourFriendDialog extends React.Component {
 	constructor(props) {
 		super(props);
 		this.newGameSettings = null;
+
 		this.startGame = this.startGame.bind(this);
+		this.getParameter = this.getParameter.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {	
@@ -19,29 +21,49 @@ export class BeatYourFriendDialog extends React.Component {
 		}
 		return false;
 	}
+
 	startGame() {
-		const { mode, difficulty, size, quantity, speed, clockTime, delayInSeconds } = this.newGameSettings;
+		const { mode, difficulty, size, quantity, speed } = this.newGameSettings;
 		this.props.setGameSettings({ mode, difficulty, size, quantity, speed });
 		this.props.toggle();
 		this.props.toggleGameDialog();
 	}
 
+	getParameter(paramName) {
+		var searchString = window.location.search.substring(1),
+			i, val, params = searchString.split("&");
+	  
+		for (i=0;i<params.length;i++) {
+		  val = params[i].split("=");
+		  if (val[0] == paramName) {
+			return val[1];
+		  }
+		}
+		return null;
+	}
+
 	render() {
 		const { isOpen, toggle } = this.props;
+
+		let params;
 		if (window.location.search === "") {
 			return "";
+		} else {
+			params = this.getParameter("settings");
+			if (!params) {
+				return "";
+			}
 		}
+		
 		const myCrypto = new SimpleCryptoJS("/*TODO: add additional logic*/");
-		const urlCipherString = decodeURI(window.location.search.slice(1));
+		const urlCipherString = decodeURI(params);
 		const dataObject = JSON.parse(myCrypto.decrypt(urlCipherString));
 		if (dataObject == null || dataObject == "") {
 			return "";
 		}
 
 		this.newGameSettings = dataObject;
-		const { mode, difficulty, size, quantity, speed, clockTime, delayInSeconds } = dataObject;
-		const correctedTime = clockTime - delayInSeconds * 1000;
-		const newClockTime = new Date(correctedTime);
+		const { m: mode, d: difficulty, s: size, q: quantity, sp: speed, m: minutes, sc: seconds } = dataObject;
 
 		return (
 			<Modal key="beatyourfriend-dialog" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="beatyourfriend-dialog">
@@ -50,7 +72,7 @@ export class BeatYourFriendDialog extends React.Component {
 					<Row>
 						<Container className="beatyourfriend-dialog__container">
 							<div > Your friend played this game for</div>
-							<div className="white">{newClockTime.getMinutes()} minutes, {newClockTime.getSeconds()} seconds</div>
+							<div className="white">{minutes} minutes, {seconds} seconds</div>
 							<div className="">Game mode: {modeToString[mode]}</div>
 							<div className="">Difficulty: {difficultyToString[difficulty]}</div>
 							<div className="d-flex justify-content-center">

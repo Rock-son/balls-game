@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
-		simulationSettings: { healedAfter, showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
+		simulationSettings: { showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;

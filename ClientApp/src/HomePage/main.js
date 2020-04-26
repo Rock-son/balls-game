@@ -71,6 +71,7 @@ export default class HomePage extends React.Component {
 		this.toggleSimulationDialogAfterNoRestart = toggleSimulationDialogAfterNoRestart.bind(this);
 		// EVENTS
 		this.onMouseMove = onMouseMove.bind(this);
+		this.getParameter = this.getParameter.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.copyUriToClipboard = this.copyUriToClipboard.bind(this);
@@ -83,16 +84,15 @@ export default class HomePage extends React.Component {
 		this.setGameSettings = setGameSettings.bind(this);
 		this.toggleGameDialog = toggleGameDialog.bind(this);
 		this.closeGameEndDialog = closeGameEndDialog.bind(this);
-		this.beatYourFriendLink = this.beatYourFriendLink.bind(this);
 		this.setQuarantineInMotion = setQuarantineInMotion.bind(this);
 		this.setQuarantineInactive = setQuarantineInactive.bind(this);
 		this.resetDraggedQuarantineId = resetDraggedQuarantineId.bind(this);
-		this.onContextMenuHideQuarantine = onContextMenuHideQuarantine.bind(this);
 		this.resetQuarantineExpiration = resetQuarantineExpiration.bind(this);
+		this.onContextMenuHideQuarantine = onContextMenuHideQuarantine.bind(this);
 		// SIMULATION
 		this.simulationRestart= simulationRestart.bind(this);
-		this.toggleShareDialog = this.toggleShareDialog.bind(this);
 		this.stopStartSimulation = stopStartSimulation.bind(this);
+		this.toggleShareDialog = this.toggleShareDialog.bind(this);
 		this.setSimulationSettings = setSimulationSettings.bind(this);
 		this.toggleSimulationDialog = toggleSimulationDialog.bind(this);
 		this.toggleNavbarVisibility = this.toggleNavbarVisibility.bind(this);
@@ -100,13 +100,18 @@ export default class HomePage extends React.Component {
 	}
 	componentDidMount() {
 		if (window.location.search !== "") {
-			this.startGame(false);
-			this.setState({ beatYourFriendDialogOpen: true, gameStopped: true, gamePaused: true, isGameActive: true });
+			const params = this.getParameter("settings");
+			if (params) {
+				this.startGame(false);
+				this.setState({ beatYourFriendDialogOpen: true, gamePaused: true, isGameActive: true });	
+			} else {
+				this.startSimulation(true);
+			}
 		} else {
 			this.startSimulation(true);
 		}
-			window.addEventListener('resize', this.handleResize);
-			this.interval = setDriftlessInterval(this.intervalTime, 1000);
+		window.addEventListener('resize', this.handleResize);
+		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
 	componentDidCatch(error, errorInfo) {
 		// logErrorToMyService(error, errorInfo);
@@ -137,7 +142,18 @@ export default class HomePage extends React.Component {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
-
+	getParameter(paramName) {
+		var searchString = window.location.search.substring(1),
+			i, val, params = searchString.split("&");
+	  
+		for (i=0;i<params.length;i++) {
+		  val = params[i].split("=");
+		  if (val[0] == paramName) {
+			return val[1];
+		  }
+		}
+		return null;
+	}
 	toggleDialog(e) {
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
@@ -197,6 +213,9 @@ export default class HomePage extends React.Component {
 			this.setState({ isCopied: false });
 		}, 1000);
 	}
+	toggleBeatYourFriendDialog() {
+		this.setState(prevState => ({ beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
+	}
 	toggleStaySafeDialog(e) {
 		e && e.preventDefault();
 		e && e.stopPropagation();
@@ -216,13 +235,6 @@ export default class HomePage extends React.Component {
 			this.toggleGamePause();
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
 		}
-	}
-	toggleBeatYourFriendDialog() {
-		this.toggleGameDialog();
-		this.setState(prevState => ({ beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
-	}
-	beatYourFriendLink() {
-
 	}
 	toggleNavbarItemsExpand(e) {
 		e.preventDefault();

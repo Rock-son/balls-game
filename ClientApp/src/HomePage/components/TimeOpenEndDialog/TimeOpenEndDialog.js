@@ -11,7 +11,6 @@ export class TimeOpenEndDialog extends React.Component {
 		this.state = {
 			isCopied: false
 		}
-
 		this.copyToClipboard = this.copyToClipboard.bind(this);
 	}
 
@@ -34,11 +33,22 @@ export class TimeOpenEndDialog extends React.Component {
 
 	copyToClipboard() {
 		const myCrypto = new SimpleCryptoJS("/*TODO: add additional logic*/");
-		const encryptedGameSettings = myCrypto.encrypt(JSON.stringify({...this.props.gameSettings, clockTime: this.props.clockTime.getTime() }));
+		const { gameSettings: { mode, difficulty, size, quantity, speed, delayInSeconds }, clockTime } = this.props;
+		const correctedTime = new Date(clockTime.getTime() - delayInSeconds * 1000);
+		const shortenedSettings = {
+			m: mode,
+			d: difficulty,
+			s: size,
+			q: quantity,
+			sp: speed,
+			m: correctedTime.getMinutes(),
+			sc: correctedTime.getSeconds()
+		};
+		const encryptedGameSettings = myCrypto.encrypt(JSON.stringify(shortenedSettings));
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state === "granted" || result.state === "prompt") {
-					navigator.clipboard.writeText(`https://www.viralballs.com?${encodeURI(encryptedGameSettings)}`);
+					navigator.clipboard.writeText(`https://www.viralballs.com?settings=${encodeURI(encryptedGameSettings)}`);
 					this.setState({ isCopied: true });
 					setTimeout(() => {
 						this.setState({ isCopied: false });
