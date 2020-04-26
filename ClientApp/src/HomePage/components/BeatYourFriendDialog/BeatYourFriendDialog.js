@@ -63,9 +63,7 @@ export class BeatYourFriendDialog extends React.Component {
 		}
 
 		this.newGameSettings = dataObject;
-		const { mode, difficulty, size, quantity, speed, clockTime, delayInSeconds } = dataObject;
-		const correctedTime = clockTime - delayInSeconds * 1000;
-		const newClockTime = new Date(correctedTime);
+		const { m: mode, d: difficulty, s: size, q: quantity, sp: speed, m: minutes, sc: seconds } = dataObject;
 
 		return (
 			<Modal key="beatyourfriend-dialog" zIndex={isOpen ? 1000: -1} isOpen={isOpen} toggle={toggle} centered={true} fade={true} className="beatyourfriend-dialog">
@@ -74,7 +72,7 @@ export class BeatYourFriendDialog extends React.Component {
 					<Row>
 						<Container className="beatyourfriend-dialog__container">
 							<div > Your friend played this game for</div>
-							<div className="white">{newClockTime.getMinutes()} minutes, {newClockTime.getSeconds()} seconds</div>
+							<div className="white">{minutes} minutes, {seconds} seconds</div>
 							<div className="">Game mode: {modeToString[mode]}</div>
 							<div className="">Difficulty: {difficultyToString[difficulty]}</div>
 							<div className="d-flex justify-content-center">
