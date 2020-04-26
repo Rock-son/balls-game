@@ -45,6 +45,7 @@ export const gameSettings = {
 }
 
 export const resetSettings = {
+	isGameActive: true,
 	isAnyButtonActive: false,
 	activeQuarantines: [],
 	gameEnded: false,
@@ -104,7 +105,6 @@ export function closeGameEndDialog() {
 	}, 400);
 }
 
-
 export function onContextMenuHideQuarantine(e) {
 	e.preventDefault();
 	if (this.state.quarantineBeingDragged) {
@@ -154,7 +154,7 @@ export function onMouseMove(e) {
 export function stopStartGame() {
 	if (this.state.gamePaused && !this.state.gameStopped) { // CONTINUE
 		this.toggleGameDialog();
-	} else {												// START
+	} else {											// START
 		this.setState({ gameRestarting: true });
 		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
 		setTimeout(() => {
