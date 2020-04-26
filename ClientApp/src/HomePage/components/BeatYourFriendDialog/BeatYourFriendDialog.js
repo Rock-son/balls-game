@@ -9,7 +9,9 @@ export class BeatYourFriendDialog extends React.Component {
 	constructor(props) {
 		super(props);
 		this.newGameSettings = null;
+
 		this.startGame = this.startGame.bind(this);
+		this.getParameter = this.getParameter.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {	
@@ -19,20 +21,42 @@ export class BeatYourFriendDialog extends React.Component {
 		}
 		return false;
 	}
+
 	startGame() {
-		const { mode, difficulty, size, quantity, speed, clockTime, delayInSeconds } = this.newGameSettings;
+		const { mode, difficulty, size, quantity, speed } = this.newGameSettings;
 		this.props.setGameSettings({ mode, difficulty, size, quantity, speed });
 		this.props.toggle();
 		this.props.toggleGameDialog();
 	}
 
+	getParameter(paramName) {
+		var searchString = window.location.search.substring(1),
+			i, val, params = searchString.split("&");
+	  
+		for (i=0;i<params.length;i++) {
+		  val = params[i].split("=");
+		  if (val[0] == paramName) {
+			return val[1];
+		  }
+		}
+		return null;
+	}
+
 	render() {
 		const { isOpen, toggle } = this.props;
+
+		let params;
 		if (window.location.search === "") {
 			return "";
+		} else {
+			params = this.getParameter("settings");
+			if (!params) {
+				return "";
+			}
 		}
+		
 		const myCrypto = new SimpleCryptoJS("/*TODO: add additional logic*/");
-		const urlCipherString = decodeURI(window.location.search.slice(1));
+		const urlCipherString = decodeURI(params);
 		const dataObject = JSON.parse(myCrypto.decrypt(urlCipherString));
 		if (dataObject == null || dataObject == "") {
 			return "";
