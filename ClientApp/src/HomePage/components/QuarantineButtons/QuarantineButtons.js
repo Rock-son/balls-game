@@ -89,8 +89,6 @@ export class QuarantineButtons extends React.Component {
 				shouldButtonBeDeployed = true;
 			}
 		} else if ((aboutToExpire && this.props.activeQuarantines.length < 6) || (!aboutToExpire && this.props.activeQuarantines.length < 5)) {
-			console.log("wtf");
-			
 			shouldButtonBeDeployed = true;
 		}
 
