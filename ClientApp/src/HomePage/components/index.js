@@ -10,3 +10,4 @@ export { AboutDialog } from "./AboutDialog/AboutDialog";
 export { StaySafeDialog } from "./StaySafeDialog/StaySafeDialog";
 export { HowToPlayDialog } from "./HowToPlayDialog/HowToPlayDialog";
 export { BeatYourFriendDialog } from "./BeatYourFriendDialog/BeatYourFriendDialog";
+export { BrowserWarningDialog } from "./BrowserWarningDialog/BrowserWarningDialog";
