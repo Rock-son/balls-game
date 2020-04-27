@@ -323,6 +323,7 @@ export function toggleGameDialog(e) {
 			// only when clicking on navbar link -> stop simulation and show game dialog
 			this.setState(prevState => {
 				return ({
+					clockTime: new Date(0),
 					gameSettingsOpen: true,
 					gamePaused: true,
 					startButtonText: "START GAME",

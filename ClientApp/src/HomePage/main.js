@@ -142,18 +142,12 @@ export default class HomePage extends React.Component {
 		this.gameApp && this.gameApp.destroy(true);
 	}
 	checkBrowser() {
-		// Opera 8.0+
-		const isOpera = (!!window.opr) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-		// Firefox 1.0+
-		const isFirefox = typeof InstallTrigger !== 'undefined';
 		// Safari 3.0+ "[object HTMLElementConstructor]" 
 		const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']);
 		// Internet Explorer 6-11
 		const isIE = /*@cc_on!@*/false || !!document.documentMode;
 		// Edge 20+
 		const isEdge = !isIE && !!window.StyleMedia;
-		// Chrome 1+
-		const isChrome = !!window.chrome;
 
 		if (isIE || isSafari || isEdge) {
 			return false;
@@ -166,7 +160,7 @@ export default class HomePage extends React.Component {
 			if ((this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped)) ||
 				(this.state.isGameActive && (this.state.gamePaused || this.state.gameStopped))
 			) {
-				// stop calculating currentTime because of deactivate time
+				// currentTime should not be running when game /simulation is stopped
 				return ({ currentTime: prevState.currentTime })
 			}
 			// if simulation / game is not paused, calculate start time a new
@@ -183,7 +177,7 @@ export default class HomePage extends React.Component {
 	  
 		for (i=0;i<params.length;i++) {
 		  val = params[i].split("=");
-		  if (val[0] == paramName) {
+		  if (val[0] === paramName) {
 			return val[1];
 		  }
 		}
