@@ -3,6 +3,7 @@ import { quantityValues } from "../../components/SimulationDialog/simulationOpti
 
 export const simulationSettings = {
 	isSimulationActive: true,
+	forceUpdateGame: false,
 	// canvas state
 	simulationRestarting: false,
 	simulationPaused: false,
@@ -48,6 +49,7 @@ export function stopStartSimulation() {
 				healthy: prevState.simulationSettings["quantity"] - 1, contagious: 1,
 				// reset game settings but leave gameActive for active quarantine buttons
 				...gameResetSettings,
+				forceUpdateGame: true,
 				isGameActive: true,
 				gamePaused: true,
 				gameStopped: true,
@@ -57,7 +59,10 @@ export function stopStartSimulation() {
 		}, 400);
 		// quarantine buttons will be reset if there are any
 		setTimeout(() => {
-			this.setState({ isGameActive: false });
+			this.setState({ 
+				isGameActive: false,
+				forceUpdateGame: false
+			});
 		}, 500);
 	}
 }

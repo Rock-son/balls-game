@@ -24,7 +24,7 @@ export class QuarantineButtons extends React.Component {
 		if (!nextProps.isGameActive) {
 			return false;
 		}
-		if (!this.props.isGameActive && nextProps.isGameActive) {
+		if (!this.props.isGameActive && nextProps.isGameActive && nextProps.forceUpdateGame) {
 			return true;
 		}
 		if (nextProps.clockTime !== this.props.clockTime ||
@@ -59,7 +59,8 @@ export class QuarantineButtons extends React.Component {
 		this.setState({ [`active_btn_${buttonId}`]: false });
 	}
 
-	getRandomButton({ aboutToExpire }) {//only deploy if quarantine is not being dragged at the moment
+	getRandomButton({ aboutToExpire }) {
+		//only deploy if quarantine is not being dragged at the moment
 		if (this.props.isQuarantineBeingDragged) {
 			return null;
 		}

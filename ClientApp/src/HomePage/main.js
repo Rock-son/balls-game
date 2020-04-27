@@ -409,6 +409,7 @@ export default class HomePage extends React.Component {
 				<QuarantineButtons
 					clockTime={this.state.clockTime}
 					isGameActive={this.state.isGameActive}
+					forceUpdateGame={this.state.forceUpdateGame}
 					activeQuarantines={this.state.activeQuarantines}
 					availableQuarantines={this.state.availableQuarantines}
 					setQuarantineInMotion={this.setQuarantineInMotion}
