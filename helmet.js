@@ -15,7 +15,7 @@ module.exports = function a(app) {
 			"fontSrc": 		[ "'self'" , "https://fonts.gstatic.com" ],
 			"imgSrc":	    [ "'self'", "data:" ],
 			"objectSrc": 	[ "'none'"],
-			"sandbox":		[ "allow-forms", "allow-scripts", "allow-same-origin" ],
+			"sandbox":		[ "allow-modals", "allow-scripts", "allow-same-origin", "allow-popups" ],
 			"reportUri": 	'/report-violation',
 			"upgradeInsecureRequests": true
 		},
