@@ -35,7 +35,7 @@ export class BeatYourFriendDialog extends React.Component {
 	  
 		for (i=0;i<params.length;i++) {
 		  val = params[i].split("=");
-		  if (val[0] == paramName) {
+		  if (val[0] === paramName) {
 			return val[1];
 		  }
 		}
@@ -57,16 +57,23 @@ export class BeatYourFriendDialog extends React.Component {
 		
 		const myCrypto = new SimpleCryptoJS("/*TODO: add additional logic*/");
 		const urlCipherString = decodeURI(params);
-		const dataObject = JSON.parse(myCrypto.decrypt(urlCipherString));
-		if (dataObject == null || dataObject == "") {
+		let dataObject;
+		try {
+			dataObject = JSON.parse(myCrypto.decrypt(urlCipherString));
+		} catch (error) {
+			// add fallback values
+			dataObject = { m: 0, d: 2, s: 8, q: 600, sp: .6, min: 0, sc: 20 };
+		}
+		
+		if (dataObject == null || dataObject === "") {
 			return "";
 		}
 
 		this.newGameSettings = dataObject;
-		const { m: mode, d: difficulty, s: size, q: quantity, sp: speed, m: minutes, sc: seconds } = dataObject;
+		const { m: mode, d: difficulty, s: size, q: quantity, sp: speed, min: minutes, sc: seconds } = dataObject;
 		// fallback in case of wrong settings
 		if (mode == null || difficulty == null || size == null || quantity == null || speed == null || minutes == null || seconds == null ) {
-			this.newGameSettings = { m: 0, d: 2, s: 8, q: 600, sp: .6, m: 0, sc: 20 };
+			this.newGameSettings = { m: 0, d: 2, s: 8, q: 600, sp: .6, min: 0, sc: 20 };
 		}
 
 		return (

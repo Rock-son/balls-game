@@ -41,7 +41,7 @@ export class TimeOpenEndDialog extends React.Component {
 			s: size,
 			q: quantity,
 			sp: speed,
-			m: correctedTime.getMinutes(),
+			min: correctedTime.getMinutes(),
 			sc: correctedTime.getSeconds()
 		};
 		const encryptedGameSettings = myCrypto.encrypt(JSON.stringify(shortenedSettings));
