@@ -20,19 +20,21 @@ export class BrowserWarningDialog extends React.Component {
 		return false;
 	}
 	checkBrowser() {
-		// INTERNET EXPLORER
-		if (navigator.userAgent.indexOf("MSIE") !== -1 ) {
-			return "Internet Expolorer";
-		}
-		// EDGE
-		else if (navigator.userAgent.indexOf("Edge") !== -1 ) {
-			return "Edge";
-		}
-		// SAFARI
-		else if (navigator.userAgent.indexOf("Safari") !== -1 ) {
+		// Safari 3.0+ "[object HTMLElementConstructor]" 
+		const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']);
+		// Internet Explorer 6-11
+		const isIE = /*@cc_on!@*/false || !!document.documentMode;
+		// Edge 20+
+		const isEdge = !isIE && !!window.StyleMedia;
+		if (isSafari) {
 			return "Safari";
 		}
-		return true;
+		else if (isEdge) {
+			return "Edge";
+		}
+		else if (isIE) {
+			return "Internet Explorer";
+		}
 	}
 
 	render() {
