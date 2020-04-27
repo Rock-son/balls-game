@@ -20,7 +20,7 @@ export class QuarantineButtons extends React.Component {
 		this.onMouseDown = this.onMouseDown.bind(this);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {		
+	shouldComponentUpdate(nextProps, nextState) {
 		if (!nextProps.isGameActive) {
 			return false;
 		}
@@ -116,9 +116,8 @@ export class QuarantineButtons extends React.Component {
 			});
 		}
 
-
 		// deploy first button- no need to check anything
-		if (clockTime.getTime() === 2000) {			
+		if (clockTime.getTime() === 2000) {
 			const randomButtonStateKey = this.getRandomButton({ aboutToExpire: false });
 			if (randomButtonStateKey) {
 				this.props.setButtonStatus(true);

@@ -160,7 +160,7 @@ export default class HomePage extends React.Component {
 			if ((this.state.isSimulationActive && (this.state.simulationPaused || this.state.simulationStopped)) ||
 				(this.state.isGameActive && (this.state.gamePaused || this.state.gameStopped))
 			) {
-				// stop calculating currentTime because of deactivate time
+				// currentTime should not be running when game /simulation is stopped
 				return ({ currentTime: prevState.currentTime })
 			}
 			// if simulation / game is not paused, calculate start time a new
