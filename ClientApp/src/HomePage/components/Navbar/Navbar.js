@@ -44,7 +44,7 @@ export const NavBar = props => {
 	return(
 		<>
 		<Navbar
-			onPointerMove={onMouseMove} 
+			onMouseMove={onMouseMove} 
 			onWheel={onWheel} 
 			onClick={toggleDialog} 
 			dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} 

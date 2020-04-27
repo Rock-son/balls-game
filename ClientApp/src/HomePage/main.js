@@ -1,5 +1,5 @@
 import React from "react";
-import Hammer from "hammerjs";
+//import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
@@ -120,10 +120,12 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
+		/*
 		const canvas = document.getElementById("canvas-container");
 		const hammerTime = new Hammer(canvas);
 		hammerTime.on("pinch", () => console.log("you pinched me"));
 		hammerTime.on("tap", () => console.log("you tapped me"));
+		*/
 		window.addEventListener('resize', this.handleResize);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
@@ -140,16 +142,20 @@ export default class HomePage extends React.Component {
 		this.gameApp && this.gameApp.destroy(true);
 	}
 	checkBrowser() {
-		// INTERNET EXPLORER
-		if (navigator.userAgent.indexOf("MSIE") !== -1 ) {
-			return false;
-		}
-		// EDGE
-		else if (navigator.userAgent.indexOf("Edge") !== -1 ) {
-			return false;
-		}
-		// SAFARI
-		else if (navigator.userAgent.indexOf("Safari") !== -1 ) {
+		// Opera 8.0+
+		const isOpera = (!!window.opr) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+		// Firefox 1.0+
+		const isFirefox = typeof InstallTrigger !== 'undefined';
+		// Safari 3.0+ "[object HTMLElementConstructor]" 
+		const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']);
+		// Internet Explorer 6-11
+		const isIE = /*@cc_on!@*/false || !!document.documentMode;
+		// Edge 20+
+		const isEdge = !isIE && !!window.StyleMedia;
+		// Chrome 1+
+		const isChrome = !!window.chrome;
+
+		if (isIE || isSafari || isEdge) {
 			return false;
 		}
 		return true;
@@ -420,7 +426,7 @@ export default class HomePage extends React.Component {
 				<article
 					id="canvas-container"
 					onClick={this.toggleDialog}
-					onPointerMove={this.onMouseMove}
+					onMouseMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
 					onContextMenu={this.onContextMenuHideQuarantine}
 					touch-action="auto"
