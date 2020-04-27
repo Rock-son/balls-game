@@ -1,5 +1,4 @@
 const express = require("express");
-const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const bodyParser = require("body-parser");
@@ -23,22 +22,8 @@ helmet(app);
 // LIMITER & 
 app.use(limiter);
 
-/* IP ACCESS CONTROL
-app.use((req, res, next) => {
-	let whitelist;
-	if (process.env.WHITELIST) {
-		whitelist = process.env.WHITELIST; // HEROKU ENV VAR
-	} else {
-		const secretsContent = fs.readFileSync("./.secrets", {encoding: "utf-8"});
-		whitelist = JSON.parse(JSON.stringify(secretsContent));
-	}
-	var ip = req.headers["x-real-ip"] || req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
-	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
-		return next();
-	}
-	return res.send("Unauthorized");
-});
-*/
+// SET SETTINGS
+app.set("env", "production");
 
 // ROUTES
 app.use(serveStatic(path.join(__dirname, "ClientApp/build/")));
@@ -64,3 +49,30 @@ bodyParser.json({
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "./ClientApp/build", "index.html")));
 
 module.exports = app;
+
+
+
+
+
+
+
+
+
+
+
+/* IP ACCESS CONTROL
+app.use((req, res, next) => {
+	let whitelist;
+	if (process.env.WHITELIST) {
+		whitelist = process.env.WHITELIST; // HEROKU ENV VAR
+	} else {
+		const secretsContent = fs.readFileSync("./.secrets", {encoding: "utf-8"});
+		whitelist = JSON.parse(JSON.stringify(secretsContent));
+	}
+	var ip = req.headers["x-real-ip"] || req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+	if (ip && whitelist && whitelist.indexOf(ip) > -1) {
+		return next();
+	}
+	return res.send("Unauthorized");
+});
+*/
