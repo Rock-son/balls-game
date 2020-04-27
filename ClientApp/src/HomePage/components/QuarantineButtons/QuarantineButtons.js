@@ -17,14 +17,14 @@ export class QuarantineButtons extends React.Component {
 
 		this.randomIntNumber = this.randomIntNumber.bind(this);
 		this.getRandomButton = this.getRandomButton.bind(this);
-		this.onPointerDown = this.onPointerDown.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {		
 		if (!nextProps.isGameActive) {
 			return false;
 		}
-		if (!this.props.isGameActive && nextProps.isGameActive) {
+		if (!this.props.isGameActive && nextProps.isGameActive && nextProps.forceUpdateGame) {
 			return true;
 		}
 		if (nextProps.clockTime !== this.props.clockTime ||
@@ -48,7 +48,7 @@ export class QuarantineButtons extends React.Component {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
-	onPointerDown = (e) => {	
+	onMouseDown = (e) => {	
 		// start quarantine
 		const event = e;
 		this.props.setQuarantineInMotion(event);
@@ -59,7 +59,8 @@ export class QuarantineButtons extends React.Component {
 		this.setState({ [`active_btn_${buttonId}`]: false });
 	}
 
-	getRandomButton({ aboutToExpire }) {//only deploy if quarantine is not being dragged at the moment
+	getRandomButton({ aboutToExpire }) {
+		//only deploy if quarantine is not being dragged at the moment
 		if (this.props.isQuarantineBeingDragged) {
 			return null;
 		}
@@ -150,25 +151,25 @@ export class QuarantineButtons extends React.Component {
 			<>
 				<Button
 					id="1btn"
-					onPointerDown={this.onPointerDown}
+					onMouseDown={this.onMouseDown}
 					className={`btn quarantine__btn quarantine__btn--left-top ${this.state.active_btn_1 ? "active" : ""}`}>
 						QUARANTINE
 				</Button>
 				<Button
 					id="2btn"
-					onPointerDown={this.onPointerDown}
+					onMouseDown={this.onMouseDown}
 					className={`btn quarantine__btn quarantine__btn--left-bottom ${this.state.active_btn_2 ? "active" : ""}`}>
 						QUARANTINE
 				</Button>
 				<Button
 					id="3btn"
-					onPointerDown={this.onPointerDown}
+					onMouseDown={this.onMouseDown}
 					className={`btn quarantine__btn quarantine__btn--right-top ${this.state.active_btn_3 ? "active" : ""}`}>
 						QUARANTINE
 				</Button>
 				<Button
 					id="4btn"
-					onPointerDown={this.onPointerDown}
+					onMouseDown={this.onMouseDown}
 					className={`btn quarantine__btn quarantine__btn--right-bottom ${this.state.active_btn_4 ? "active" : ""}`}>
 						QUARANTINE
 				</Button>

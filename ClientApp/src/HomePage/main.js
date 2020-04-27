@@ -1,8 +1,9 @@
 import React from "react";
+//import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog,
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, BrowserWarningDialog,
 	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog, ContactDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog, toggleSimulationDialogAfterNoRestart } from "./helpers/simulation/simulationState";
@@ -47,13 +48,16 @@ export default class HomePage extends React.Component {
 			contactDialogOpen: false,
 			staySafeDialogOpen: false,
 			howToPlayDialogOpen: false,
-			beatYourFriendDialogOpen: false
+			beatYourFriendDialogOpen: false,
+			browserWarningDialogOpen: false
 		}
 
 		this.interval = null;
 		this.canvasWidth = window.innerWidth < 800 ? 800 : window.innerWidth;
 		this.canvasHeight = window.innerHeight < 600 ? 600 : window.innerHeight;
-
+		// MISCELLANEOUS
+		this.checkBrowser = this.checkBrowser.bind(this);
+		// PIXI
 		this.stop = stop.bind(this);
 		this.startSimulation = startSimulation.bind(this);
 		this.startGame = startGame.bind(this);
@@ -68,6 +72,7 @@ export default class HomePage extends React.Component {
 		this.toggleStaySafeDialog = this.toggleStaySafeDialog.bind(this);
 		this.toggleHowToPlayDialog = this.toggleHowToPlayDialog.bind(this);
 		this.toggleBeatYourFriendDialog = this.toggleBeatYourFriendDialog.bind(this);
+		this.toggleBrowserWarningDialog = this.toggleBrowserWarningDialog.bind(this);
 		this.toggleSimulationDialogAfterNoRestart = toggleSimulationDialogAfterNoRestart.bind(this);
 		// EVENTS
 		this.onMouseMove = onMouseMove.bind(this);
@@ -99,6 +104,11 @@ export default class HomePage extends React.Component {
 		this.toggleNavbarItemsExpand = this.toggleNavbarItemsExpand.bind(this);
 	}
 	componentDidMount() {
+		// check for browser and return warning (for Safari, MSIE & Edge)
+		if (!this.checkBrowser()) {
+			return this.toggleBrowserWarningDialog();
+		}
+		// check for url params
 		if (window.location.search !== "") {
 			const params = this.getParameter("settings");
 			if (params) {
@@ -110,6 +120,12 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
+		/*
+		const canvas = document.getElementById("canvas-container");
+		const hammerTime = new Hammer(canvas);
+		hammerTime.on("pinch", () => console.log("you pinched me"));
+		hammerTime.on("tap", () => console.log("you tapped me"));
+		*/
 		window.addEventListener('resize', this.handleResize);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
@@ -124,6 +140,25 @@ export default class HomePage extends React.Component {
 		clearDriftless(this.interval);
 		this.simulationApp && this.simulationApp.destroy(true);
 		this.gameApp && this.gameApp.destroy(true);
+	}
+	checkBrowser() {
+		// Opera 8.0+
+		const isOpera = (!!window.opr) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+		// Firefox 1.0+
+		const isFirefox = typeof InstallTrigger !== 'undefined';
+		// Safari 3.0+ "[object HTMLElementConstructor]" 
+		const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']);
+		// Internet Explorer 6-11
+		const isIE = /*@cc_on!@*/false || !!document.documentMode;
+		// Edge 20+
+		const isEdge = !isIE && !!window.StyleMedia;
+		// Chrome 1+
+		const isChrome = !!window.chrome;
+
+		if (isIE || isSafari || isEdge) {
+			return false;
+		}
+		return true;
 	}
 	intervalTime() {
 		this.setState(prevState => {
@@ -215,6 +250,9 @@ export default class HomePage extends React.Component {
 	}
 	toggleBeatYourFriendDialog() {
 		this.setState(prevState => ({ beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
+	}
+	toggleBrowserWarningDialog() {
+		this.setState(prevState => ({ browserWarningDialogOpen: !prevState.browserWarningDialogOpen}));
 	}
 	toggleStaySafeDialog(e) {
 		e && e.preventDefault();
@@ -364,9 +402,14 @@ export default class HomePage extends React.Component {
 					gameSettings={this.state.gameSettings}
 					toggleGameDialog={this.toggleGameDialog}
 				/>
+				<BrowserWarningDialog
+					isOpen={this.state.browserWarningDialogOpen}
+					toggle={this.toggleBrowserWarningDialog}
+				/>
 				<QuarantineButtons
 					clockTime={this.state.clockTime}
 					isGameActive={this.state.isGameActive}
+					forceUpdateGame={this.state.forceUpdateGame}
 					activeQuarantines={this.state.activeQuarantines}
 					availableQuarantines={this.state.availableQuarantines}
 					setQuarantineInMotion={this.setQuarantineInMotion}
@@ -384,7 +427,7 @@ export default class HomePage extends React.Component {
 				<article
 					id="canvas-container"
 					onClick={this.toggleDialog}
-					onPointerMove={this.onMouseMove}
+					onMouseMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
 					onContextMenu={this.onContextMenuHideQuarantine}
 					touch-action="auto"
