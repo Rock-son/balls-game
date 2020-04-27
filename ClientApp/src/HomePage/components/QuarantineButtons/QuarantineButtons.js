@@ -48,7 +48,8 @@ export class QuarantineButtons extends React.Component {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
-	onMouseDown = (e) => {	
+	onMouseDown = (e) => {
+		e && e.stopPropagation();
 		// start quarantine
 		const event = e;
 		this.props.setQuarantineInMotion(event);
