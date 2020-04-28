@@ -70,14 +70,8 @@ export const updateSimulation = (sprite, spriteArr, circleIntersect, loader) => 
 			const otherSprite = spriteArr[i];
 				// ACTIVATE TIME contagiousFrom - if not already healed
 			if (sprite.contagion !== 2) {
-					// with HEALED time on and healed off
-				if ((sprite.reactContext.state.simulationSettings["healedAfter"] > 0 && !sprite.reactContext.state.simulationSettings["staysHealed"]) &&
-					(otherSprite.contagion || sprite.contagion)) // any red can infect another red again
-				{
-					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;
-					otherSprite.contagiousFrom = sprite.contagion ? new Date().getTime() : otherSprite.contagiousFrom;
-				} // with HEALED time on or off and heal on, red cannot infect another red again
-				else if ((otherSprite.contagion && !sprite.contagion) || (!otherSprite.contagion && sprite.contagion))
+				// red cannot infect another red again
+				if ((otherSprite.contagion && !sprite.contagion) || (!otherSprite.contagion && sprite.contagion))
 				{
 					sprite.contagiousFrom = otherSprite.contagion ? new Date().getTime() : sprite.contagiousFrom;
 					otherSprite.contagiousFrom = sprite.contagion ? new Date().getTime() : otherSprite.contagiousFrom;
