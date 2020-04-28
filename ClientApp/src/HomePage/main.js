@@ -1,5 +1,5 @@
 import React from "react";
-//import Hammer from "hammerjs";
+import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
@@ -120,12 +120,41 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
-		/*
+		/********************** MOBILE EVENTS ***************************/
 		const canvas = document.getElementById("canvas-container");
-		const hammerTime = new Hammer(canvas);
-		hammerTime.on("pinch", () => console.log("you pinched me"));
-		hammerTime.on("tap", () => console.log("you tapped me"));
+		//const navbar = document.getElementById("top-navbar");
+			
+		const canvasHammer = new Hammer(canvas);
+		//const navbarHammer = new Hammer(navbar);
+
+		// ENABLE pinch and all directional panning
+		canvasHammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+		canvasHammer.get('pinch').set({ enable: true });
+
+		/* EVENTS
+		canvasHammer.on("pinch", (e) => console.log("you pinched me"));
+		navbarHammer.on("pinch", (e) => console.log("you pinched me"));
 		*/
+			/* navbar
+		navbarHammer.on("tap", (e) => {
+			e && e.preventDefault();
+			//e && e.stopPropagation();
+			this.toggleDialog(e)
+		});
+		navbarHammer.on("pan", (e) => {
+			e.preventDefault();
+			this.onMouseMove(e)
+		});*/
+			// canvas
+		canvasHammer.on("tap", (e) => {
+			e.preventDefault();
+			this.toggleDialog(e)
+		});
+		canvasHammer.on("pan", (e) => {
+			e.preventDefault();
+			this.onMouseMove(e)
+		});
+		/**************************************************************/
 		window.addEventListener('resize', this.handleResize);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
@@ -428,6 +457,7 @@ export default class HomePage extends React.Component {
 				>
 				</article>
 				<article
+					id="fadein"
 					className={`simulator-fadein ${this.state.simulationRestarting || this.state.gameRestarting ? "visible" : ""}`}
 					tabIndex="-1"
 					role="presentation"

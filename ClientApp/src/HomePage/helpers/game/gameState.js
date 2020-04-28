@@ -143,8 +143,8 @@ export function onWheelScroll(e) {
 }
 export function onMouseMove(e) {
 	if (this.state.quarantineBeingDragged) {
-		const pageX = e.pageX;
-		const pageY = e.pageY;
+		const pageX = e.pageX || e.center.x;
+		const pageY = e.pageY || e.center.y;
 		this.setState(prevstate => {
 			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
 		});
