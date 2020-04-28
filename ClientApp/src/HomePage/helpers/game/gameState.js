@@ -88,21 +88,38 @@ export function gameEnded({ playerWin }) {
 }
 export function closeGameEndDialog() {
 	const playerWin = this.state.didPlayerWin;
-	this.setState({ gameRestarting: true });
-	setTimeout(() => this.setState({ gameRestarting: false }), 1000);
-	setTimeout(() => {
-		this.stop();
-		this.startGame(false);
-		this.setState({
-			...resetSettings,
-			clockTime: new Date(0),
-			startButtonText: "START GAME",
-			didPlayerWin: playerWin,
-			gameSettingsOpen: true,
-			gamePaused: true,
-			gameStopped: true
-		});
-	}, 400);
+
+	if (playerWin) {
+		this.openTimeChallengeShareDialog();
+	} else {
+		this.setState({ gameRestarting: true });
+		setTimeout(() => this.setState({ gameRestarting: false }), 1000);
+		setTimeout(() => {
+			this.stop();
+			this.startGame(false);
+			this.setState({
+				...resetSettings,
+				clockTime: new Date(0),
+				startButtonText: "START GAME",
+				didPlayerWin: playerWin,
+				timeChallengeShareDialogOpen: false,
+				gameSettingsOpen: true,
+				gamePaused: true,
+				gameStopped: true
+			});
+		}, 400);
+	}
+}
+export function openTimeChallengeShareDialog() {
+	console.log("This is triggering");
+	this.setState(prevState => ({
+		...resetSettings,
+		gamePaused: true,
+		gameStopped: true,
+		didPlayerWin: false, // reset due to closeGameEndDialog logic
+		timeChallengeShareDialogOpen: !prevState.timeChallengeShareDialogOpen,
+
+	}));
 }
 
 export function onContextMenuHideQuarantine(e) {

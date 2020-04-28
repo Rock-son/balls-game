@@ -3,11 +3,11 @@ import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, BrowserWarningDialog,
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, BrowserWarningDialog, TimeChallengeShareDialog,
 	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog, ContactDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog, toggleSimulationDialogAfterNoRestart } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded, resetQuarantineExpiration,
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded, resetQuarantineExpiration, openTimeChallengeShareDialog,
 	setQuarantineInMotion, setQuarantineInactive, setButtonStatus, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -49,7 +49,8 @@ export default class HomePage extends React.Component {
 			staySafeDialogOpen: false,
 			howToPlayDialogOpen: false,
 			beatYourFriendDialogOpen: false,
-			browserWarningDialogOpen: false
+			browserWarningDialogOpen: false,
+			timeChallengeShareDialogOpen: false
 		}
 
 		this.interval = null;
@@ -94,6 +95,7 @@ export default class HomePage extends React.Component {
 		this.resetDraggedQuarantineId = resetDraggedQuarantineId.bind(this);
 		this.resetQuarantineExpiration = resetQuarantineExpiration.bind(this);
 		this.onContextMenuHideQuarantine = onContextMenuHideQuarantine.bind(this);
+		this.openTimeChallengeShareDialog = openTimeChallengeShareDialog.bind(this);
 		// SIMULATION
 		this.simulationRestart= simulationRestart.bind(this);
 		this.stopStartSimulation = stopStartSimulation.bind(this);
@@ -129,16 +131,14 @@ export default class HomePage extends React.Component {
 
 		// ENABLE pinch and all directional panning
 		canvasHammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-		canvasHammer.get('pinch').set({ enable: true });
 
 		/* EVENTS
 		canvasHammer.on("pinch", (e) => console.log("you pinched me"));
 		navbarHammer.on("pinch", (e) => console.log("you pinched me"));
-		*/
-			/* navbar
+		
+			// navbar
 		navbarHammer.on("tap", (e) => {
-			e && e.preventDefault();
-			//e && e.stopPropagation();
+			e.preventDefault();
 			this.toggleDialog(e)
 		});
 		navbarHammer.on("pan", (e) => {
@@ -383,6 +383,13 @@ export default class HomePage extends React.Component {
 					didPlayerWin={this.state.didPlayerWin}
 					closeGameEndDialog={this.closeGameEndDialog}
 				/>
+				<TimeChallengeShareDialog
+					isGameActive={this.state.isGameActive}
+					isOpen={this.state.timeChallengeShareDialogOpen}
+					gameSettings={this.state.gameSettings}
+					closeGameEndDialog={this.closeGameEndDialog}
+					clockTime={this.state.clockTime}
+				/>
 				<TimeOpenEndDialog
 					isGameActive={this.state.isGameActive}
 					gameEnded={this.state.gameEnded}
@@ -449,11 +456,9 @@ export default class HomePage extends React.Component {
 				/>
 				<article
 					id="canvas-container"
-					onClick={this.toggleDialog}
 					onMouseMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
 					onContextMenu={this.onContextMenuHideQuarantine}
-					touch-action="auto"
 				>
 				</article>
 				<article
