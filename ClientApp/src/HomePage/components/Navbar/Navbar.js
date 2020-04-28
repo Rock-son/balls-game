@@ -44,6 +44,7 @@ export const NavBar = props => {
 	return(
 		<>
 		<Navbar
+			id="top-navbar"
 			onMouseMove={onMouseMove} 
 			onWheel={onWheel} 
 			onClick={toggleDialog} 

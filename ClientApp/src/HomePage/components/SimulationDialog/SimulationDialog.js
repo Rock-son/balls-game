@@ -41,12 +41,6 @@ export class SimulationDialog extends React.Component {
 			} else if (prevProps.settings["staysHealed"]) {
 				return this.props.setSimulationSettings({ staysHealed: false });
 			} 
-		} 
-		// if "heal" is off and healedAfter is on
-		else if (!this.props.settings["staysHealed"] && this.props.settings["healedAfter"] > 0) {
-			if (prevProps.settings["staysHealed"]) {
-				return this.props.setSimulationSettings({ healedAfter: 0 });
-			}			
 		}
 	}
 

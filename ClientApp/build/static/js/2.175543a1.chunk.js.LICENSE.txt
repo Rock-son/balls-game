@@ -259,6 +259,12 @@ object-assign
  * http://www.opensource.org/licenses/mit-license
  */
 
+/*! Hammer.JS - v2.0.7 - 2016-04-22
+ * http://hammerjs.github.io/
+ *
+ * Copyright (c) 2016 Jorik Tangelder;
+ * Licensed under the MIT license */
+
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 
 /** @license React v0.19.1
