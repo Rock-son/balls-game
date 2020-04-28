@@ -22,7 +22,7 @@ export const updateGame = (sprite, spriteArr, quarantineArr, quarantineObj, circ
 	}
 	// GAME END - Time Challenge: show Won Dialog (GameEndDialog) - time is 0 and game is obviously still running - so win
 	if (sprite.reactContext.state.gameSettings["mode"] === 1 &&
-		sprite.reactContext.state.clockTime.getTime()/1000 > (sprite.reactContext.state.gameTimeDifficultyInSeconds[sprite.reactContext.state.gameSettings["difficulty"]]*60 + sprite.reactContext.state.gameSettings["delayInSeconds"])) {
+		sprite.reactContext.state.clockTime.getTime()/1000 > (sprite.reactContext.state.gameTimeDifficultyInSeconds[sprite.reactContext.state.gameSettings["difficulty"]]*60+ sprite.reactContext.state.gameSettings["delayInSeconds"])) {
 		if (sprite.myID === 0) {
 			// it is imperative to call these functions only once
 			sprite.reactContext.toggleGamePause();

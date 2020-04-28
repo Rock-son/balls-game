@@ -1,0 +1,111 @@
+@import "../../helpers/colors.scss";
+
+// working over default component classes
+
+// setting the width of the modal dialog
+
+@media (min-width: 576px) {
+	.modal-dialog.game-open-end {
+		max-width: 400px;
+	}	
+}
+.game-open-end {
+	& .modal-content {
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		background-color: $black;
+	}
+	& .modal-header {
+		border-bottom: none;
+		padding-top: 1rem;
+		color: $grey;
+		padding-bottom: 0px;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		& .modal-title {
+			text-align: center;
+			font-weight: 700;
+			font-size: 19px;
+			padding-top: 1rem;
+			margin: auto;
+		}
+		& .close {
+			position: absolute;
+			right: 20px;
+			text-align: right;
+			color: $light-grey;
+			margin: -1rem;
+			font-size: 19px;
+			font-weight: 300;
+			text-shadow: none;
+			&:hover {
+				color: $white;
+			}
+		}
+	}
+	& .text {
+		font-weight: 700;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		text-align: center;
+		margin-bottom: 1rem;
+		font-size: 17px;
+		& .grey {
+			color: $light-grey;
+			&.stats {
+				padding: 0 20px;
+			}
+		}
+		& .white {
+			color: $white;
+		}
+	}
+	& .link {
+		font-weight: 700;
+		font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+		text-align: center;
+		margin-bottom: 1rem;
+		&__header {
+			color: $white;
+			font-size: 17px;
+			font-weight: 700;
+		}
+		&__copied {
+			color: $white;
+			margin-top: 1rem;
+			padding: 5px 15px;
+		}
+		& .grey {
+			color: $light-grey;
+			font-weight: 700;
+		}
+		& .btn {
+			color: $white;
+			margin-top: 1rem;
+			background-color: $dark-grey;
+			border: none;
+			padding: 5px 25px;
+			&:active, &:hover {
+				background-color: $grey;
+			}
+			&:focus {
+				border: none;
+				box-shadow: none;
+			}
+		}
+
+
+
+	}
+	& .modal-footer {
+		padding: 1.1rem 0;
+		text-align: center;
+		justify-content: center;
+		color: $white;
+		font-size: 17px;
+		background-color: $dark-grey;
+		font-weight: 700;
+		cursor: pointer;
+		border-top: none;;
+	}
+}
+.last-row-inline {
+	justify-content: center;
+}

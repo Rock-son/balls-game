@@ -1,22 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.c8a05f85.chunk.css",
-    "main.js": "/static/js/main.df9fa521.chunk.js",
-    "main.js.map": "/static/js/main.df9fa521.chunk.js.map",
+    "main.css": "/static/css/main.e1c94f5e.chunk.css",
+    "main.js": "/static/js/main.d77f4204.chunk.js",
+    "main.js.map": "/static/js/main.d77f4204.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.2f90d172.js",
     "runtime-main.js.map": "/static/js/runtime-main.2f90d172.js.map",
     "static/css/2.89f067aa.chunk.css": "/static/css/2.89f067aa.chunk.css",
-    "static/js/2.175543a1.chunk.js": "/static/js/2.175543a1.chunk.js",
-    "static/js/2.175543a1.chunk.js.map": "/static/js/2.175543a1.chunk.js.map",
+    "static/js/2.98e5cb9c.chunk.js": "/static/js/2.98e5cb9c.chunk.js",
+    "static/js/2.98e5cb9c.chunk.js.map": "/static/js/2.98e5cb9c.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.5b22813c8aba6937884830218446118f.js": "/precache-manifest.5b22813c8aba6937884830218446118f.js",
+    "precache-manifest.eaaf5ce67f29cea971821cedf27d87bc.js": "/precache-manifest.eaaf5ce67f29cea971821cedf27d87bc.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.89f067aa.chunk.css.map": "/static/css/2.89f067aa.chunk.css.map",
-    "static/css/main.c8a05f85.chunk.css.map": "/static/css/main.c8a05f85.chunk.css.map",
-    "static/js/2.175543a1.chunk.js.LICENSE.txt": "/static/js/2.175543a1.chunk.js.LICENSE.txt",
-    "static/media/01-stay-safe.png": "/static/media/01-stay-safe.906d4e71.png",
-    "static/media/02-stay-safe-avoid-crowds.png": "/static/media/02-stay-safe-avoid-crowds.1d7f0483.png",
-    "static/media/06-stay-safe-social.png": "/static/media/06-stay-safe-social.c6e63857.png",
+    "static/css/main.e1c94f5e.chunk.css.map": "/static/css/main.e1c94f5e.chunk.css.map",
+    "static/js/2.98e5cb9c.chunk.js.LICENSE.txt": "/static/js/2.98e5cb9c.chunk.js.LICENSE.txt",
     "static/media/snd-gameStart.mp3": "/static/media/snd-gameStart.80b0b014.mp3",
     "static/media/snd-lose.mp3": "/static/media/snd-lose.363fbb0b.mp3",
     "static/media/snd-quarantine.mp3": "/static/media/snd-quarantine.5154d5fa.mp3",
@@ -26,8 +23,8 @@
   "entrypoints": [
     "static/js/runtime-main.2f90d172.js",
     "static/css/2.89f067aa.chunk.css",
-    "static/js/2.175543a1.chunk.js",
-    "static/css/main.c8a05f85.chunk.css",
-    "static/js/main.df9fa521.chunk.js"
+    "static/js/2.98e5cb9c.chunk.js",
+    "static/css/main.e1c94f5e.chunk.css",
+    "static/js/main.d77f4204.chunk.js"
   ]
 }

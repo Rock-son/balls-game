@@ -11,3 +11,4 @@ export { StaySafeDialog } from "./StaySafeDialog/StaySafeDialog";
 export { HowToPlayDialog } from "./HowToPlayDialog/HowToPlayDialog";
 export { BeatYourFriendDialog } from "./BeatYourFriendDialog/BeatYourFriendDialog";
 export { BrowserWarningDialog } from "./BrowserWarningDialog/BrowserWarningDialog";
+export { TimeChallengeShareDialog } from "./TimeChallengeShareDialog/TimeChallengeShareDialog";

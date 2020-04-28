@@ -3,9 +3,9 @@ import SimpleCryptoJS from "simple-crypto-js";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter, Container, Button } from "reactstrap";
 import { speedToString, sizeToString } from "../GameDialog/gameOptions";
 
-import "./timeOpenEndDialog.scss";
+import "./timeChallengeShareDialog.scss";
 
-export class TimeOpenEndDialog extends React.Component {
+export class TimeChallengeShareDialog extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,11 +21,11 @@ export class TimeOpenEndDialog extends React.Component {
 			return false;
 		}
 		// trigger only on game end and correct game mode
-		if (nextProps.gameEnded !== this.props.gameEnded && nextProps.gameSettings["mode"] === 0 ) {
+		if (nextProps.isOpen !== this.props.isOpen && nextProps.gameSettings["mode"] === 1) {
 			return true;
 		}
 		// trigger on game end, correct game mode and copied link
-		if (nextProps.gameEnded && nextProps.gameSettings["mode"] === 0 && this.state.isCopied !== nextState.isCopied) {
+		if (nextProps.gameSettings["mode"] === 1 && this.state.isCopied !== nextState.isCopied) {
 			return true;
 		}
 		return false;
@@ -59,17 +59,17 @@ export class TimeOpenEndDialog extends React.Component {
 
 
 	render() {
-		const { gameEnded, closeGameEndDialog, clockTime, gameSettings } = this.props;		
-		const shouldDialogOpen = gameEnded && gameSettings["mode"] === 0;
+		const { closeGameEndDialog, clockTime, gameSettings, isOpen } = this.props;
 		const correctedClockTime = new Date(clockTime.getTime() - gameSettings["delayInSeconds"]*1000);
+		const minutes = correctedClockTime.getMinutes();
 
 		return (		
-			<Modal key="game-open-end" zIndex={shouldDialogOpen ? 1000: -1} toggle={closeGameEndDialog} isOpen={shouldDialogOpen} centered={true} fade={true} className="game-open-end">
-				<ModalHeader charCode="X" toggle={closeGameEndDialog}>GAME FINSHED</ModalHeader>
+			<Modal key="game-open-end" zIndex={isOpen ? 1000: -1} toggle={closeGameEndDialog} isOpen={isOpen} centered={true} fade={true} className="game-open-end">
+				<ModalHeader charCode="X" toggle={closeGameEndDialog}>CONGRATULATIONS!</ModalHeader>
 				<ModalBody>
 					<Row>
 						<Container className="text">
-							<div className="grey">You managed to play the game for</div>
+							<div className="grey">You successfully finished the time challenge of</div>
 							<div className="white">{`${correctedClockTime.getMinutes()} minutes ${correctedClockTime.getSeconds()} seconds`}</div>
 							<div className="grey stats d-flex justify-content-between">
 								<div className="span">Size: {sizeToString[gameSettings["size"]]}</div>

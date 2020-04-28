@@ -16,10 +16,9 @@ export class TimeChallengeEndDialog extends React.Component {
 		return false;
 	}
 
-
 	render() {
-		const { gameEnded, closeGameEndDialog, didPlayerWin } = this.props;
-		const shouldDialogOpen = gameEnded && this.props.gameSettings["mode"] === 1;
+		const { gameEnded, didPlayerWin, closeGameEndDialog, gameSettings: { mode } } = this.props;
+		const shouldDialogOpen = gameEnded && mode === 1;
 		return (		
 			<Modal key="game-time-challenge-end" zIndex={shouldDialogOpen ? 1000: -1} isOpen={shouldDialogOpen} centered={true} fade={true} className="game-end">
 				<ModalBody>
