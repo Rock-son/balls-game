@@ -8,7 +8,6 @@ export function startGame(autostart, gameSettings = null) {
 	this.gameApp = new PIXI.Application({
 		width: this.canvasWidth,
 		height: this.canvasHeight,
-		resolution: window.devicePixelRatio || 1,
 		autoDensity: true,
 		sharedLoader: true
 	});

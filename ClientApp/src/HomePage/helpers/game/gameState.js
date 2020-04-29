@@ -111,9 +111,7 @@ export function closeGameEndDialog() {
 	}
 }
 export function openTimeChallengeShareDialog() {
-	console.log("This is triggering");
 	this.setState(prevState => ({
-		...resetSettings,
 		gamePaused: true,
 		gameStopped: true,
 		didPlayerWin: false, // reset due to closeGameEndDialog logic
@@ -165,6 +163,21 @@ export function onMouseMove(e) {
 		this.setState(prevstate => {
 			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
 		});
+	}
+}
+export function onTouchMove(e) {
+	// not viable on Chrom dev tools: e.touches.length === 2
+	if (this.state.quarantineBeingDragged) {
+		const { pageX, pageY } = e.touches && e.touches[0] || { pageX: 0, pageY: 0 };
+		this.setState(prevstate => {
+			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
+		});
+	}
+}
+export function onPinchStart(e) {
+	// if this is true - it's a pinch - use with onTouchStart
+	if (this.state.quarantineBeingDragged && e.touches.length === 2) {
+
 	}
 }
 // GAME

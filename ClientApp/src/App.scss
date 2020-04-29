@@ -4,6 +4,11 @@ ms-viewport       { width: device-width; }
 o-viewport        { width: device-width; }
 viewport          { width: device-width; }
 
+// disable accessibility outline
+* {
+  outline: none;
+}
+
 .App {
   text-align: center;
 }
