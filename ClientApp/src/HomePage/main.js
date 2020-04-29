@@ -125,38 +125,20 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
-		/********************** MOBILE EVENTS ***************************//*
+		/********************** MOBILE EVENTS ***************************/
 		const canvas = document.getElementById("canvas-container");
-		//const navbar = document.getElementById("top-navbar");
+		const navbar = document.getElementById("top-navbar");
 			
 		const canvasHammer = new Hammer(canvas);
-		//const navbarHammer = new Hammer(navbar);
+		const navbarHammer = new Hammer(navbar);
 
-		// ENABLE pinch and all directional panning
-		canvasHammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+		canvasHammer.get('pinch').set({ enable: true});
+		navbarHammer.get('pinch').set({ enable: true});
 
-		/* EVENTS
-		canvasHammer.on("pinch", (e) => console.log("you pinched me"));
-		navbarHammer.on("pinch", (e) => console.log("you pinched me"));
-		
-			// navbar
-		navbarHammer.on("tap", (e) => {
-			e.preventDefault();
-			this.toggleDialog(e)
-		});
-		navbarHammer.on("pan", (e) => {
-			e.preventDefault();
-			this.onMouseMove(e)
-		});
-			// canvas
-		canvasHammer.on("tap", (e) => {
-			e.preventDefault();
-			this.toggleDialog(e)
-		});
-		canvasHammer.on("pan", (e) => {
-			e.preventDefault();
-			this.onMouseMove(e)
-		});*/
+		// EVENTS
+		canvasHammer.on("pinch", (e) => console.log("you pinched me", e));
+		navbarHammer.on("pinch", (e) => console.log("you pinched me", e));
+
 		/**************************************************************/
 		window.addEventListener("blur", this.handleBlur);
 		window.addEventListener('resize', this.handleResize);
