@@ -1,5 +1,4 @@
 import React from "react";
-import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
@@ -125,21 +124,6 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
-		/********************** MOBILE EVENTS ***************************/
-		const canvas = document.getElementById("canvas-container");
-		const navbar = document.getElementById("top-navbar");
-			
-		const canvasHammer = new Hammer(canvas);
-		const navbarHammer = new Hammer(navbar);
-
-		canvasHammer.get('pinch').set({ enable: true});
-		navbarHammer.get('pinch').set({ enable: true});
-
-		// EVENTS
-		canvasHammer.on("pinch", (e) => console.log("you pinched me", e));
-		navbarHammer.on("pinch", (e) => console.log("you pinched me", e));
-
-		/**************************************************************/
 		window.addEventListener("blur", this.handleBlur);
 		window.addEventListener('resize', this.handleResize);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);

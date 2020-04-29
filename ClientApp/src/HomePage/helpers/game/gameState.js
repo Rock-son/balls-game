@@ -29,6 +29,7 @@ export const gameSettings = {
 		id: -1,
 		x: 0,
 		y: 0,
+		dy: 0,
 		durationInSeconds: 0,
 		size: 250
 	},
@@ -158,8 +159,8 @@ export function onWheelScroll(e) {
 }
 export function onMouseMove(e) {
 	if (this.state.quarantineBeingDragged) {
-		const pageX = e.pageX || e.center.x;
-		const pageY = e.pageY || e.center.y;
+		const pageX = e.pageX;
+		const pageY = e.pageY;
 		this.setState(prevstate => {
 			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
 		});
@@ -168,16 +169,23 @@ export function onMouseMove(e) {
 export function onTouchMove(e) {
 	// not viable on Chrom dev tools: e.touches.length === 2
 	if (this.state.quarantineBeingDragged) {
-		const { pageX, pageY } = e.touches && e.touches[0] || { pageX: 0, pageY: 0 };
-		this.setState(prevstate => {
-			return { draggedQuarantine: {...prevstate.draggedQuarantine, x: pageX , y: pageY} }
-		});
-	}
-}
-export function onPinchStart(e) {
-	// if this is true - it's a pinch - use with onTouchStart
-	if (this.state.quarantineBeingDragged && e.touches.length === 2) {
+		let dy = 0;
+		// on pinch start - dy should be 0 and two fingers touch the screen
+		if (e.touches.length === 2 && this.state.draggedQuarantine.dy === 0) {
+			dy = e.touches[0].pageY - e.touches[1].pageY;
+		}
+		// pinching stops -> reset dy
+		else if (e.touches.length === 1 && this.state.draggedQuarantine.dy !== 0) {
+			dy = 0;
+		}
 
+		const { pageX, pageY } = e.touches && e.touches[0] || { pageX: 0, pageY: 0 };
+		this.setState(prevState => {
+			const { draggedQuarantine } = prevState;
+			const changeInSize = dy === 0 ? draggedQuarantine["size"] : (dy > draggedQuarantine["dy"] ? draggedQuarantine["size"] + 30 : draggedQuarantine["size"] - 30);
+			console.log("changeInSize", changeInSize);
+			return { draggedQuarantine: {...prevState.draggedQuarantine, x: pageX , y: pageY, size: changeInSize, dy: dy } }
+		});
 	}
 }
 // GAME
