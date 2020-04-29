@@ -8,7 +8,6 @@ export function startSimulation(autostart, simulationSettings = null) {
 	this.simulationApp = new PIXI.Application({
 		width: this.canvasWidth,
 		height: this.canvasHeight,
-		resolution: window.devicePixelRatio || 1,
 		autoDensity: true,
 		sharedLoader: true
 	});
