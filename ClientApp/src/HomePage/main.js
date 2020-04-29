@@ -3,12 +3,13 @@ import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
-import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, BrowserWarningDialog, TimeChallengeShareDialog,
-	HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog, ContactDialog } from "./components";
+import { SimulationDialog, NavBar, ShareDialog, GameDialog, QuarantineButtons, TimeChallengeEndDialog, BrowserWarningDialog, 
+	TimeChallengeShareDialog, HowToPlayDialog, TimeOpenEndDialog, AboutDialog, StaySafeDialog, BeatYourFriendDialog, ContactDialog } from "./components";
 import { simulationSettings, stopStartSimulation, simulationRestart, setSimulationSettings,
 	toggleSimulationPause, toggleSimulationDialog, toggleSimulationDialogAfterNoRestart } from "./helpers/simulation/simulationState";
-import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded, resetQuarantineExpiration, openTimeChallengeShareDialog,
-	setQuarantineInMotion, setQuarantineInactive, setButtonStatus, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId, closeGameEndDialog } from "./helpers/game/gameState";
+import { gameSettings, setGameSettings, onMouseMove, stopStartGame, onWheelScroll, onContextMenuHideQuarantine, gameEnded, resetQuarantineExpiration, 
+	openTimeChallengeShareDialog, setQuarantineInMotion, setQuarantineInactive, setButtonStatus, toggleGamePause, toggleGameDialog, resetDraggedQuarantineId,
+	closeGameEndDialog, onTouchMove } from "./helpers/game/gameState";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import "./main.scss";
@@ -65,6 +66,7 @@ export default class HomePage extends React.Component {
 		this.pause = pause.bind(this);
 		this.unpause = unPause.bind(this);
 		// DIALOGS
+		this.handleBlur = this.handleBlur.bind(this);
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.toggleGamePause = toggleGamePause.bind(this);
 		this.toggleAboutDialog = this.toggleAboutDialog.bind(this);
@@ -77,6 +79,7 @@ export default class HomePage extends React.Component {
 		this.toggleSimulationDialogAfterNoRestart = toggleSimulationDialogAfterNoRestart.bind(this);
 		// EVENTS
 		this.onMouseMove = onMouseMove.bind(this);
+		this.onTouchMove = onTouchMove.bind(this);
 		this.getParameter = this.getParameter.bind(this);
 		this.intervalTime = this.intervalTime.bind(this);
 		this.handleResize = this.handleResize.bind(this);
@@ -122,7 +125,7 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
-		/********************** MOBILE EVENTS ***************************/
+		/********************** MOBILE EVENTS ***************************//*
 		const canvas = document.getElementById("canvas-container");
 		//const navbar = document.getElementById("top-navbar");
 			
@@ -144,7 +147,7 @@ export default class HomePage extends React.Component {
 		navbarHammer.on("pan", (e) => {
 			e.preventDefault();
 			this.onMouseMove(e)
-		});*/
+		});
 			// canvas
 		canvasHammer.on("tap", (e) => {
 			e.preventDefault();
@@ -153,8 +156,9 @@ export default class HomePage extends React.Component {
 		canvasHammer.on("pan", (e) => {
 			e.preventDefault();
 			this.onMouseMove(e)
-		});
+		});*/
 		/**************************************************************/
+		window.addEventListener("blur", this.handleBlur);
 		window.addEventListener('resize', this.handleResize);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
 	}
@@ -170,6 +174,7 @@ export default class HomePage extends React.Component {
 		this.simulationApp && this.simulationApp.destroy(true);
 		this.gameApp && this.gameApp.destroy(true);
 	}
+
 	checkBrowser() {
 		// Safari 3.0+ "[object HTMLElementConstructor]" 
 		const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']);
@@ -183,6 +188,7 @@ export default class HomePage extends React.Component {
 		}
 		return true;
 	}
+
 	intervalTime() {
 		this.setState(prevState => {
 			// in case of simulation /game either stopped or paused
@@ -196,10 +202,18 @@ export default class HomePage extends React.Component {
 			return ({ currentTime: new Date().getTime(), clockTime: new Date(prevState.clockTime.getTime() + 1000) })
 		});
 	}
+
+	handleBlur() {
+		if (this.state.isGameActive && !this.state.gamePaused) {
+			this.toggleDialog();
+		}
+	}
+
 	handleResize(e) {
 		this.canvasWidth = window.innerWidth < this.canvasWidth ? this.canvasWidth : window.innerWidth;
 		this.canvasHeight = window.innerHeight < this.canvasHeight ? this.canvasHeight : window.innerHeight;
 	}
+
 	getParameter(paramName) {
 		var searchString = window.location.search.substring(1),
 			i, val, params = searchString.split("&");
@@ -212,6 +226,7 @@ export default class HomePage extends React.Component {
 		}
 		return null;
 	}
+
 	toggleDialog(e) {
 		// on simulation -> show dialog
 		if (this.state.isSimulationActive) {
@@ -232,6 +247,7 @@ export default class HomePage extends React.Component {
 			this.toggleGameDialog();
 		}
 	}
+
 	toggleAboutDialog(e){
 		e && e.preventDefault();
 		e && e.stopPropagation();
@@ -243,6 +259,7 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, aboutDialogOpen: !prevState.aboutDialogOpen }));
 		}
 	}
+
 	toggleShareDialog(e) {
 		e && e.preventDefault();
 		e && e.stopPropagation();
@@ -257,6 +274,7 @@ export default class HomePage extends React.Component {
 			this.setState({ isCopied: false });
 		}, 1000);
 	}
+
 	toggleContactDialog(e) {
 		e && e.preventDefault();
 		e && e.stopPropagation();
@@ -271,12 +289,15 @@ export default class HomePage extends React.Component {
 			this.setState({ isCopied: false });
 		}, 1000);
 	}
+
 	toggleBeatYourFriendDialog() {
 		this.setState(prevState => ({ beatYourFriendDialogOpen: !prevState.beatYourFriendDialogOpen}));
 	}
+
 	toggleBrowserWarningDialog() {
 		this.setState(prevState => ({ browserWarningDialogOpen: !prevState.browserWarningDialogOpen}));
 	}
+
 	toggleStaySafeDialog(e) {
 		e && e.preventDefault();
 		e && e.stopPropagation();
@@ -288,6 +309,7 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, staySafeDialogOpen: !prevState.staySafeDialogOpen}));
 		}
 	}
+
 	toggleHowToPlayDialog(e) {
 		if (this.state.isSimulationActive) {
 			this.toggleSimulationPause();
@@ -297,16 +319,19 @@ export default class HomePage extends React.Component {
 			this.setState(prevState => ({ gamePaused: !prevState.gamePaused, howToPlayDialogOpen: !prevState.howToPlayDialogOpen}));
 		}
 	}
+
 	toggleNavbarItemsExpand(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		this.setState(prevState => ({ isNavbarExpanded: !prevState.isNavbarExpanded}));
 	}
+
 	toggleNavbarVisibility(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		this.setState(prevState => ({ isNavbarVisible: !prevState.isNavbarVisible}));
 	}
+
 	copyUriToClipboard() {
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
@@ -316,6 +341,7 @@ export default class HomePage extends React.Component {
 				}
 		 	});
 	}
+
 	copyMailToClipboard() {
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
@@ -325,6 +351,7 @@ export default class HomePage extends React.Component {
 				}
 		 	});
 	}
+
 	render() {
 
 		return (
@@ -333,6 +360,7 @@ export default class HomePage extends React.Component {
 					currentTime={this.state.currentTime}
 					clockTime={this.state.clockTime}
 					onMouseMove={this.onMouseMove}
+					onTouchMove={this.onTouchMove}
 					onWheel={this.onWheelScroll}
 					toggleNavbarItemsExpand={this.toggleNavbarItemsExpand}
 					toggleNavbarVisibility={this.toggleNavbarVisibility}
@@ -456,6 +484,9 @@ export default class HomePage extends React.Component {
 				/>
 				<article
 					id="canvas-container"
+					onClick={this.toggleDialog}
+					onTouchEnd={this.toggleDialog}
+					onTouchMove={this.onTouchMove}
 					onMouseMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
 					onContextMenu={this.onContextMenuHideQuarantine}

@@ -7,7 +7,7 @@ import "./navbar.scss";
 export const NavBar = props => {
 	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
 		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
-		simulationSettings: { showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog } = props;
+		simulationSettings: { showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog, onTouchMove, onTouchEnd } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -45,7 +45,8 @@ export const NavBar = props => {
 		<>
 		<Navbar
 			id="top-navbar"
-			onMouseMove={onMouseMove} 
+			onMouseMove={onMouseMove}
+			onTouchMove={onTouchMove}
 			onWheel={onWheel} 
 			onClick={toggleDialog} 
 			dark className={`main__navbar ${!isNavbarVisible && "hidden"} d-inline-flex justify-content-between`} 
