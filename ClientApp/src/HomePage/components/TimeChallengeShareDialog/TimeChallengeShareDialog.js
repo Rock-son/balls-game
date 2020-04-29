@@ -42,7 +42,7 @@ export class TimeChallengeShareDialog extends React.Component {
 			q: quantity,
 			sp: speed,
 			min: correctedTime.getMinutes(),
-			sc: correctedTime.getSeconds()
+			sc: 0
 		};
 		const encryptedGameSettings = myCrypto.encrypt(JSON.stringify(shortenedSettings));
 		navigator.permissions.query({name: "clipboard-write"})
@@ -70,7 +70,7 @@ export class TimeChallengeShareDialog extends React.Component {
 					<Row>
 						<Container className="text">
 							<div className="grey">You successfully finished the time challenge of</div>
-							<div className="white">{`${correctedClockTime.getMinutes()} minutes ${correctedClockTime.getSeconds()} seconds`}</div>
+							<div className="white">{`${correctedClockTime.getMinutes()} minutes 0 seconds`}</div>
 							<div className="grey stats d-flex justify-content-between">
 								<div className="span">Size: {sizeToString[gameSettings["size"]]}</div>
 								<div className="span">Nr.: {gameSettings["quantity"]}</div>
