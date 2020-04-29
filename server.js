@@ -45,6 +45,23 @@ bodyParser.json({
 	  }
 	  res.status(204).end()
 });
+// IP AUTHORIZATION ONLY FOR HEROKU
+app.use((req, res, next) => {
+	if (process && process.env && process.env.WHITELIST) {
+		const whitelist = process.env.WHITELIST || []; // HEROKU ENV VAR
+		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+		// AUTHORIZED
+		if (ip && whitelist && whitelist.indexOf(ip) > -1) {
+			console.log("Access IP: ",  ip);
+			return next();
+		} else {
+			console.error("Rejected Adress: ", ip );	
+			return res.send("Unauthorized");
+		}
+	} else {
+		next();
+	}
+});
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "./ClientApp/build", "index.html")));
 
