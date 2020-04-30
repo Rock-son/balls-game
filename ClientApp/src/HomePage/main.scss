@@ -3,9 +3,11 @@
 
 html {
 	overflow: hidden;
+	min-width: 600px;
 }
 
 canvas {
+	min-width: 600px;
 	image-rendering: optimizeQuality;             // Older versions of FF
 	image-rendering: -moz-crisp-edges;          // FF 6.0+
 	image-rendering: -webkit-optimize-contrast; // Safari
