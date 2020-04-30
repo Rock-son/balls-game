@@ -6,8 +6,8 @@ import "./navbar.scss";
 
 export const NavBar = props => {
 	const { onMouseMove, onWheel, toggleNavbarItemsExpand, isNavbarExpanded, toggleNavbarVisibility, isNavbarVisible, contagious, healed, toggleStaySafeDialog,
-		healthy, isGameActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
-		simulationSettings: { showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog, onTouchMove, onTouchEnd } = props;
+		healthy, isGameActive, isSimulationActive, gamePaused, toggleSimulationDialog, toggleShareDialog, toggleGameDialog, toggleAboutDialog, clockTime, gameTimeDifficultyInSeconds,
+		simulationSettings: { showTime, showStats, staysHealed }, gameSettings: { delayInSeconds, mode, difficulty }, gameEnded, toggleDialog, onTouchMove } = props;
 
 	// count in the in-game start delay
 	let formattedSeconds, seconds, minutes;
@@ -60,13 +60,13 @@ export const NavBar = props => {
 				<Collapse isOpen={isNavbarExpanded} navbar>
 				<Nav className="navbar__nav left" navbar>
 					<NavItem>
-						<NavLink className="navbar__nav__link" onClick={toggleSimulationDialog}>Simulate</NavLink>
+						<NavLink className={`navbar__nav__link ${isSimulationActive ? "active": ""}`} onClick={toggleSimulationDialog}>Simulate</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink data="game" className="navbar__nav__link " onClick={toggleGameDialog}>Play game</NavLink>
+						<NavLink data="game" className={`navbar__nav__link ${isGameActive ? "active": ""}`} onClick={toggleGameDialog}>Play game</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink className="d-none d-sm-block disabled stick">|</NavLink>

@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Modal, ModalHeader, ModalBody, ModalFooter,
 		Container, Nav, NavLink } from "reactstrap";
 
-import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDiffVals, speedOptions, speedDiffValues } from "./gameOptions";
+import { modeOptions, difficultyOptions, sizeOptions, quantityValues, quantityDiffVals, speedOptions } from "./gameOptions";
 import "./gameDialog.scss";
 
 export class GameDialog extends React.Component {

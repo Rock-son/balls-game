@@ -61,7 +61,6 @@ export class TimeChallengeShareDialog extends React.Component {
 	render() {
 		const { closeGameEndDialog, clockTime, gameSettings, isOpen } = this.props;
 		const correctedClockTime = new Date(clockTime.getTime() - gameSettings["delayInSeconds"]*1000);
-		const minutes = correctedClockTime.getMinutes();
 
 		return (		
 			<Modal key="game-open-end" zIndex={isOpen ? 1000: -1} toggle={closeGameEndDialog} isOpen={isOpen} centered={true} fade={true} className="game-open-end">
