@@ -45,24 +45,24 @@ export class BeatYourFriendDialog extends React.Component {
 	render() {
 		const { isOpen, toggle } = this.props;
 
-		let params;
+		let settings;
 		if (window.location.search === "") {
 			return "";
 		} else {
-			params = this.getParameter("settings");
-			if (!params) {
+			settings = this.getParameter("settings");
+			if (!settings) {
 				return "";
 			}
 		}
 		
 		const myCrypto = new SimpleCryptoJS("/*TODO: add additional logic*/");
-		const urlCipherString = decodeURI(params);
+		const urlCipherString = decodeURIComponent(settings).replace(/\s/g, "+"); // if there's a whitespace replace it with + sign
 		let dataObject;
 		try {
 			dataObject = JSON.parse(myCrypto.decrypt(urlCipherString));
 		} catch (error) {
 			// add fallback values
-			dataObject = { m: 0, d: 2, s: 8, q: 600, sp: .6, min: 0, sc: 20 };
+			dataObject = { m: 0, d: 2, s: 8, q: 600, sp: .6, min: 0, sc: 0 };
 		}
 		
 		if (dataObject == null || dataObject === "") {

@@ -48,7 +48,7 @@ export class TimeChallengeShareDialog extends React.Component {
 		navigator.permissions.query({name: "clipboard-write"})
 			.then(result => {
 				if (result.state === "granted" || result.state === "prompt") {
-					navigator.clipboard.writeText(`https://www.viralballs.com?settings=${encodeURI(encryptedGameSettings)}`);
+					navigator.clipboard.writeText(`https://www.viralballs.com?settings=${encodeURIComponent(encryptedGameSettings)}`);
 					this.setState({ isCopied: true });
 					setTimeout(() => {
 						this.setState({ isCopied: false });
