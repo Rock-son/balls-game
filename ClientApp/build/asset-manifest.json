@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.cbe1523e.chunk.css",
+    "main.css": "/static/css/main.91b63e74.chunk.css",
     "main.js": "/static/js/main.07034d2b.chunk.js",
     "main.js.map": "/static/js/main.07034d2b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.2f90d172.js",
@@ -9,10 +9,10 @@
     "static/js/2.3ca66245.chunk.js": "/static/js/2.3ca66245.chunk.js",
     "static/js/2.3ca66245.chunk.js.map": "/static/js/2.3ca66245.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.cef8c7572e187291fa999e26ea64bf25.js": "/precache-manifest.cef8c7572e187291fa999e26ea64bf25.js",
+    "precache-manifest.a385a88d7aab962805fd3d15599c8e4f.js": "/precache-manifest.a385a88d7aab962805fd3d15599c8e4f.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.89f067aa.chunk.css.map": "/static/css/2.89f067aa.chunk.css.map",
-    "static/css/main.cbe1523e.chunk.css.map": "/static/css/main.cbe1523e.chunk.css.map",
+    "static/css/main.91b63e74.chunk.css.map": "/static/css/main.91b63e74.chunk.css.map",
     "static/js/2.3ca66245.chunk.js.LICENSE.txt": "/static/js/2.3ca66245.chunk.js.LICENSE.txt",
     "static/media/snd-gameStart.mp3": "/static/media/snd-gameStart.80b0b014.mp3",
     "static/media/snd-lose.mp3": "/static/media/snd-lose.363fbb0b.mp3",
@@ -24,7 +24,7 @@
     "static/js/runtime-main.2f90d172.js",
     "static/css/2.89f067aa.chunk.css",
     "static/js/2.3ca66245.chunk.js",
-    "static/css/main.cbe1523e.chunk.css",
+    "static/css/main.91b63e74.chunk.css",
     "static/js/main.07034d2b.chunk.js"
   ]
 }
