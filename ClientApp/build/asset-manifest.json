@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.4e84a6e8.chunk.css",
-    "main.js": "/static/js/main.0c5876ec.chunk.js",
-    "main.js.map": "/static/js/main.0c5876ec.chunk.js.map",
+    "main.css": "/static/css/main.cbe1523e.chunk.css",
+    "main.js": "/static/js/main.07034d2b.chunk.js",
+    "main.js.map": "/static/js/main.07034d2b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.2f90d172.js",
     "runtime-main.js.map": "/static/js/runtime-main.2f90d172.js.map",
     "static/css/2.89f067aa.chunk.css": "/static/css/2.89f067aa.chunk.css",
     "static/js/2.3ca66245.chunk.js": "/static/js/2.3ca66245.chunk.js",
     "static/js/2.3ca66245.chunk.js.map": "/static/js/2.3ca66245.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.9284649467aad5146692c510b76a2469.js": "/precache-manifest.9284649467aad5146692c510b76a2469.js",
+    "precache-manifest.cef8c7572e187291fa999e26ea64bf25.js": "/precache-manifest.cef8c7572e187291fa999e26ea64bf25.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.89f067aa.chunk.css.map": "/static/css/2.89f067aa.chunk.css.map",
-    "static/css/main.4e84a6e8.chunk.css.map": "/static/css/main.4e84a6e8.chunk.css.map",
+    "static/css/main.cbe1523e.chunk.css.map": "/static/css/main.cbe1523e.chunk.css.map",
     "static/js/2.3ca66245.chunk.js.LICENSE.txt": "/static/js/2.3ca66245.chunk.js.LICENSE.txt",
     "static/media/snd-gameStart.mp3": "/static/media/snd-gameStart.80b0b014.mp3",
     "static/media/snd-lose.mp3": "/static/media/snd-lose.363fbb0b.mp3",
@@ -24,7 +24,7 @@
     "static/js/runtime-main.2f90d172.js",
     "static/css/2.89f067aa.chunk.css",
     "static/js/2.3ca66245.chunk.js",
-    "static/css/main.4e84a6e8.chunk.css",
-    "static/js/main.0c5876ec.chunk.js"
+    "static/css/main.cbe1523e.chunk.css",
+    "static/js/main.07034d2b.chunk.js"
   ]
 }
