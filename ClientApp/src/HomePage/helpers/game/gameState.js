@@ -171,7 +171,7 @@ export function onTouchMove(e) {
 	if (this.state.quarantineBeingDragged) {
 		let dx = 0;
 		// on pinch - two fingers touch the screen
-		if (e.touches.length === 2) {
+		if (e.touches.length > 1) {
 			dx = Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2) + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2));
 
 		}
@@ -180,7 +180,7 @@ export function onTouchMove(e) {
 			dx = 0;
 		}
 
-		const { pageX, pageY } = e.touches && e.touches[0] || { pageX: 0, pageY: 0 };
+		const { pageX, pageY } = (e.touches && e.touches[0]) || { pageX: 0, pageY: 0 };
 		this.setState(prevState => {
 			const { draggedQuarantine } = prevState;
 			const limitSize = draggedQuarantine["size"] < 90 ? 90 : (draggedQuarantine["size"] > 360 ? 360 : draggedQuarantine["size"]);
