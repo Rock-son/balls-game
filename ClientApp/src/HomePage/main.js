@@ -1,4 +1,5 @@
 import React from "react";
+import Hammer from "hammerjs";
 import { clearDriftless, setDriftlessInterval } from 'driftless';
 
 import { startSimulation, startGame, stop, pause, unPause } from "./helpers/actions";
@@ -124,6 +125,30 @@ export default class HomePage extends React.Component {
 		} else {
 			this.startSimulation(true);
 		}
+		/************************************************************ */
+		const canvas = document.getElementById("canvas-container");
+		const navbar = document.getElementById("top-navbar");
+			
+		//const canvasHammer = new Hammer(canvas);
+		//const navbarHammer = new Hammer(navbar);
+		// Create a manager to manager the element
+		const canvasManager = new Hammer.Manager(canvas);
+		const navbarManager = new Hammer.Manager(navbar);
+
+		// Create a recognizer
+		const DoubleTap = new Hammer.Tap({
+			event: 'doubletap',
+			taps: 2
+		});
+
+		// Add the recognizer to the manager
+		canvasManager.add(DoubleTap);
+		navbarManager.add(DoubleTap);
+
+		// Subscribe to desired event
+		canvasManager.on('doubletap', this.toggleDialog);
+		navbarManager.on('doubletap', this.toggleDialog);
+		/************************************************************ */
 		window.addEventListener("blur", this.handleBlur);
 		window.addEventListener('resize', this.handleResize);
 		this.interval = setDriftlessInterval(this.intervalTime, 1000);
@@ -451,7 +476,6 @@ export default class HomePage extends React.Component {
 				<article
 					id="canvas-container"
 					onClick={this.toggleDialog}
-					onTouchEnd={this.toggleDialog}
 					onTouchMove={this.onTouchMove}
 					onMouseMove={this.onMouseMove}
 					onWheel={this.onWheelScroll}
